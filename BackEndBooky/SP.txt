@@ -1,0 +1,84 @@
+USE [Booky]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Procedimiento: SP_LOGIN_USUARIO
+-- Descripción: Valida credenciales de usuario y retorna IdUsuario y Rol
+-- =============================================
+CREATE PROCEDURE [dbo].[SP_LOGIN_USUARIO]
+    @Email VARCHAR(150),
+    @PasswordHash VARCHAR(255),  -- Contraseña ya en hash
+    @IdUsuario INT OUTPUT,
+    @RolNombre VARCHAR(50) OUTPUT,
+    @SUCCESS BIT OUTPUT,
+    @ERRORID INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- ================================
+        -- Validar parámetros obligatorios
+        -- ================================
+        IF @Email IS NULL OR LTRIM(RTRIM(@Email)) = ''
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 20001; -- Email vacío
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF @PasswordHash IS NULL OR LTRIM(RTRIM(@PasswordHash)) = ''
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 20002; -- Contraseña vacía
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- ================================
+        -- Buscar usuario por Email y PasswordHash
+        -- ================================
+        SELECT 
+            @IdUsuario = u.IdUsuario,
+            @RolNombre = r.Nombre
+        FROM Usuarios u
+        INNER JOIN Roles r ON u.IdRol = r.IdRol
+        WHERE u.Email = @Email
+          AND u.PasswordHash = @PasswordHash
+          AND u.Estado = 1; -- Solo activos
+
+        -- ================================
+        -- Validar si encontró usuario
+        -- ================================
+        IF @IdUsuario IS NULL
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 20003; -- Usuario o contraseña inválidos
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- ================================
+        -- Éxito
+        -- ================================
+        COMMIT TRANSACTION;
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+GO
