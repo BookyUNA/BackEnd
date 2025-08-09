@@ -9,5 +9,6 @@ namespace Entities.Response
     public class ResInicioSesion : ResBase
     {
         public string token { get; set; }
+       
     }
 }

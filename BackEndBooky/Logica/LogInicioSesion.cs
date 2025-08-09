@@ -2,13 +2,13 @@
 using Entities.Entity;
 using Entities.Request;
 using Entities.Response;
+using Logic;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Logica
 {
     public class LogInicioSesion
@@ -53,8 +53,11 @@ namespace Logica
                 if (resultadoBd.HasValue && resultadoBd.Value)
                 {
                     res.resultado = true;
-                    int id = idUsuario ?? 0;
-                    string rolUsuario = rol ?? string.Empty;
+
+                    res.token = JwtService.GenerateToken(idUsuario.Value, rol);
+
+
+
                 }
                 else
                 {
@@ -99,4 +102,5 @@ namespace Logica
         }
 
     }
+
 }
