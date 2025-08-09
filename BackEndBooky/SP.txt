@@ -82,3 +82,177 @@ BEGIN
     END CATCH
 END
 GO
+
+
+
+
+
+
+
+USE [Booky]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+/*
+Procedimiento: SP_GENERAR_CODIGO_RECUPERACION
+Objetivo: Generar un código de recuperación para un usuario dado su correo electrónico.
+*/
+
+CREATE OR ALTER PROCEDURE SP_GENERAR_CODIGO_RECUPERACION
+    @CorreoElectronico NVARCHAR(255),  -- Correo que envía el cliente
+    @SUCCESS BIT OUTPUT,               -- Salida: 1 = OK, 0 = Error
+    @ERRORID INT OUTPUT                 -- Salida: Código de error
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @IdUsuario INT;
+    DECLARE @Codigo VARCHAR(10);
+    DECLARE @FechaExpiracion DATETIME;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el correo no sea nulo o vacío
+        IF (LTRIM(RTRIM(@CorreoElectronico)) = '' OR @CorreoElectronico IS NULL)
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 20001; -- Error: Correo no proporcionado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Buscar el usuario
+        SELECT @IdUsuario = IdUsuario
+        FROM Usuarios
+        WHERE CorreoElectronico = @CorreoElectronico;
+
+        IF @IdUsuario IS NULL
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 20002; -- Error: Usuario no encontrado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Generar un código aleatorio de 6 dígitos
+        SET @Codigo = RIGHT('000000' + CAST(ABS(CHECKSUM(NEWID())) % 1000000 AS VARCHAR(6)), 6);
+
+        -- Definir expiración (5 minutos desde ahora)
+        SET @FechaExpiracion = DATEADD(MINUTE, 5, GETDATE());
+
+        -- Insertar en CodigosRecuperacion
+        INSERT INTO CodigosRecuperacion (IdUsuario, Codigo, FechaCreacion, FechaExpiracion, Usado)
+        VALUES (@IdUsuario, @Codigo, GETDATE(), @FechaExpiracion, 0);
+
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        -- Manejo de errores
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+GO
+
+
+
+
+
+
+
+
+
+
+USE [Booky]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+/*
+Procedimiento: SP_CAMBIAR_CONTRASENA_CON_CODIGO
+Objetivo: Validar un código de recuperación y actualizar la contraseña de un usuario.
+*/
+
+CREATE OR ALTER PROCEDURE SP_CAMBIAR_CONTRASENA_CON_CODIGO
+    @Codigo VARCHAR(10),                 -- Código de recuperación
+    @NuevaContrasenaHash NVARCHAR(255),  -- Contraseña ya hasheada
+    @SUCCESS BIT OUTPUT,                 -- Salida: 1 = OK, 0 = Error
+    @ERRORID INT OUTPUT                   -- Salida: Código de error
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @IdUsuario INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar parámetros obligatorios
+        IF (@Codigo IS NULL OR LTRIM(RTRIM(@Codigo)) = '')
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 30001; -- Código no proporcionado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF (@NuevaContrasenaHash IS NULL OR LTRIM(RTRIM(@NuevaContrasenaHash)) = '')
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 30002; -- Contraseña no proporcionada
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Buscar el código válido (no usado, no expirado)
+        SELECT TOP 1 @IdUsuario = IdUsuario
+        FROM CodigosRecuperacion
+        WHERE Codigo = @Codigo
+          AND Usado = 0
+          AND FechaExpiracion >= GETDATE()
+        ORDER BY FechaCreacion DESC;
+
+        -- Validar si el código existe y es válido
+        IF @IdUsuario IS NULL
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 30003; -- Código inválido o expirado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Actualizar contraseña del usuario
+        UPDATE Usuarios
+        SET PasswordHash = @NuevaContrasenaHash
+        WHERE IdUsuario = @IdUsuario;
+
+        -- Marcar código como usado
+        UPDATE CodigosRecuperacion
+        SET Usado = 1
+        WHERE Codigo = @Codigo;
+
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+GO

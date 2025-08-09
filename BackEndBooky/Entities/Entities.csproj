@@ -44,9 +44,13 @@
     <Compile Include="Entity\Error.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\ReqBase.cs" />
+    <Compile Include="Request\ReqCambioContraseña.cs" />
     <Compile Include="Request\ReqInicioSesion.cs" />
+    <Compile Include="Request\ReqRecuperarContraseña.cs" />
     <Compile Include="Response\ResBase.cs" />
+    <Compile Include="Response\ResCambioContraseña.cs" />
     <Compile Include="Response\ResInicioSesion.cs" />
+    <Compile Include="Response\ResRecuperarContraseña.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">
