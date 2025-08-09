@@ -1,0 +1,60 @@
+
+USE Booky;
+GO
+
+-- ========================
+-- TABLA: Roles
+-- ========================
+CREATE TABLE Roles (
+    IdRol INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre VARCHAR(50) NOT NULL UNIQUE,
+    Descripcion VARCHAR(255) NULL
+);
+
+-- Insertar roles básicos
+INSERT INTO Roles (Nombre, Descripcion)
+VALUES 
+('Cliente', 'Usuario que solicita servicios y agenda citas'),
+('Profesional', 'Usuario que ofrece servicios y gestiona citas'),
+('Admin', 'Usuario con privilegios de administración');
+
+-- ========================
+-- TABLA: Usuarios
+-- ========================
+CREATE TABLE Usuarios (
+    IdUsuario INT IDENTITY(1,1) PRIMARY KEY,
+    IdRol INT NOT NULL FOREIGN KEY REFERENCES Roles(IdRol),
+    Cedula VARCHAR(20) NOT NULL UNIQUE, -- Cédula o DNI
+    Nombre VARCHAR(100) NOT NULL,
+    Email VARCHAR(150) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    Telefono VARCHAR(20) NULL,
+    EmailVerificado BIT NOT NULL DEFAULT 0, -- 0 = no verificado
+    FechaRegistro DATETIME NOT NULL DEFAULT GETDATE(),
+    Estado BIT NOT NULL DEFAULT 1
+);
+
+-- ========================
+-- TABLA: CodigosVerificacion (Registro con código al email)
+-- ========================
+CREATE TABLE CodigosVerificacion (
+    IdCodigoVerificacion INT IDENTITY(1,1) PRIMARY KEY,
+    IdUsuario INT NOT NULL FOREIGN KEY REFERENCES Usuarios(IdUsuario),
+    Codigo VARCHAR(10) NOT NULL, -- Ej: "482931"
+    FechaCreacion DATETIME NOT NULL DEFAULT GETDATE(),
+    FechaExpiracion DATETIME NOT NULL, -- Ej: 15 minutos después
+    Usado BIT NOT NULL DEFAULT 0
+);
+
+-- ========================
+-- TABLA: CodigosRecuperacion (Recuperación de contraseña)
+-- ========================
+CREATE TABLE CodigosRecuperacion (
+    IdCodigoRecuperacion INT IDENTITY(1,1) PRIMARY KEY,
+    IdUsuario INT NOT NULL FOREIGN KEY REFERENCES Usuarios(IdUsuario),
+    Codigo VARCHAR(10) NOT NULL, -- Ej: "749283"
+    FechaCreacion DATETIME NOT NULL DEFAULT GETDATE(),
+    FechaExpiracion DATETIME NOT NULL, -- Ej: 15 minutos después
+    Usado BIT NOT NULL DEFAULT 0
+);
+
