@@ -21,19 +21,24 @@ VALUES
 -- ========================
 -- TABLA: Usuarios
 -- ========================
+USE [Booky]
+GO
+
 CREATE TABLE Usuarios (
     IdUsuario INT IDENTITY(1,1) PRIMARY KEY,
     IdRol INT NOT NULL FOREIGN KEY REFERENCES Roles(IdRol),
-    Cedula VARCHAR(20) NOT NULL UNIQUE, -- Cédula o DNI
+    Cedula VARCHAR(20) NOT NULL UNIQUE,
     Nombre VARCHAR(100) NOT NULL,
     Email VARCHAR(150) NOT NULL UNIQUE,
     PasswordHash VARCHAR(255) NOT NULL,
     Telefono VARCHAR(20) NULL,
-    EmailVerificado BIT NOT NULL DEFAULT 0, -- 0 = no verificado
+    EmailVerificado BIT NOT NULL DEFAULT 0,
     FechaRegistro DATETIME NOT NULL DEFAULT GETDATE(),
-    Estado BIT NOT NULL DEFAULT 1
+    Estado BIT NOT NULL DEFAULT 1,
+    Bloqueado BIT NOT NULL DEFAULT 0,
+    IntentosLoginFallidos INT NOT NULL DEFAULT 0,
+    FechaUltimoIntentoFallido DATETIME NULL
 );
-
 -- ========================
 -- TABLA: CodigosVerificacion (Registro con código al email)
 -- ========================
@@ -58,3 +63,441 @@ CREATE TABLE CodigosRecuperacion (
     Usado BIT NOT NULL DEFAULT 0
 );
 
+
+
+
+
+-- Base de datos completa para la aplicación Booky
+-- Incluye tablas existentes y nuevas funcionalidades
+
+USE [Booky]
+GO
+
+-- =============================================
+-- TABLAS DE AUTENTICACIÓN Y SEGURIDAD
+-- =============================================
+
+-- Tabla para controlar intentos fallidos de login
+CREATE TABLE [dbo].[IntentosLogin](
+    [IdIntentoLogin] [int] IDENTITY(1,1) NOT NULL,
+    [IdUsuario] [int] NULL, -- Puede ser NULL si el usuario no existe
+    [Email] [varchar](150) NOT NULL,
+    [IPAddress] [varchar](45) NULL,
+    [FechaIntento] [datetime] NOT NULL,
+    [Exitoso] [bit] NOT NULL,
+    [MotivoFallo] [varchar](100) NULL,
+PRIMARY KEY CLUSTERED ([IdIntentoLogin] ASC),
+FOREIGN KEY([IdUsuario]) REFERENCES [dbo].[Usuarios] ([IdUsuario])
+)
+GO
+
+ALTER TABLE [dbo].[IntentosLogin] ADD DEFAULT (getdate()) FOR [FechaIntento]
+GO
+
+-- Tabla para bloqueos de cuenta
+CREATE TABLE [dbo].[BloqueosUsuario](
+    [IdBloqueo] [int] IDENTITY(1,1) NOT NULL,
+    [IdUsuario] [int] NOT NULL,
+    [FechaBloqueo] [datetime] NOT NULL,
+    [FechaDesbloqueo] [datetime] NULL,
+    [MotivoBloqueo] [varchar](255) NOT NULL,
+    [BloqueadoPor] [int] NULL, -- Puede ser automático (NULL) o manual
+    [Activo] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdBloqueo] ASC),
+FOREIGN KEY([IdUsuario]) REFERENCES [dbo].[Usuarios] ([IdUsuario]),
+FOREIGN KEY([BloqueadoPor]) REFERENCES [dbo].[Usuarios] ([IdUsuario])
+)
+GO
+
+ALTER TABLE [dbo].[BloqueosUsuario] ADD DEFAULT (getdate()) FOR [FechaBloqueo]
+GO
+ALTER TABLE [dbo].[BloqueosUsuario] ADD DEFAULT ((1)) FOR [Activo]
+GO
+
+-- =============================================
+-- TABLAS DE PLANES Y SUSCRIPCIONES
+-- =============================================
+
+CREATE TABLE [dbo].[Planes](
+    [IdPlan] [int] IDENTITY(1,1) NOT NULL,
+    [Nombre] [varchar](50) NOT NULL,
+    [Descripcion] [varchar](500) NULL,
+    [PrecioMensual] [decimal](10,2) NOT NULL,
+    [PrecioAnual] [decimal](10,2) NULL,
+    [MaxServicios] [int] NOT NULL,
+    [MaxClientes] [int] NOT NULL,
+    [MaxListaEspera] [int] NOT NULL,
+    [MaxPoliticaCancelacion] [int] NOT NULL, -- En horas
+    [IncluyeEstadisticas] [bit] NOT NULL,
+    [IncluyeAnuncios] [bit] NOT NULL,
+    [Estado] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdPlan] ASC)
+)
+GO
+
+ALTER TABLE [dbo].[Planes] ADD DEFAULT ((1)) FOR [Estado]
+GO
+
+CREATE TABLE [dbo].[SuscripcionesProfesionales](
+    [IdSuscripcion] [int] IDENTITY(1,1) NOT NULL,
+    [IdUsuario] [int] NOT NULL,
+    [IdPlan] [int] NOT NULL,
+    [FechaInicio] [datetime] NOT NULL,
+    [FechaFin] [datetime] NOT NULL,
+    [Estado] [varchar](20) NOT NULL, -- 'activa', 'vencida', 'cancelada'
+    [FechaCreacion] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdSuscripcion] ASC),
+FOREIGN KEY([IdUsuario]) REFERENCES [dbo].[Usuarios] ([IdUsuario]),
+FOREIGN KEY([IdPlan]) REFERENCES [dbo].[Planes] ([IdPlan])
+)
+GO
+
+ALTER TABLE [dbo].[SuscripcionesProfesionales] ADD DEFAULT (getdate()) FOR [FechaCreacion]
+GO
+
+-- =============================================
+-- TABLAS DE PROFESIONALES Y SERVICIOS
+-- =============================================
+
+CREATE TABLE [dbo].[PerfilesProfesionales](
+    [IdPerfil] [int] IDENTITY(1,1) NOT NULL,
+    [IdUsuario] [int] NOT NULL,
+    [Profesion] [varchar](100) NOT NULL,
+    [Descripcion] [text] NULL,
+    [Direccion] [varchar](255) NULL,
+    [Latitud] [decimal](10,8) NULL,
+    [Longitud] [decimal](11,8) NULL,
+    [CalificacionPromedio] [decimal](3,2) NULL,
+    [TotalCalificaciones] [int] NOT NULL,
+    [FechaCreacion] [datetime] NOT NULL,
+    [Estado] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdPerfil] ASC),
+FOREIGN KEY([IdUsuario]) REFERENCES [dbo].[Usuarios] ([IdUsuario])
+)
+GO
+
+ALTER TABLE [dbo].[PerfilesProfesionales] ADD DEFAULT ((0)) FOR [TotalCalificaciones]
+GO
+ALTER TABLE [dbo].[PerfilesProfesionales] ADD DEFAULT (getdate()) FOR [FechaCreacion]
+GO
+ALTER TABLE [dbo].[PerfilesProfesionales] ADD DEFAULT ((1)) FOR [Estado]
+GO
+
+CREATE TABLE [dbo].[Servicios](
+    [IdServicio] [int] IDENTITY(1,1) NOT NULL,
+    [IdPerfil] [int] NOT NULL,
+    [Nombre] [varchar](100) NOT NULL,
+    [Descripcion] [varchar](500) NULL,
+    [DuracionMinutos] [int] NULL, -- NULL para servicios de tiempo ilimitado
+    [Precio] [decimal](10,2) NOT NULL,
+    [PermiteDescuento] [bit] NOT NULL,
+    [PorcentajeDescuento] [decimal](5,2) NULL,
+    [FechaCreacion] [datetime] NOT NULL,
+    [Estado] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdServicio] ASC),
+FOREIGN KEY([IdPerfil]) REFERENCES [dbo].[PerfilesProfesionales] ([IdPerfil])
+)
+GO
+
+ALTER TABLE [dbo].[Servicios] ADD DEFAULT ((0)) FOR [PermiteDescuento]
+GO
+ALTER TABLE [dbo].[Servicios] ADD DEFAULT (getdate()) FOR [FechaCreacion]
+GO
+ALTER TABLE [dbo].[Servicios] ADD DEFAULT ((1)) FOR [Estado]
+GO
+
+-- =============================================
+-- TABLAS DE HORARIOS Y DISPONIBILIDAD
+-- =============================================
+
+CREATE TABLE [dbo].[HorariosProfesionales](
+    [IdHorario] [int] IDENTITY(1,1) NOT NULL,
+    [IdPerfil] [int] NOT NULL,
+    [DiaSemana] [tinyint] NOT NULL, -- 1=Lunes, 2=Martes, etc.
+    [HoraInicio] [time] NOT NULL,
+    [HoraFin] [time] NOT NULL,
+    [Estado] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdHorario] ASC),
+FOREIGN KEY([IdPerfil]) REFERENCES [dbo].[PerfilesProfesionales] ([IdPerfil])
+)
+GO
+
+ALTER TABLE [dbo].[HorariosProfesionales] ADD DEFAULT ((1)) FOR [Estado]
+GO
+
+CREATE TABLE [dbo].[BloquesNoDisponibles](
+    [IdBloque] [int] IDENTITY(1,1) NOT NULL,
+    [IdPerfil] [int] NOT NULL,
+    [FechaInicio] [datetime] NOT NULL,
+    [FechaFin] [datetime] NOT NULL,
+    [Motivo] [varchar](255) NULL,
+    [TipoBloque] [varchar](20) NOT NULL, -- 'almuerzo', 'personal', 'vacaciones', etc.
+    [FechaCreacion] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdBloque] ASC),
+FOREIGN KEY([IdPerfil]) REFERENCES [dbo].[PerfilesProfesionales] ([IdPerfil])
+)
+GO
+
+ALTER TABLE [dbo].[BloquesNoDisponibles] ADD DEFAULT (getdate()) FOR [FechaCreacion]
+GO
+
+-- =============================================
+-- TABLAS DE CITAS Y RESERVAS
+-- =============================================
+
+CREATE TABLE [dbo].[Citas](
+    [IdCita] [int] IDENTITY(1,1) NOT NULL,
+    [IdPerfil] [int] NOT NULL,
+    [IdCliente] [int] NOT NULL,
+    [IdServicio] [int] NOT NULL,
+    [FechaCita] [datetime] NOT NULL,
+    [DuracionMinutos] [int] NULL,
+    [PrecioAcordado] [decimal](10,2) NOT NULL,
+    [Estado] [varchar](20) NOT NULL, -- 'pendiente', 'confirmada', 'completada', 'cancelada'
+    [MensajeSolicitud] [text] NULL,
+    [MotivoRechazo] [varchar](255) NULL,
+    [MotivoCancelacion] [varchar](255) NULL,
+    [FechaSolicitud] [datetime] NOT NULL,
+    [FechaRespuesta] [datetime] NULL,
+    [ProbabilidadIncumplimiento] [decimal](5,2) NULL, -- Porcentaje de 0-100
+PRIMARY KEY CLUSTERED ([IdCita] ASC),
+FOREIGN KEY([IdPerfil]) REFERENCES [dbo].[PerfilesProfesionales] ([IdPerfil]),
+FOREIGN KEY([IdCliente]) REFERENCES [dbo].[Usuarios] ([IdUsuario]),
+FOREIGN KEY([IdServicio]) REFERENCES [dbo].[Servicios] ([IdServicio])
+)
+GO
+
+ALTER TABLE [dbo].[Citas] ADD DEFAULT (getdate()) FOR [FechaSolicitud]
+GO
+
+CREATE TABLE [dbo].[ListaEspera](
+    [IdListaEspera] [int] IDENTITY(1,1) NOT NULL,
+    [IdPerfil] [int] NOT NULL,
+    [IdCliente] [int] NOT NULL,
+    [IdServicio] [int] NOT NULL,
+    [FechaDeseada] [datetime] NULL,
+    [RangoFechaInicio] [datetime] NULL,
+    [RangoFechaFin] [datetime] NULL,
+    [Prioridad] [int] NOT NULL, -- Orden en la lista
+    [FechaRegistro] [datetime] NOT NULL,
+    [Estado] [varchar](20) NOT NULL, -- 'activa', 'asignada', 'cancelada'
+PRIMARY KEY CLUSTERED ([IdListaEspera] ASC),
+FOREIGN KEY([IdPerfil]) REFERENCES [dbo].[PerfilesProfesionales] ([IdPerfil]),
+FOREIGN KEY([IdCliente]) REFERENCES [dbo].[Usuarios] ([IdUsuario]),
+FOREIGN KEY([IdServicio]) REFERENCES [dbo].[Servicios] ([IdServicio])
+)
+GO
+
+ALTER TABLE [dbo].[ListaEspera] ADD DEFAULT (getdate()) FOR [FechaRegistro]
+GO
+
+-- =============================================
+-- TABLAS DE POLÍTICAS Y CONFIGURACIONES
+-- =============================================
+
+CREATE TABLE [dbo].[PoliticasCancelacion](
+    [IdPolitica] [int] IDENTITY(1,1) NOT NULL,
+    [IdPerfil] [int] NOT NULL,
+    [TiempoMinimoHoras] [int] NOT NULL,
+    [PermiteCancelacionCliente] [bit] NOT NULL,
+    [FechaCreacion] [datetime] NOT NULL,
+    [Estado] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdPolitica] ASC),
+FOREIGN KEY([IdPerfil]) REFERENCES [dbo].[PerfilesProfesionales] ([IdPerfil])
+)
+GO
+
+ALTER TABLE [dbo].[PoliticasCancelacion] ADD DEFAULT ((1)) FOR [PermiteCancelacionCliente]
+GO
+ALTER TABLE [dbo].[PoliticasCancelacion] ADD DEFAULT (getdate()) FOR [FechaCreacion]
+GO
+ALTER TABLE [dbo].[PoliticasCancelacion] ADD DEFAULT ((1)) FOR [Estado]
+GO
+
+-- =============================================
+-- TABLAS DE CALIFICACIONES Y RESEÑAS
+-- =============================================
+
+CREATE TABLE [dbo].[Calificaciones](
+    [IdCalificacion] [int] IDENTITY(1,1) NOT NULL,
+    [IdCita] [int] NOT NULL,
+    [IdCliente] [int] NOT NULL,
+    [IdPerfil] [int] NOT NULL,
+    [Puntuacion] [tinyint] NOT NULL, -- 1-5
+    [Comentario] [text] NULL,
+    [FechaCalificacion] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdCalificacion] ASC),
+FOREIGN KEY([IdCita]) REFERENCES [dbo].[Citas] ([IdCita]),
+FOREIGN KEY([IdCliente]) REFERENCES [dbo].[Usuarios] ([IdUsuario]),
+FOREIGN KEY([IdPerfil]) REFERENCES [dbo].[PerfilesProfesionales] ([IdPerfil])
+)
+GO
+
+ALTER TABLE [dbo].[Calificaciones] ADD DEFAULT (getdate()) FOR [FechaCalificacion]
+GO
+
+-- =============================================
+-- TABLAS DE PUBLICIDAD Y POSICIONAMIENTO
+-- =============================================
+
+CREATE TABLE [dbo].[PosicionamientoPremium](
+    [IdPosicionamiento] [int] IDENTITY(1,1) NOT NULL,
+    [IdPerfil] [int] NOT NULL,
+    [FechaInicio] [datetime] NOT NULL,
+    [FechaFin] [datetime] NOT NULL,
+    [MontoPagado] [decimal](10,2) NOT NULL,
+    [Estado] [varchar](20) NOT NULL, -- 'activo', 'vencido', 'cancelado'
+    [FechaCreacion] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdPosicionamiento] ASC),
+FOREIGN KEY([IdPerfil]) REFERENCES [dbo].[PerfilesProfesionales] ([IdPerfil])
+)
+GO
+
+ALTER TABLE [dbo].[PosicionamientoPremium] ADD DEFAULT (getdate()) FOR [FechaCreacion]
+GO
+
+CREATE TABLE [dbo].[CampanasPublicitarias](
+    [IdCampana] [int] IDENTITY(1,1) NOT NULL,
+    [IdPerfil] [int] NOT NULL,
+    [Titulo] [varchar](100) NOT NULL,
+    [Descripcion] [varchar](500) NULL,
+    [AlcanceMaximo] [int] NOT NULL,
+    [MontoPagado] [decimal](10,2) NOT NULL,
+    [FechaInicio] [datetime] NOT NULL,
+    [FechaFin] [datetime] NOT NULL,
+    [Estado] [varchar](20) NOT NULL, -- 'activa', 'pausada', 'completada'
+    [ImpresionesReales] [int] NOT NULL,
+    [FechaCreacion] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED ([IdCampana] ASC),
+FOREIGN KEY([IdPerfil]) REFERENCES [dbo].[PerfilesProfesionales] ([IdPerfil])
+)
+GO
+
+ALTER TABLE [dbo].[CampanasPublicitarias] ADD DEFAULT ((0)) FOR [ImpresionesReales]
+GO
+ALTER TABLE [dbo].[CampanasPublicitarias] ADD DEFAULT (getdate()) FOR [FechaCreacion]
+GO
+
+-- =============================================
+-- TABLAS DE NOTIFICACIONES
+-- =============================================
+
+CREATE TABLE [dbo].[TiposNotificacion](
+    [IdTipoNotificacion] [int] IDENTITY(1,1) NOT NULL,
+    [Nombre] [varchar](50) NOT NULL,
+    [Descripcion] [varchar](255) NULL,
+    [Template] [text] NULL,
+PRIMARY KEY CLUSTERED ([IdTipoNotificacion] ASC)
+)
+GO
+
+CREATE TABLE [dbo].[Notificaciones](
+    [IdNotificacion] [int] IDENTITY(1,1) NOT NULL,
+    [IdUsuario] [int] NOT NULL,
+    [IdTipoNotificacion] [int] NOT NULL,
+    [Titulo] [varchar](255) NOT NULL,
+    [Mensaje] [text] NOT NULL,
+    [Leida] [bit] NOT NULL,
+    [FechaCreacion] [datetime] NOT NULL,
+    [FechaLectura] [datetime] NULL,
+PRIMARY KEY CLUSTERED ([IdNotificacion] ASC),
+FOREIGN KEY([IdUsuario]) REFERENCES [dbo].[Usuarios] ([IdUsuario]),
+FOREIGN KEY([IdTipoNotificacion]) REFERENCES [dbo].[TiposNotificacion] ([IdTipoNotificacion])
+)
+GO
+
+ALTER TABLE [dbo].[Notificaciones] ADD DEFAULT ((0)) FOR [Leida]
+GO
+ALTER TABLE [dbo].[Notificaciones] ADD DEFAULT (getdate()) FOR [FechaCreacion]
+GO
+
+CREATE TABLE [dbo].[HistorialEmails](
+    [IdEmail] [int] IDENTITY(1,1) NOT NULL,
+    [IdUsuario] [int] NOT NULL,
+    [EmailDestino] [varchar](150) NOT NULL,
+    [Asunto] [varchar](255) NOT NULL,
+    [Contenido] [text] NOT NULL,
+    [Enviado] [bit] NOT NULL,
+    [FechaEnvio] [datetime] NULL,
+    [FechaCreacion] [datetime] NOT NULL,
+    [ErrorEnvio] [varchar](500) NULL,
+PRIMARY KEY CLUSTERED ([IdEmail] ASC),
+FOREIGN KEY([IdUsuario]) REFERENCES [dbo].[Usuarios] ([IdUsuario])
+)
+GO
+
+ALTER TABLE [dbo].[HistorialEmails] ADD DEFAULT ((0)) FOR [Enviado]
+GO
+ALTER TABLE [dbo].[HistorialEmails] ADD DEFAULT (getdate()) FOR [FechaCreacion]
+GO
+
+-- =============================================
+-- TABLAS DE ESTADÍSTICAS
+-- =============================================
+
+CREATE TABLE [dbo].[EstadisticasProfesionales](
+    [IdEstadistica] [int] IDENTITY(1,1) NOT NULL,
+    [IdPerfil] [int] NOT NULL,
+    [Mes] [tinyint] NOT NULL,
+    [Año] [int] NOT NULL,
+    [TotalCitas] [int] NOT NULL,
+    [CitasCompletadas] [int] NOT NULL,
+    [CitasCanceladas] [int] NOT NULL,
+    [CitasReprogramadas] [int] NOT NULL,
+    [IngresosTotales] [decimal](12,2) NOT NULL,
+    [CalificacionPromedio] [decimal](3,2) NULL,
+    [TiempoPromedioRespuesta] [int] NULL, -- En minutos
+PRIMARY KEY CLUSTERED ([IdEstadistica] ASC),
+FOREIGN KEY([IdPerfil]) REFERENCES [dbo].[PerfilesProfesionales] ([IdPerfil])
+)
+GO
+
+-- =============================================
+-- INSERTAR DATOS INICIALES
+-- =============================================
+
+-- Insertar roles básicos
+INSERT INTO [dbo].[Roles] ([Nombre], [Descripcion]) VALUES 
+('Cliente', 'Usuario que solicita servicios profesionales'),
+('Profesional', 'Usuario que ofrece servicios profesionales'),
+('Administrador', 'Usuario con permisos administrativos completos')
+GO
+
+-- Insertar planes de suscripción
+INSERT INTO [dbo].[Planes] ([Nombre], [Descripcion], [PrecioMensual], [PrecioAnual], [MaxServicios], [MaxClientes], [MaxListaEspera], [MaxPoliticaCancelacion], [IncluyeEstadisticas], [IncluyeAnuncios]) VALUES
+('Gratuito', 'Plan básico para empezar', 0.00, 0.00, 5, 30, 0, 24, 0, 0),
+('Básico', 'Plan intermedio para profesionales establecidos', 9.99, 99.00, 30, 120, 50, 999999, 0, 0),
+('Premium', 'Plan completo con todas las funcionalidades', 39.99, 399.00, 300, 999999, 999999, 999999, 1, 1)
+GO
+
+-- Insertar tipos de notificación
+INSERT INTO [dbo].[TiposNotificacion] ([Nombre], [Descripcion]) VALUES
+('Nueva Solicitud', 'Notificación de nueva solicitud de cita'),
+('Cita Confirmada', 'Confirmación de aprobación de cita'),
+('Recordatorio', 'Recordatorio de cita próxima'),
+('Cancelación', 'Notificación de cancelación de cita'),
+('Lista de Espera', 'Notificación de cambio en lista de espera'),
+('Calificación', 'Notificación de nueva calificación recibida')
+GO
+
+-- =============================================
+-- ÍNDICES PARA OPTIMIZACIÓN
+-- =============================================
+
+-- Índices para tabla de intentos de login
+CREATE INDEX IX_IntentosLogin_Email_Fecha ON [dbo].[IntentosLogin] ([Email], [FechaIntento])
+CREATE INDEX IX_IntentosLogin_Usuario_Fecha ON [dbo].[IntentosLogin] ([IdUsuario], [FechaIntento])
+
+-- Índices para citas
+CREATE INDEX IX_Citas_Profesional_Fecha ON [dbo].[Citas] ([IdPerfil], [FechaCita])
+CREATE INDEX IX_Citas_Cliente_Estado ON [dbo].[Citas] ([IdCliente], [Estado])
+CREATE INDEX IX_Citas_Estado_Fecha ON [dbo].[Citas] ([Estado], [FechaCita])
+
+-- Índices para disponibilidad
+CREATE INDEX IX_BloquesNoDisponibles_Perfil_Fechas ON [dbo].[BloquesNoDisponibles] ([IdPerfil], [FechaInicio], [FechaFin])
+
+-- Índices para búsquedas
+CREATE INDEX IX_PerfilesProfesionales_Profesion ON [dbo].[PerfilesProfesionales] ([Profesion])
+CREATE INDEX IX_Servicios_Precio ON [dbo].[Servicios] ([Precio])
+
+GO

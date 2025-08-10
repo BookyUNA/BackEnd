@@ -1,18 +1,180 @@
 USE [Booky]
 GO
-
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
--- =============================================
--- Procedimiento: SP_LOGIN_USUARIO
--- Descripción: Valida credenciales de usuario y retorna IdUsuario y Rol
--- =============================================
-CREATE PROCEDURE [dbo].[SP_LOGIN_USUARIO]
+/*
+Procedimiento: SP_GENERAR_CODIGO_RECUPERACION
+Objetivo: Generar un código de recuperación para un usuario dado su correo electrónico.
+*/
+
+CREATE OR ALTER PROCEDURE SP_GENERAR_CODIGO_RECUPERACION
+    @CorreoElectronico NVARCHAR(255),  -- Correo que envía el cliente
+    @SUCCESS BIT OUTPUT,               -- Salida: 1 = OK, 0 = Error
+    @ERRORID INT OUTPUT                 -- Salida: Código de error
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @IdUsuario INT;
+    DECLARE @Codigo VARCHAR(10);
+    DECLARE @FechaExpiracion DATETIME;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que el correo no sea nulo o vacío
+        IF (LTRIM(RTRIM(@CorreoElectronico)) = '' OR @CorreoElectronico IS NULL)
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 20001; -- Error: Correo no proporcionado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Buscar el usuario
+        SELECT @IdUsuario = IdUsuario
+        FROM Usuarios
+        WHERE CorreoElectronico = @CorreoElectronico;
+
+        IF @IdUsuario IS NULL
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 20002; -- Error: Usuario no encontrado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Generar un código aleatorio de 6 dígitos
+        SET @Codigo = RIGHT('000000' + CAST(ABS(CHECKSUM(NEWID())) % 1000000 AS VARCHAR(6)), 6);
+
+        -- Definir expiración (5 minutos desde ahora)
+        SET @FechaExpiracion = DATEADD(MINUTE, 5, GETDATE());
+
+        -- Insertar en CodigosRecuperacion
+        INSERT INTO CodigosRecuperacion (IdUsuario, Codigo, FechaCreacion, FechaExpiracion, Usado)
+        VALUES (@IdUsuario, @Codigo, GETDATE(), @FechaExpiracion, 0);
+
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        -- Manejo de errores
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+GO
+
+USE [Booky]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+Procedimiento: SP_CAMBIAR_CONTRASENA_CON_CODIGO
+Objetivo: Validar un código de recuperación y actualizar la contraseña de un usuario.
+*/
+
+CREATE OR ALTER PROCEDURE SP_CAMBIAR_CONTRASENA_CON_CODIGO
+    @Codigo VARCHAR(10),                 -- Código de recuperación
+    @NuevaContrasenaHash NVARCHAR(255),  -- Contraseña ya hasheada
+    @SUCCESS BIT OUTPUT,                 -- Salida: 1 = OK, 0 = Error
+    @ERRORID INT OUTPUT                   -- Salida: Código de error
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @IdUsuario INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar parámetros obligatorios
+        IF (@Codigo IS NULL OR LTRIM(RTRIM(@Codigo)) = '')
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 30001; -- Código no proporcionado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF (@NuevaContrasenaHash IS NULL OR LTRIM(RTRIM(@NuevaContrasenaHash)) = '')
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 30002; -- Contraseña no proporcionada
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Buscar el código válido (no usado, no expirado)
+        SELECT TOP 1 @IdUsuario = IdUsuario
+        FROM CodigosRecuperacion
+        WHERE Codigo = @Codigo
+          AND Usado = 0
+          AND FechaExpiracion >= GETDATE()
+        ORDER BY FechaCreacion DESC;
+
+        -- Validar si el código existe y es válido
+        IF @IdUsuario IS NULL
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 30003; -- Código inválido o expirado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Actualizar contraseña del usuario
+        UPDATE Usuarios
+        SET PasswordHash = @NuevaContrasenaHash
+        WHERE IdUsuario = @IdUsuario;
+
+        -- Marcar código como usado
+        UPDATE CodigosRecuperacion
+        SET Usado = 1
+        WHERE Codigo = @Codigo;
+
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+GO
+
+
+	CREATE OR ALTER PROCEDURE [dbo].[SP_LOGIN_USUARIO]
     @Email VARCHAR(150),
-    @PasswordHash VARCHAR(255),  -- Contraseña ya en hash
+    @PasswordHash VARCHAR(255),
     @IdUsuario INT OUTPUT,
     @RolNombre VARCHAR(50) OUTPUT,
     @SUCCESS BIT OUTPUT,
@@ -21,8 +183,22 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    -- Variables para control de bloqueo
+    DECLARE @MaxIntentosFallidos INT = 5;
+    DECLARE @TiempoBloqueoMinutos INT = 30;
+    DECLARE @IntentosActuales INT = 0;
+    DECLARE @EstaBloqueado BIT = 0;
+    DECLARE @FechaUltimoIntento DATETIME;
+    DECLARE @UsuarioExiste BIT = 0;
+    DECLARE @UsuarioTempId INT;
+    DECLARE @PasswordCorrecta BIT = 0;
+
     BEGIN TRY
         BEGIN TRANSACTION;
+
+        -- Inicializar variables de salida
+        SET @IdUsuario = NULL;
+        SET @RolNombre = NULL;
 
         -- ================================
         -- Validar parámetros obligatorios
@@ -30,7 +206,7 @@ BEGIN
         IF @Email IS NULL OR LTRIM(RTRIM(@Email)) = ''
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 20001; -- Email vacío
+            SET @ERRORID = 20001;
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -38,40 +214,137 @@ BEGIN
         IF @PasswordHash IS NULL OR LTRIM(RTRIM(@PasswordHash)) = ''
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 20002; -- Contraseña vacía
+            SET @ERRORID = 20002;
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
         -- ================================
-        -- Buscar usuario por Email y PasswordHash
+        -- PASO 1: Verificar si el usuario existe
+        -- ================================
+        SELECT 
+            @UsuarioTempId = IdUsuario,
+            @IntentosActuales = IntentosLoginFallidos,
+            @EstaBloqueado = Bloqueado,
+            @FechaUltimoIntento = FechaUltimoIntentoFallido,
+            @UsuarioExiste = 1
+        FROM Usuarios 
+        WHERE Email = @Email AND Estado = 1;
+
+        -- Si el usuario no existe, salir inmediatamente
+        IF @UsuarioExiste = 0 OR @UsuarioTempId IS NULL
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 20003;
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- ================================
+        -- PASO 2: Verificar si está bloqueado
+        -- ================================
+        IF @EstaBloqueado = 1
+        BEGIN
+            -- Verificar si el tiempo de bloqueo ha expirado
+            IF @FechaUltimoIntento IS NOT NULL 
+               AND DATEDIFF(MINUTE, @FechaUltimoIntento, GETDATE()) >= @TiempoBloqueoMinutos
+            BEGIN
+                -- Desbloquear automáticamente
+                UPDATE Usuarios 
+                SET Bloqueado = 0,
+                    IntentosLoginFallidos = 0,
+                    FechaUltimoIntentoFallido = NULL
+                WHERE IdUsuario = @UsuarioTempId;
+                
+                SET @EstaBloqueado = 0;
+                SET @IntentosActuales = 0;
+            END
+            ELSE
+            BEGIN
+                -- La cuenta sigue bloqueada
+                SET @SUCCESS = 0;
+                SET @ERRORID = 20004;
+                ROLLBACK TRANSACTION;
+                RETURN;
+            END
+        END
+
+        -- ================================
+        -- PASO 3: Verificar la contraseña
+        -- ================================
+        IF EXISTS (
+            SELECT 1 FROM Usuarios 
+            WHERE IdUsuario = @UsuarioTempId 
+              AND PasswordHash = @PasswordHash
+        )
+        BEGIN
+            SET @PasswordCorrecta = 1;
+        END
+        ELSE
+        BEGIN
+            SET @PasswordCorrecta = 0;
+        END
+
+        -- ================================
+        -- PASO 4: Manejar resultado de contraseña
+        -- ================================
+        IF @PasswordCorrecta = 0
+        BEGIN
+            -- CONTRASEÑA INCORRECTA - Incrementar contador
+            SET @IntentosActuales = @IntentosActuales + 1;
+            
+            -- Verificar si debe bloquear
+            IF @IntentosActuales >= @MaxIntentosFallidos
+            BEGIN
+                -- BLOQUEAR la cuenta
+                UPDATE Usuarios 
+                SET IntentosLoginFallidos = @IntentosActuales,
+                    FechaUltimoIntentoFallido = GETDATE(),
+                    Bloqueado = 1
+                WHERE IdUsuario = @UsuarioTempId;
+                
+                SET @SUCCESS = 0;
+                SET @ERRORID = 20005; -- Cuenta bloqueada por intentos fallidos
+            END
+            ELSE
+            BEGIN
+                -- Solo incrementar contador
+                UPDATE Usuarios 
+                SET IntentosLoginFallidos = @IntentosActuales,
+                    FechaUltimoIntentoFallido = GETDATE()
+                WHERE IdUsuario = @UsuarioTempId;
+                
+                SET @SUCCESS = 0;
+                SET @ERRORID = 20003; -- Contraseña incorrecta
+            END
+
+            COMMIT TRANSACTION; -- Importante: COMMIT para guardar el incremento
+            RETURN;
+        END
+
+        -- ================================
+        -- PASO 5: CONTRASEÑA CORRECTA - Obtener datos del usuario
         -- ================================
         SELECT 
             @IdUsuario = u.IdUsuario,
             @RolNombre = r.Nombre
         FROM Usuarios u
         INNER JOIN Roles r ON u.IdRol = r.IdRol
-        WHERE u.Email = @Email
-          AND u.PasswordHash = @PasswordHash
-          AND u.Estado = 1; -- Solo activos
+        WHERE u.IdUsuario = @UsuarioTempId;
 
         -- ================================
-        -- Validar si encontró usuario
+        -- PASO 6: ÉXITO - REINICIAR contador de intentos fallidos
         -- ================================
-        IF @IdUsuario IS NULL
-        BEGIN
-            SET @SUCCESS = 0;
-            SET @ERRORID = 20003; -- Usuario o contraseña inválidos
-            ROLLBACK TRANSACTION;
-            RETURN;
-        END
+        UPDATE Usuarios 
+        SET IntentosLoginFallidos = 0,
+            FechaUltimoIntentoFallido = NULL,
+            Bloqueado = 0
+        WHERE IdUsuario = @IdUsuario;
 
-        -- ================================
-        -- Éxito
-        -- ================================
         COMMIT TRANSACTION;
         SET @SUCCESS = 1;
         SET @ERRORID = 0;
+        
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0
