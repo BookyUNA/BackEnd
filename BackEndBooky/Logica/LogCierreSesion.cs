@@ -17,73 +17,28 @@ namespace Logica
         {
             ResCierreSesion res = new ResCierreSesion();
             res.error = new List<Error>();
-            bool? resultadoBd = true;
-            int? errorID = 0;
 
             try
             {
-                // Validación simple de campos obligatorios
-                if (req.IdSesion == Guid.Empty)
+                if (string.IsNullOrEmpty(req.Token))
                 {
                     res.resultado = false;
-                    res.error.Add(new Error
-                    {
-                        ErrorCode = 1,
-                        Message = "El Id de sesión es obligatorio"
-                    });
+                    res.error.Add(new Error { ErrorCode = 1, Message = "Token es obligatorio" });
                     return res;
                 }
 
-                // Llamada al procedimiento almacenado
-                using (DataClasses1DataContext linq = new DataClasses1DataContext())
-                {
-                    linq./*PONER AQUI NOMBRE DEL SP*/(
-                        /*PONER AQUI LO QUE SE OCUPE SEGUN EL SP CREADO*/
+                JwtService.InvalidateToken(req.Token);
 
-                    );
-                }
-
-                // Evaluar respuesta
-                if (resultadoBd.HasValue && resultadoBd.Value)
-                {
-                    res.resultado = true;
-                }
-                else
-                {
-                    /*"PERSONALIZAR LOS CASES SEGUN EL SP*/
-                    res.resultado = false;
-                    switch (errorID)
-                    {
-                        case 30001:
-                            res.error.Add(new Error { ErrorCode = 30001, Message = "La sesión no existe o ya fue cerrada" });
-                            break;
-                        default:
-                            res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error al cerrar sesión en la base de datos" });
-                            break;
-                    }
-                }
-            }
-            /*PERSONALIZAR ESTOS ERROR CODES TAMBIEN*/
-            catch (SqlException)
-            {
-                res.resultado = false;
-                res.error.Add(new Error
-                {
-                    ErrorCode = 50001,
-                    Message = "Error de base de datos al cerrar sesión"
-                });
+                res.resultado = true;
             }
             catch (Exception)
             {
                 res.resultado = false;
-                res.error.Add(new Error
-                {
-                    ErrorCode = 50002,
-                    Message = "Error en la lógica de cierre de sesión"
-                });
+                res.error.Add(new Error { ErrorCode = 50002, Message = "Error al cerrar sesión" });
             }
 
             return res;
         }
+
     }
 }
