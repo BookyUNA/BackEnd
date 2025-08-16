@@ -1,59 +1,43 @@
-﻿using Owin;
+﻿using System;
 using System.Configuration;
 using System.Text;
-using System;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+using Owin;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
-public static class JwtConfig
+namespace APIs
 {
-    public static void ConfigureAuth(IAppBuilder app)
+    public static class JwtConfig
     {
-        var issuer = ConfigurationManager.AppSettings["JWT:Issuer"];
-        var secretKey = ConfigurationManager.AppSettings["JWT:SecretKey"];
-
-        var key = Encoding.ASCII.GetBytes(secretKey);
-
-        app.UseJwtBearerAuthentication(new JwtBearerAuthenticationOptions
+        public static void ConfigureAuth(IAppBuilder app)
         {
-            AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Active,
-            TokenValidationParameters = new TokenValidationParameters
+            var issuer = ConfigurationManager.AppSettings["JWT:Issuer"];
+            var secretKey = ConfigurationManager.AppSettings["JWT:SecretKey"];
+            var key = Encoding.UTF8.GetBytes(secretKey);
+
+            var options = new JwtBearerAuthenticationOptions
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidIssuer = issuer,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero // Para que la expiración del token sea más estricta
-            }
-        });
-    }
+                AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Active,
+                TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = issuer,
 
-    public static string GenerarToken(int idUsuario, string rol)
-    {
-        var issuer = ConfigurationManager.AppSettings["JWT:Issuer"];
-        var secretKey = ConfigurationManager.AppSettings["JWT:SecretKey"];
-        var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+                    ValidateAudience = false, // sin audience
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
 
-        var claims = new[]
-        {
-                new Claim("IdUsuario", idUsuario.ToString()),
-                new Claim(ClaimTypes.Role, rol),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // identificador único del token
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+
+                    RoleClaimType = ClaimTypes.Role,
+                    NameClaimType = JwtRegisteredClaimNames.Sub
+                }
             };
 
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: null,
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(2),
-            signingCredentials: creds
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+            app.UseJwtBearerAuthentication(options);
+        }
     }
 }

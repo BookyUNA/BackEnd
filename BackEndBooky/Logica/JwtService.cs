@@ -5,20 +5,22 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Logic
 {
     public static class JwtService
     {
-        private static readonly string SecretKey = ConfigurationManager.AppSettings["JWT:SecretKey"] ?? throw new ArgumentNullException("JWT:SecretKey no está configurado en Web.config");
-        private static readonly string Issuer = ConfigurationManager.AppSettings["JWT:Issuer"] ?? throw new ArgumentNullException("JWT:Issuer no está configurado en Web.config");
-        private static readonly string Audience = ConfigurationManager.AppSettings["JWT:Audience"] ?? Issuer;
-        private static readonly double AccessTokenExpirationHours = Convert.ToDouble(ConfigurationManager.AppSettings["JWT:AccessTokenExpirationHours"] ?? "1");
+        private static readonly string SecretKey = ConfigurationManager.AppSettings["JWT:SecretKey"]
+            ?? throw new ArgumentNullException("JWT:SecretKey no configurado");
+        private static readonly string Issuer = ConfigurationManager.AppSettings["JWT:Issuer"]
+            ?? throw new ArgumentNullException("JWT:Issuer no configurado");
+        private static readonly double AccessTokenExpirationHours = Convert.ToDouble(
+            ConfigurationManager.AppSettings["JWT:AccessTokenExpirationHours"] ?? "1");
 
-        /// <summary>
-        /// Genera un token JWT con solo IdUsuario y Rol
-        /// </summary>
+        private static readonly IMemoryCache _blacklistCache = new MemoryCache(new MemoryCacheOptions());
+
         public static string GenerateToken(int idUsuario, string rol)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
@@ -26,13 +28,14 @@ namespace Logic
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, idUsuario.ToString()), // ID Usuario
-                new Claim(ClaimTypes.Role, rol ?? string.Empty)               // Rol
+                new Claim(JwtRegisteredClaimNames.Sub, idUsuario.ToString()),
+                new Claim(ClaimTypes.Role, rol ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var token = new JwtSecurityToken(
                 issuer: Issuer,
-                audience: Audience,
+                audience: null, // sin audience
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(AccessTokenExpirationHours),
                 signingCredentials: credentials
@@ -41,31 +44,47 @@ namespace Logic
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        /// <summary>
-        /// Obtiene el IdUsuario desde un token
-        /// </summary>
-        public static int GetUserIdFromToken(string token)
+        public static ClaimsPrincipal ValidateToken(string token)
         {
+            if (IsTokenBlacklisted(token))
+                throw new SecurityTokenException("Token invalido");
+
             var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-            var subClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
 
-            if (subClaim == null || !int.TryParse(subClaim.Value, out int idUsuario))
-                throw new SecurityTokenException("Token no contiene un IdUsuario válido");
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = Issuer,
 
-            return idUsuario;
+                ValidateAudience = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = securityKey,
+
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+
+                RoleClaimType = ClaimTypes.Role,
+                NameClaimType = JwtRegisteredClaimNames.Sub
+            };
+
+            return handler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
         }
 
-        /// <summary>
-        /// Obtiene el Rol desde un token
-        /// </summary>
-        public static string GetRoleFromToken(string token)
+        public static bool IsTokenBlacklisted(string token)
         {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-            var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+                var jti = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
 
-            return roleClaim?.Value ?? string.Empty;
+                return !string.IsNullOrEmpty(jti) && _blacklistCache.TryGetValue(jti, out _);
+            }
+            catch
+            {
+                return true;
+            }
         }
     }
 }
