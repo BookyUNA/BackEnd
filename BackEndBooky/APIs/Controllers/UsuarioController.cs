@@ -15,8 +15,8 @@ namespace APIs.Controllers
     public class UsuarioController : ApiController
     {
 
-
         [Authorize]
+
         [HttpGet]
         [Route("api/debug-token")]
         
@@ -43,30 +43,45 @@ namespace APIs.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpPost] 
         [Route("api/cerrarsesion")]
         public ResCierreSesion CerrarSesion()
         {
-            var req = new ReqCierreSesion();
-
-            // Extraer token del header Authorization: "Bearer {token}"
-            var authHeader = Request.Headers.Authorization;
-            if (authHeader == null || authHeader.Scheme != "Bearer")
+            try
             {
+                var authHeader = Request.Headers.Authorization;
+
+                if (authHeader == null || authHeader.Scheme != "Bearer" || string.IsNullOrEmpty(authHeader.Parameter))
+                {
+                    return new ResCierreSesion
+                    {
+                        resultado = false,
+                        error = new System.Collections.Generic.List<Entities.Entity.Error>
+                {
+                    new Entities.Entity.Error { ErrorCode = 1, Message = "Token no proporcionado o esquema incorrecto" }
+                }
+                    };
+                }
+
+                // Agregar token a blacklist
+                Logic.JwtService.BlacklistToken(authHeader.Parameter);
+
+                // Procesar logout
+                return new LogCierreSesion().LogoutUsuario(authHeader.Parameter);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error en CerrarSesion: {ex.Message}");
                 return new ResCierreSesion
                 {
                     resultado = false,
                     error = new System.Collections.Generic.List<Entities.Entity.Error>
-                    {
-                        new Entities.Entity.Error { ErrorCode = 1, Message = "Token no proporcionado en el header" }
-                    }
+            {
+                new Entities.Entity.Error { ErrorCode = 500, Message = "Error interno del servidor" }
+            }
                 };
             }
-
-           
-            return new LogCierreSesion().LogoutUsuario(authHeader.Parameter);
         }
-
 
         [HttpGet]
         [Route("api/debug-generated-token")]
