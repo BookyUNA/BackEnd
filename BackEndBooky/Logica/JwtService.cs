@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Runtime.Caching;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -17,32 +16,25 @@ namespace Logic
         private static readonly string Audience = ConfigurationManager.AppSettings["JWT:Audience"] ?? Issuer;
         private static readonly double AccessTokenExpirationHours = Convert.ToDouble(ConfigurationManager.AppSettings["JWT:AccessTokenExpirationHours"] ?? "1");
 
-        // Cache en memoria para tokens invalidados (key = jti)
-        private static readonly MemoryCache _blacklistCache = MemoryCache.Default;
-
         /// <summary>
-        /// Genera un token JWT con IdUsuario, Rol y un JTI único
+        /// Genera un token JWT con solo IdUsuario y Rol
         /// </summary>
         public static string GenerateToken(int idUsuario, string rol)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            string jti = Guid.NewGuid().ToString(); // identificador único del token
-
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, idUsuario.ToString()),
-                new Claim(ClaimTypes.Role, rol ?? string.Empty),
-                new Claim(JwtRegisteredClaimNames.Jti, jti)
+                new Claim(JwtRegisteredClaimNames.Sub, idUsuario.ToString()), // ID Usuario
+                new Claim(ClaimTypes.Role, rol ?? string.Empty)               // Rol
             };
-
-            var expiration = DateTime.UtcNow.AddHours(AccessTokenExpirationHours);
 
             var token = new JwtSecurityToken(
                 issuer: Issuer,
+                audience: Audience,
                 claims: claims,
-                expires: expiration,
+                expires: DateTime.UtcNow.AddHours(AccessTokenExpirationHours),
                 signingCredentials: credentials
             );
 
@@ -74,49 +66,6 @@ namespace Logic
             var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
 
             return roleClaim?.Value ?? string.Empty;
-        }
-
-        /// <summary>
-        /// Invalida un token añadiendo su JTI a la blacklist hasta que expire
-        /// </summary>
-        public static void InvalidateToken(string token)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-
-            var jti = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
-            var expUnix = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Exp)?.Value;
-
-            if (string.IsNullOrEmpty(jti))
-                throw new SecurityTokenException("El token no contiene un identificador único (jti)");
-
-            // Calcular expiración real
-            DateTimeOffset expiration;
-            if (!string.IsNullOrEmpty(expUnix) && long.TryParse(expUnix, out var expSeconds))
-            {
-                expiration = DateTimeOffset.FromUnixTimeSeconds(expSeconds);
-            }
-            else
-            {
-                expiration = DateTimeOffset.UtcNow.AddHours(AccessTokenExpirationHours);
-            }
-
-            _blacklistCache.Add(jti, true, expiration);
-        }
-
-        /// <summary>
-        /// Verifica si un token está invalidado
-        /// </summary>
-        public static bool IsTokenBlacklisted(string token)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-
-            var jti = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
-            if (string.IsNullOrEmpty(jti))
-                return false;
-
-            return _blacklistCache.Contains(jti);
         }
     }
 }
