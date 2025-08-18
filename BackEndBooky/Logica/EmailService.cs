@@ -11,7 +11,7 @@ namespace Logic.Helpers
             {
                 SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
                 {
-                    Credentials = new NetworkCredential("sistemabooky@gmail.com", "bpxy avyb rmvp qqpd"),
+                    Credentials = new NetworkCredential("sistemabooky@gmail.com", "aqgq qygz emiq iiry"),
                     EnableSsl = true,// prueba commit
                     Timeout = 30000 // Aumentar el tiempo de espera a 30 segundos
                 };
