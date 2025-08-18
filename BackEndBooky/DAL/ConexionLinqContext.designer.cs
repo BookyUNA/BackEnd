@@ -33,7 +33,7 @@ namespace DAL
     #endregion
 		
 		public DataClasses1DataContext() : 
-				base(global::DAL.Properties.Settings.Default.BookyConnectionString, mappingSource)
+				base(global::DAL.Properties.Settings.Default.BookyConnectionString2, mappingSource)
 		{
 			OnCreated();
 		}
@@ -70,6 +70,16 @@ namespace DAL
 			rolNombre = ((string)(result.GetParameterValue(3)));
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(4)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(5)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_GENERAR_CODIGO_RECUPERACION")]
+		public int SP_GENERAR_CODIGO_RECUPERACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CorreoElectronico", DbType="NVarChar(255)")] string correoElectronico, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CodigoRecuperacion", DbType="VarChar(10)")] ref string codigoRecuperacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), correoElectronico, codigoRecuperacion, sUCCESS, eRRORID);
+			codigoRecuperacion = ((string)(result.GetParameterValue(1)));
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(2)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			return ((int)(result.ReturnValue));
 		}
 	}

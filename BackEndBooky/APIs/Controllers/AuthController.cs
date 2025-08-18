@@ -1,7 +1,8 @@
 ﻿using Entities.Request;
 using Entities.Response;
+using Logic.Helpers;
 using Logica;
-
+using System;
 using System.Web.Http;
 
 namespace API.Controllers
@@ -13,6 +14,13 @@ namespace API.Controllers
         public ResInicioSesion IniciarSesion([FromBody] ReqInicioSesion req)
         {
             return new LogInicioSesion().LoginUsuario(req);
+        }
+
+        [HttpPost]
+        [Route("api/GenerarNuevoCodigoRecuperacion")]
+        public ResGenerarNuevoCodigo GenerarCodigoRecuperacion([FromBody] ReqGenerarNuevoCodigo req)
+        {
+            return new LogGenerarNuevoCodigo().GenerarNuevoCodigo(req);
         }
     }
 }
