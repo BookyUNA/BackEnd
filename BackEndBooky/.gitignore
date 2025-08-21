@@ -41,6 +41,16 @@ bld/
 # Visual Studio 2017 auto generated files
 Generated\ Files/
 
+# NuGet Packages
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+!packages.config
+*.nuget.props
+*.nuget.targets
+
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
