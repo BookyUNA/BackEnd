@@ -22,5 +22,12 @@ namespace API.Controllers
         {
             return new LogGenerarNuevoCodigo().GenerarNuevoCodigo(req);
         }
+       
+        [HttpPost]
+        [Route("api/RegistrarUsuario")]
+        public ResAgregarUsuario RegistrarUsuario([FromBody] ReqAgregarUsuario req)
+        {
+            return new LogUsuario().RegistrarUsuario(req);
+        }
     }
 }

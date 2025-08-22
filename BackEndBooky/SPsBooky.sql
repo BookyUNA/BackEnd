@@ -1,4 +1,4 @@
--- =============================================
+Ôªø-- =============================================
 -- STORED PROCEDURES BOOKY
 -- =============================================
 
@@ -11,13 +11,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
--- SP: GENERAR C”DIGO DE RECUPERACI”N
--- DescripciÛn: Generar un cÛdigo de recuperaciÛn para un usuario dado su correo electrÛnico
+-- SP: GENERAR C√ìDIGO DE RECUPERACI√ìN
+-- Descripci√≥n: Generar un c√≥digo de recuperaci√≥n para un usuario dado su correo electr√≥nico
 -- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[SP_GENERAR_CODIGO_RECUPERACION]
-    @CorreoElectronico NVARCHAR(255),  -- Correo que envÌa el cliente
+    @CorreoElectronico NVARCHAR(255),  -- Correo que env√≠a el cliente
     @SUCCESS BIT OUTPUT,               -- Salida: 1 = OK, 0 = Error
-    @ERRORID INT OUTPUT                -- Salida: CÛdigo de error
+    @ERRORID INT OUTPUT                -- Salida: C√≥digo de error
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -34,7 +34,7 @@ BEGIN
         BEGIN TRANSACTION;
 
         -- ================================
-        -- VALIDAR PAR¡METROS DE ENTRADA
+        -- VALIDAR PAR√ÅMETROS DE ENTRADA
         -- ================================
         IF (LTRIM(RTRIM(@CorreoElectronico)) = '' OR @CorreoElectronico IS NULL)
         BEGIN
@@ -61,7 +61,7 @@ BEGIN
         END
 
         -- ================================
-        -- MARCAR C”DIGOS ANTERIORES COMO USADOS
+        -- MARCAR C√ìDIGOS ANTERIORES COMO USADOS
         -- ================================
         UPDATE [dbo].[CodigosRecuperacion]
         SET Usado = 1
@@ -69,13 +69,13 @@ BEGIN
           AND Usado = 0;
 
         -- ================================
-        -- GENERAR NUEVO C”DIGO
+        -- GENERAR NUEVO C√ìDIGO
         -- ================================
         SET @Codigo = RIGHT('000000' + CAST(ABS(CHECKSUM(NEWID())) % 1000000 AS VARCHAR(6)), 6);
         SET @FechaExpiracion = DATEADD(MINUTE, 15, GETDATE()); -- 15 minutos de validez
 
         -- ================================
-        -- INSERTAR NUEVO C”DIGO
+        -- INSERTAR NUEVO C√ìDIGO
         -- ================================
         INSERT INTO [dbo].[CodigosRecuperacion] (
             IdUsuario, 
@@ -109,14 +109,14 @@ END
 GO
 
 -- =============================================
--- SP: CAMBIAR CONTRASE—A CON C”DIGO
--- DescripciÛn: Validar un cÛdigo de recuperaciÛn y actualizar la contraseÒa de un usuario
+-- SP: CAMBIAR CONTRASE√ëA CON C√ìDIGO
+-- Descripci√≥n: Validar un c√≥digo de recuperaci√≥n y actualizar la contrase√±a de un usuario
 -- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[SP_CAMBIAR_CONTRASENA_CON_CODIGO]
-    @Codigo VARCHAR(10),                 -- CÛdigo de recuperaciÛn
-    @NuevaContrasenaHash NVARCHAR(255),  -- ContraseÒa ya hasheada
+    @Codigo VARCHAR(10),                 -- C√≥digo de recuperaci√≥n
+    @NuevaContrasenaHash NVARCHAR(255),  -- Contrase√±a ya hasheada
     @SUCCESS BIT OUTPUT,                 -- Salida: 1 = OK, 0 = Error
-    @ERRORID INT OUTPUT                  -- Salida: CÛdigo de error
+    @ERRORID INT OUTPUT                  -- Salida: C√≥digo de error
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -132,12 +132,12 @@ BEGIN
         BEGIN TRANSACTION;
 
         -- ================================
-        -- VALIDAR PAR¡METROS DE ENTRADA
+        -- VALIDAR PAR√ÅMETROS DE ENTRADA
         -- ================================
         IF (@Codigo IS NULL OR LTRIM(RTRIM(@Codigo)) = '')
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 30001; -- CÛdigo no proporcionado
+            SET @ERRORID = 30001; -- C√≥digo no proporcionado
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -145,13 +145,13 @@ BEGIN
         IF (@NuevaContrasenaHash IS NULL OR LTRIM(RTRIM(@NuevaContrasenaHash)) = '')
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 30002; -- ContraseÒa no proporcionada
+            SET @ERRORID = 30002; -- Contrase√±a no proporcionada
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
         -- ================================
-        -- BUSCAR Y VALIDAR EL C”DIGO
+        -- BUSCAR Y VALIDAR EL C√ìDIGO
         -- ================================
         SELECT TOP 1 
             @IdUsuario = cr.IdUsuario,
@@ -164,17 +164,17 @@ BEGIN
           AND u.Estado = 1
         ORDER BY cr.FechaCreacion DESC;
 
-        -- Validar si el cÛdigo existe y es v·lido
+        -- Validar si el c√≥digo existe y es v√°lido
         IF @CodigoValido = 0 OR @IdUsuario IS NULL
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 30003; -- CÛdigo inv·lido, expirado o usuario inactivo
+            SET @ERRORID = 30003; -- C√≥digo inv√°lido, expirado o usuario inactivo
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
         -- ================================
-        -- ACTUALIZAR CONTRASE—A DEL USUARIO
+        -- ACTUALIZAR CONTRASE√ëA DEL USUARIO
         -- ================================
         UPDATE [dbo].[Usuarios]
         SET PasswordHash = @NuevaContrasenaHash,
@@ -184,7 +184,7 @@ BEGIN
         WHERE IdUsuario = @IdUsuario;
 
         -- ================================
-        -- MARCAR C”DIGO COMO USADO
+        -- MARCAR C√ìDIGO COMO USADO
         -- ================================
         UPDATE [dbo].[CodigosRecuperacion]
         SET Usado = 1
@@ -208,22 +208,22 @@ GO
 
 -- =============================================
 -- SP: LOGIN DE USUARIO
--- DescripciÛn: Autenticar usuario con controles de seguridad y bloqueo autom·tico
+-- Descripci√≥n: Autenticar usuario con controles de seguridad y bloqueo autom√°tico
 -- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[SP_LOGIN_USUARIO]
     @Email VARCHAR(150),              -- Email del usuario
-    @PasswordHash VARCHAR(255),       -- ContraseÒa hasheada
+    @PasswordHash VARCHAR(255),       -- Contrase√±a hasheada
     @IPAddress VARCHAR(45) = NULL,    -- IP del cliente (opcional)
     @IdUsuario INT OUTPUT,            -- ID del usuario autenticado
     @RolNombre VARCHAR(50) OUTPUT,    -- Nombre del rol del usuario
-    @SUCCESS BIT OUTPUT,              -- Resultado: 1 = Èxito, 0 = error
-    @ERRORID INT OUTPUT               -- CÛdigo de error
+    @SUCCESS BIT OUTPUT,              -- Resultado: 1 = √©xito, 0 = error
+    @ERRORID INT OUTPUT               -- C√≥digo de error
 AS
 BEGIN
     SET NOCOUNT ON;
 
     -- ================================
-    -- CONFIGURACI”N DE SEGURIDAD
+    -- CONFIGURACI√ìN DE SEGURIDAD
     -- ================================
     DECLARE @MaxIntentosFallidos INT = 5;
     DECLARE @TiempoBloqueoMinutos INT = 30;
@@ -247,7 +247,7 @@ BEGIN
         BEGIN TRANSACTION;
 
         -- ================================
-        -- VALIDAR PAR¡METROS OBLIGATORIOS
+        -- VALIDAR PAR√ÅMETROS OBLIGATORIOS
         -- ================================
         IF @Email IS NULL OR LTRIM(RTRIM(@Email)) = ''
         BEGIN
@@ -260,7 +260,7 @@ BEGIN
         IF @PasswordHash IS NULL OR LTRIM(RTRIM(@PasswordHash)) = ''
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 10002; -- ContraseÒa no proporcionada
+            SET @ERRORID = 10002; -- Contrase√±a no proporcionada
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -297,7 +297,7 @@ BEGIN
         END
 
         -- ================================
-        -- VERIFICAR SI EST¡ BLOQUEADO
+        -- VERIFICAR SI EST√Å BLOQUEADO
         -- ================================
         IF @EstaBloqueado = 1
         BEGIN
@@ -305,7 +305,7 @@ BEGIN
             IF @FechaUltimoIntento IS NOT NULL 
                AND DATEDIFF(MINUTE, @FechaUltimoIntento, GETDATE()) >= @TiempoBloqueoMinutos
             BEGIN
-                -- Desbloquear autom·ticamente
+                -- Desbloquear autom√°ticamente
                 UPDATE [dbo].[Usuarios] 
                 SET Bloqueado = 0,
                     IntentosLoginFallidos = 0,
@@ -351,7 +351,7 @@ BEGIN
         END
 
         -- ================================
-        -- VERIFICAR CONTRASE—A
+        -- VERIFICAR CONTRASE√ëA
         -- ================================
         IF EXISTS (
             SELECT 1 FROM [dbo].[Usuarios] 
@@ -367,7 +367,7 @@ BEGIN
         END
 
         -- ================================
-        -- MANEJAR CONTRASE—A INCORRECTA
+        -- MANEJAR CONTRASE√ëA INCORRECTA
         -- ================================
         IF @PasswordCorrecta = 0
         BEGIN
@@ -383,7 +383,7 @@ BEGIN
                     Bloqueado = 1
                 WHERE IdUsuario = @UsuarioTempId;
 
-                -- Registrar intento que causÛ el bloqueo
+                -- Registrar intento que caus√≥ el bloqueo
                 INSERT INTO [dbo].[IntentosLogin] (
                     IdUsuario, Email, IPAddress, FechaIntento, Exitoso, MotivoFallo
                 )
@@ -407,11 +407,11 @@ BEGIN
                     IdUsuario, Email, IPAddress, FechaIntento, Exitoso, MotivoFallo
                 )
                 VALUES (
-                    @UsuarioTempId, @Email, @IPAddress, GETDATE(), 0, 'ContraseÒa incorrecta'
+                    @UsuarioTempId, @Email, @IPAddress, GETDATE(), 0, 'Contrase√±a incorrecta'
                 );
                 
                 SET @SUCCESS = 0;
-                SET @ERRORID = 10003; -- ContraseÒa incorrecta
+                SET @ERRORID = 10003; -- Contrase√±a incorrecta
             END
 
             COMMIT TRANSACTION;
@@ -419,7 +419,7 @@ BEGIN
         END
 
         -- ================================
-        -- …XITO EN EL LOGIN
+        -- √âXITO EN EL LOGIN
         -- ================================
         SELECT 
             @IdUsuario = u.IdUsuario,
@@ -461,18 +461,18 @@ GO
 
 -- =============================================
 -- SP: REGISTRAR USUARIO
--- DescripciÛn: Crear un nuevo usuario en el sistema
+-- Descripci√≥n: Crear un nuevo usuario en el sistema
 -- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[SP_REGISTRAR_USUARIO]
-    @Cedula VARCHAR(20),              -- CÈdula del usuario
+    @Cedula VARCHAR(20),              -- C√©dula del usuario
     @Nombre VARCHAR(100),             -- Nombre completo
-    @Email VARCHAR(150),              -- Email ˙nico
-    @PasswordHash VARCHAR(255),       -- ContraseÒa hasheada
-    @Telefono VARCHAR(20) = NULL,     -- TelÈfono (opcional)
+    @Email VARCHAR(150),              -- Email √∫nico
+    @PasswordHash VARCHAR(255),       -- Contrase√±a hasheada
+    @Telefono VARCHAR(20) = NULL,     -- Tel√©fono (opcional)
     @IdRol INT = 1,                   -- Rol (1=Cliente por defecto)
     @IdUsuario INT OUTPUT,            -- ID del usuario creado
-    @SUCCESS BIT OUTPUT,              -- Resultado: 1 = Èxito, 0 = error
-    @ERRORID INT OUTPUT               -- CÛdigo de error
+    @SUCCESS BIT OUTPUT,              -- Resultado: 1 = √©xito, 0 = error
+    @ERRORID INT OUTPUT               -- C√≥digo de error
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -486,12 +486,12 @@ BEGIN
         BEGIN TRANSACTION;
 
         -- ================================
-        -- VALIDAR PAR¡METROS OBLIGATORIOS
+        -- VALIDAR PAR√ÅMETROS OBLIGATORIOS
         -- ================================
         IF @Cedula IS NULL OR LTRIM(RTRIM(@Cedula)) = ''
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 40001; -- CÈdula no proporcionada
+            SET @ERRORID = 40001; -- C√©dula no proporcionada
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -515,7 +515,7 @@ BEGIN
         IF @PasswordHash IS NULL OR LTRIM(RTRIM(@PasswordHash)) = ''
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 40004; -- ContraseÒa no proporcionada
+            SET @ERRORID = 40004; -- Contrase√±a no proporcionada
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -526,7 +526,7 @@ BEGIN
         IF EXISTS (SELECT 1 FROM [dbo].[Usuarios] WHERE Cedula = @Cedula)
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 40005; -- CÈdula ya existe
+            SET @ERRORID = 40005; -- C√©dula ya existe
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -545,7 +545,7 @@ BEGIN
         IF NOT EXISTS (SELECT 1 FROM [dbo].[Roles] WHERE IdRol = @IdRol)
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 40007; -- Rol no v·lido
+            SET @ERRORID = 40007; -- Rol no v√°lido
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -582,18 +582,19 @@ END
 GO
 
 -- =============================================
--- SP: GENERAR C”DIGO DE VERIFICACI”N
--- DescripciÛn: Generar cÛdigo para verificar email de usuario
+-- SP: GENERAR C√ìDIGO DE VERIFICACI√ìN
+-- Descripci√≥n: Generar c√≥digo para verificar email de usuario
 -- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[SP_GENERAR_CODIGO_VERIFICACION]
-    @IdUsuario INT,                   -- ID del usuario
-    @Codigo VARCHAR(10) OUTPUT,       -- CÛdigo generado
-    @SUCCESS BIT OUTPUT,              -- Resultado: 1 = Èxito, 0 = error
-    @ERRORID INT OUTPUT               -- CÛdigo de error
+    @Email VARCHAR(150),              -- Email del usuario
+    @Codigo VARCHAR(10) OUTPUT,       -- C√≥digo generado
+    @SUCCESS BIT OUTPUT,              -- Resultado: 1 = √©xito, 0 = error
+    @ERRORID INT OUTPUT               -- C√≥digo de error
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    DECLARE @IdUsuario INT;
     DECLARE @FechaExpiracion DATETIME;
 
     -- Inicializar variables de salida
@@ -605,50 +606,56 @@ BEGIN
         BEGIN TRANSACTION;
 
         -- ================================
-        -- VALIDAR QUE EL USUARIO EXISTE
+        -- OBTENER ID DEL USUARIO POR EMAIL
         -- ================================
-        IF NOT EXISTS (SELECT 1 FROM [dbo].[Usuarios] WHERE IdUsuario = @IdUsuario AND Estado = 1)
+        SELECT @IdUsuario = IdUsuario
+        FROM [dbo].[Usuarios]
+        WHERE Email = @Email
+          AND Estado = 1;
+
+        -- Validar si el usuario existe
+        IF @IdUsuario IS NULL
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 50001; -- Usuario no v·lido
+            SET @ERRORID = 50001; -- Usuario no v√°lido
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
         -- ================================
-        -- MARCAR C”DIGOS ANTERIORES COMO USADOS
+        -- MARCAR C√ìDIGOS ANTERIORES COMO USADOS
         -- ================================
         UPDATE [dbo].[CodigosVerificacion]
         SET Usado = 1
-        WHERE IdUsuario = @IdUsuario 
+        WHERE IdUsuario = @IdUsuario
           AND Usado = 0;
 
         -- ================================
-        -- GENERAR NUEVO C”DIGO
+        -- GENERAR NUEVO C√ìDIGO
         -- ================================
         SET @Codigo = RIGHT('000000' + CAST(ABS(CHECKSUM(NEWID())) % 1000000 AS VARCHAR(6)), 6);
         SET @FechaExpiracion = DATEADD(MINUTE, 15, GETDATE()); -- 15 minutos de validez
 
         -- ================================
-        -- INSERTAR NUEVO C”DIGO
+        -- INSERTAR NUEVO C√ìDIGO
         -- ================================
         INSERT INTO [dbo].[CodigosVerificacion] (
-            IdUsuario, 
-            Codigo, 
-            FechaCreacion, 
-            FechaExpiracion, 
+            IdUsuario,
+            Codigo,
+            FechaCreacion,
+            FechaExpiracion,
             Usado
         )
         VALUES (
-            @IdUsuario, 
-            @Codigo, 
-            GETDATE(), 
-            @FechaExpiracion, 
+            @IdUsuario,
+            @Codigo,
+            GETDATE(),
+            @FechaExpiracion,
             0
         );
 
         COMMIT TRANSACTION;
-        
+
         SET @SUCCESS = 1;
         SET @ERRORID = 0;
 
@@ -664,79 +671,181 @@ BEGIN
 END
 GO
 
--- =============================================
--- SP: VERIFICAR EMAIL CON C”DIGO
--- DescripciÛn: Verificar email de usuario usando cÛdigo de verificaciÛn
--- =============================================
-CREATE OR ALTER PROCEDURE [dbo].[SP_VERIFICAR_EMAIL_CON_CODIGO]
-    @Codigo VARCHAR(10),              -- CÛdigo de verificaciÛn
-    @SUCCESS BIT OUTPUT,              -- Resultado: 1 = Èxito, 0 = error
-    @ERRORID INT OUTPUT               -- CÛdigo de error
+
+
+
+
+
+USE [Booky]
+
+/** Object:  StoredProcedure [dbo].[SP_GENERAR_CODIGO_RECUPERACION]    Script Date: 20/8/2025 18:14:50 **/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+/*
+Procedimiento: SP_GENERAR_CODIGO_RECUPERACION
+Objetivo: Generar un c√≥digo de recuperaci√≥n para un usuario dado su correo electr√≥nico.
+*/
+
+CREATE PROCEDURE [dbo].[SP_GENERAR_CODIGO_RECUPERACION]
+    @CorreoElectronico NVARCHAR(255),  -- Correo que env√≠a el cliente
+	@CodigoRecuperacion VARCHAR(10) OUTPUT, -- Salida: C√≥digo de recuperaci√≥n
+    @SUCCESS BIT OUTPUT,               -- Salida: 1 = OK, 0 = Error
+    @ERRORID INT OUTPUT                 -- Salida: C√≥digo de error
 AS
 BEGIN
     SET NOCOUNT ON;
-
     DECLARE @IdUsuario INT;
-    DECLARE @CodigoValido BIT = 0;
-
-    -- Inicializar variables de salida
-    SET @SUCCESS = 0;
-    SET @ERRORID = 0;
+    DECLARE @CodigoTemp VARCHAR(10);
+    DECLARE @FechaExpiracion DATETIME;
+	SET @CodigoRecuperacion = NULL;
 
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- ================================
-        -- VALIDAR PAR¡METRO
-        -- ================================
-        IF (@Codigo IS NULL OR LTRIM(RTRIM(@Codigo)) = '')
+        -- Validar que el correo no sea nulo o vac√≠o
+        IF (LTRIM(RTRIM(@CorreoElectronico)) = '' OR @CorreoElectronico IS NULL)
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 60001; -- CÛdigo no proporcionado
+            SET @ERRORID = 20001; -- Error: Correo no proporcionado
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- ================================
-        -- BUSCAR Y VALIDAR EL C”DIGO
-        -- ================================
-        SELECT TOP 1 
-            @IdUsuario = cv.IdUsuario,
-            @CodigoValido = 1
-        FROM [dbo].[CodigosVerificacion] cv
-        INNER JOIN [dbo].[Usuarios] u ON cv.IdUsuario = u.IdUsuario
-        WHERE cv.Codigo = @Codigo
-          AND cv.Usado = 0
-          AND cv.FechaExpiracion >= GETDATE()
-          AND u.Estado = 1
-          AND u.EmailVerificado = 0
-        ORDER BY cv.FechaCreacion DESC;
+        -- Buscar el usuario
+        SELECT @IdUsuario = IdUsuario
+        FROM Usuarios
+        WHERE Email = @CorreoElectronico;
 
-        -- Validar si el cÛdigo existe y es v·lido
-        IF @CodigoValido = 0 OR @IdUsuario IS NULL
+        IF @IdUsuario IS NULL
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 60002; -- CÛdigo inv·lido, expirado o ya verificado
+            SET @ERRORID = 20002; -- Error: Usuario no encontrado
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- ================================
-        -- MARCAR EMAIL COMO VERIFICADO
-        -- ================================
-        UPDATE [dbo].[Usuarios]
-        SET EmailVerificado = 1
-        WHERE IdUsuario = @IdUsuario;
+        -- Generar un c√≥digo aleatorio de 6 d√≠gitos
+        SET @CodigoTemp = RIGHT('000000' + CAST(ABS(CHECKSUM(NEWID())) % 1000000 AS VARCHAR(6)), 6);
 
-        -- ================================
-        -- MARCAR C”DIGO COMO USADO
-        -- ================================
-        UPDATE [dbo].[CodigosVerificacion]
-        SET Usado = 1
-        WHERE Codigo = @Codigo;
+        -- Definir expiraci√≥n (5 minutos desde ahora)
+        SET @FechaExpiracion = DATEADD(MINUTE, 5, GETDATE());
+
+        -- Insertar en CodigosRecuperacion
+        INSERT INTO CodigosRecuperacion (IdUsuario, Codigo, FechaCreacion, FechaExpiracion, Usado)
+        VALUES (@IdUsuario, @CodigoTemp, GETDATE(), @FechaExpiracion, 0);
+
+		SET @CodigoRecuperacion = @CodigoTemp;
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
 
         COMMIT TRANSACTION;
-        
+    END TRY
+    BEGIN CATCH
+        -- Manejo de errores
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+		SET @CodigoRecuperacion = NULL;
+    END CATCH
+END
+
+DROP PROCEDURE IF EXISTS [dbo].[SP_AGREGAR_USUARIO];
+GO
+-- Luego vuelve a ejecutar el CREATE OR ALTER PROCEDURE
+
+
+
+USE Booky;  
+GO
+CREATE OR ALTER PROCEDURE [dbo].[SP_AGREGAR_USUARIO]
+    @NombreRol VARCHAR(50),           -- Rol del usuario
+    @Cedula VARCHAR(20),              -- C√©dula √∫nica
+    @Nombre VARCHAR(100),             -- Nombre del usuario
+    @Email VARCHAR(150),              -- Correo electr√≥nico
+    @PasswordHash VARCHAR(255),       -- Contrase√±a en hash
+    @Telefono VARCHAR(20) = NULL,     -- Tel√©fono opcional
+    @SUCCESS BIT OUTPUT,              -- 1 = √âxito, 0 = Error
+    @ERRORID INT OUTPUT               -- C√≥digo de error
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @IdRol INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- ==========================
+        -- VALIDAR ROL
+        -- ==========================
+        SELECT @IdRol = IdRol
+        FROM [dbo].[Roles]
+        WHERE Nombre = @NombreRol;
+
+        IF @IdRol IS NULL
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 62006; -- Rol no existe
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- ==========================
+        -- VALIDAR DUPLICADOS
+        -- ==========================
+        IF EXISTS (SELECT 1 FROM [dbo].[Usuarios] WHERE Cedula = @Cedula)
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 62007; -- C√©dula duplicada
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF EXISTS (SELECT 1 FROM [dbo].[Usuarios] WHERE Email = @Email)
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 62008; -- Email duplicado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- ==========================
+        -- INSERTAR USUARIO
+        -- ==========================
+        INSERT INTO [dbo].[Usuarios] (
+            IdRol,
+            Cedula,
+            Nombre,
+            Email,
+            PasswordHash,
+            Telefono,
+            EmailVerificado,      -- Email no verificado
+            FechaRegistro,
+            Estado,
+            Bloqueado,
+            IntentosLoginFallidos
+        )
+        VALUES (
+            @IdRol,
+            @Cedula,
+            @Nombre,
+            @Email,
+            @PasswordHash,
+            @Telefono,
+            0,                  -- EmailVerificado = 0
+            GETDATE(),
+            1,                  -- Estado activo
+            0,
+            0
+        );
+
+        COMMIT TRANSACTION;
+
         SET @SUCCESS = 1;
         SET @ERRORID = 0;
 
@@ -751,6 +860,24 @@ BEGIN
 END
 GO
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -- =============================================
 -- SCRIPT COMPLETADO EXITOSAMENTE
 -- =============================================
@@ -764,3 +891,7 @@ PRINT '  - SP_REGISTRAR_USUARIO'
 PRINT '  - SP_GENERAR_CODIGO_VERIFICACION'
 PRINT '  - SP_VERIFICAR_EMAIL_CON_CODIGO'
 GO
+
+
+
+-- Luego vuelve a ejecutar el CREATE OR ALTER PROCEDURE
