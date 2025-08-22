@@ -871,6 +871,92 @@ GO
 
 
 
+-- =============================================
+-- SP: VERIFICAR EMAIL CON C�DIGO
+-- Descripci�n: Verificar email de usuario usando c�digo de verificaci�n
+-- =============================================
+CREATE OR ALTER PROCEDURE [dbo].[SP_VERIFICAR_EMAIL_CON_CODIGO]
+    @Codigo VARCHAR(10),              -- C�digo de verificaci�n
+    @SUCCESS BIT OUTPUT,              -- Resultado: 1 = �xito, 0 = error
+    @ERRORID INT OUTPUT               -- C�digo de error
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @IdUsuario INT;
+    DECLARE @CodigoValido BIT = 0;
+
+    -- Inicializar variables de salida
+    SET @SUCCESS = 0;
+    SET @ERRORID = 0;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- ================================
+        -- VALIDAR PAR�METRO
+        -- ================================
+        IF (@Codigo IS NULL OR LTRIM(RTRIM(@Codigo)) = '')
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 60001; -- C�digo no proporcionado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- ================================
+        -- BUSCAR Y VALIDAR EL C�DIGO
+        -- ================================
+        SELECT TOP 1 
+            @IdUsuario = cv.IdUsuario,
+            @CodigoValido = 1
+        FROM [dbo].[CodigosVerificacion] cv
+        INNER JOIN [dbo].[Usuarios] u ON cv.IdUsuario = u.IdUsuario
+        WHERE cv.Codigo = @Codigo
+          AND cv.Usado = 0
+          AND cv.FechaExpiracion >= GETDATE()
+          AND u.Estado = 1
+          AND u.EmailVerificado = 0
+        ORDER BY cv.FechaCreacion DESC;
+
+        -- Validar si el c�digo existe y es v�lido
+        IF @CodigoValido = 0 OR @IdUsuario IS NULL
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 60002; -- C�digo inv�lido, expirado o ya verificado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- ================================
+        -- MARCAR EMAIL COMO VERIFICADO
+        -- ================================
+        UPDATE [dbo].[Usuarios]
+        SET EmailVerificado = 1
+        WHERE IdUsuario = @IdUsuario;
+
+        -- ================================
+        -- MARCAR C�DIGO COMO USADO
+        -- ================================
+        UPDATE [dbo].[CodigosVerificacion]
+        SET Usado = 1
+        WHERE Codigo = @Codigo;
+
+        COMMIT TRANSACTION;
+        
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+GO
 
 
 

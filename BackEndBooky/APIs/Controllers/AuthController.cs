@@ -29,5 +29,20 @@ namespace API.Controllers
         {
             return new LogUsuario().RegistrarUsuario(req);
         }
+
+        [HttpPost]
+        [Route("api/VerificarEmail")]
+        public ResVerificarEmail VerificarEmail([FromBody] ReqVerificarEmail req)
+        {
+            return new LogUsuario().VerificarEmail(req);
+        }
+
+
+        [HttpPost]
+        [Route("api/GenerarNuevoCodigoVerificacion")]
+        public ResGenerarNuevoCodigo GenerarNuevoCodigoVerificacion([FromBody] ReqGenerarNuevoCodigo req)
+        {
+            return new LogUsuario().GenerarCodigoVerificacion(req);
+        }
     }
 }

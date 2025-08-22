@@ -14,7 +14,7 @@ namespace Logica
         // ================================================
         // 1. GENERAR CÓDIGO DE VERIFICACIÓN POR EMAIL
         // ================================================
-        public bool GenerarCodigoVerificacion(ReqGenerarNuevoCodigo req)
+        public ResGenerarNuevoCodigo GenerarCodigoVerificacion(ReqGenerarNuevoCodigo req)
         {
             ResGenerarNuevoCodigo res = new ResGenerarNuevoCodigo();
             res.error = new List<Error>();
@@ -32,7 +32,7 @@ namespace Logica
                         ErrorCode = 60001,
                         Message = "El correo electrónico es obligatorio"
                     });
-                    return res.resultado;
+                    return res;
                 }
 
                 using (DataClasses1DataContext linq = new DataClasses1DataContext())
@@ -67,11 +67,22 @@ namespace Logica
                             else
                             {
                                 res.resultado = false;
-                                res.error.Add(new Error
+                                if (errorID==60001)
                                 {
-                                    ErrorCode = 60003,
-                                    Message = "No se generó el código correctamente."
-                                });
+                                    res.error.Add(new Error
+                                    {
+                                        ErrorCode = 60003,
+                                        Message = "Código no proporcionado"
+                                    });
+                                }else if (errorID == 60002)
+                                {
+                                    res.error.Add(new Error
+                                    {
+                                        ErrorCode = 60003,
+                                        Message = "Código invalido"
+                                    });
+                                }
+                              
                             }
                         }
                         catch (Exception)
@@ -113,7 +124,7 @@ namespace Logica
                     Message = "Error en la lógica de generación de código de verificación"
                 });
             }
-            return res.resultado;
+            return res;
         }
 
         // ================================================
@@ -160,18 +171,54 @@ namespace Logica
                     if (resultadoBd.HasValue && resultadoBd.Value)
                     {
                         res.resultado = true;
-                        bool email = GenerarCodigoVerificacion(new ReqGenerarNuevoCodigo
+                       ResGenerarNuevoCodigo resp= GenerarCodigoVerificacion(new ReqGenerarNuevoCodigo
                         {
                             email = req.email
                         });
-                        if (!email)
+                        if (!resp.resultado)   
                         {
                             res.resultado = false;
-                            res.error.Add(new Error
+                            switch (errorID)
                             {
-                                ErrorCode = 60005,
-                                Message = "Error al enviar el código de verificación por correo electrónico"
-                            });
+                                case 62006:
+                                    res.error.Add(new Error
+                                    {
+                                        ErrorCode = 60001,
+                                        Message = "El rol no existe"
+                                    });
+                                    break;
+                                case 62007:
+                                    res.error.Add(new Error
+                                    {
+                                        ErrorCode = 60002,
+                                        Message = "Cedula Registrada"
+                                    });
+                                    break;
+                                    
+                                   case 62008:
+                                    res.error.Add(new Error
+                                    {
+                                        ErrorCode = 60003,
+                                        Message = "Email Registrado"
+                                    });
+                                    break;
+                                case 62009:
+                                    res.error.Add(new Error
+                                    {
+                                        ErrorCode = 60004,
+                                        Message = "Error al registrar usuario"
+                                    });
+                                    break;
+                                default:
+                                    res.error.Add(new Error
+                                    {
+                                        ErrorCode = errorID ?? 99999,
+                                        Message = "Error desconocido al generar el código de verificación"
+                                    });
+                                    break;
+
+                            }
+                            
                         }
                         else
                         {
@@ -212,7 +259,71 @@ namespace Logica
             return res;
         }
 
+        public ResVerificarEmail VerificarEmail(ReqVerificarEmail req)
+        {
+            ResVerificarEmail res = new ResVerificarEmail();
+            res.error = new List<Error>();
+            bool? resultadoBd = true;
+            int? errorID = 0;
 
+            try
+            {
+                if (string.IsNullOrEmpty(req.codigo))
+                {
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = 60001,
+                        Message = "El código de verificación es obligatorio"
+                    });
+                    return res;
+                }
+
+                using (DataClasses1DataContext linq = new DataClasses1DataContext())
+                {
+                    // Llamada al SP
+                    linq.SP_VERIFICAR_EMAIL_CON_CODIGO(
+                        req.codigo,
+                        ref resultadoBd,
+                        ref errorID
+                    );
+
+                    if (resultadoBd.HasValue && resultadoBd.Value)
+                    {
+                        res.resultado = true;
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        res.error.Add(new Error
+                        {
+                            ErrorCode = errorID ?? 99999,
+                            Message = "Código inválido, expirado o ya verificado"
+                        });
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                res.resultado = false;
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50005,
+                    Message = "Error de base de datos al verificar email"
+                });
+            }
+            catch (Exception)
+            {
+                res.resultado = false;
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50006,
+                    Message = "Error en la lógica de verificación de email"
+                });
+            }
+
+            return res;
+        }
 
     }
 }
