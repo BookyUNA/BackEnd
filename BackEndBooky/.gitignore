@@ -41,16 +41,6 @@ bld/
 # Visual Studio 2017 auto generated files
 Generated\ Files/
 
-# NuGet Packages
-*.nupkg
-*.snupkg
-**/[Pp]ackages/*
-!**/[Pp]ackages/build/
-!packages.config
-*.nuget.props
-*.nuget.targets
-
-
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
@@ -372,12 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# --- 🚀 Ajustes específicos para tu proyecto DAL ---
-# IMPORTANTE: No ignores estos archivos, deben estar versionados porque son parte del código
-# del modelo LINQ to SQL. Si se ignoran, la capa DAL no compila al clonar el repo.
-
-# (antes estaban ignorados, ahora permitidos)
-#!DAL/ConexionLinq.dbml
-#!DAL/ConexionLinq.dbml.layout
-#!DAL/ConexionLinq.designer.cs
-#!DAL/Properties/Settings.Designer.cs
+DAL/ConexionLinq.dbml
+DAL/ConexionLinq.dbml.layout
+DAL/ConexionLinq.designer.cs
+DAL/Properties/Settings.Designer.cs
