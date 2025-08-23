@@ -42,6 +42,7 @@ namespace Logica
                     linq.SP_LOGIN_USUARIO(
                         req.email,
                         req.password, // Ya viene hasheada
+                        "",
                         ref idUsuario,
                         ref rol,
                         ref resultadoBd,
