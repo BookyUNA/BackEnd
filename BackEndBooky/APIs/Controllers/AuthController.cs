@@ -22,5 +22,12 @@ namespace API.Controllers
         {
             return new LogGenerarNuevoCodigo().GenerarNuevoCodigo(req);
         }
+
+        [HttpPost]
+        [Route("api/CambiarContrasena")]
+        public ResCambioDeContrasena CambioDeContrasena([FromBody] ReqCambioDeContrasena req)
+        {
+            return new LogCambioDeContrasena().CambioDeContrasena(req);
+        }
     }
 }

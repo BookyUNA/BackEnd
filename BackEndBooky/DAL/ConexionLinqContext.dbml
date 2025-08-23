@@ -16,4 +16,12 @@
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.SP_CAMBIAR_CONTRASENA_CON_CODIGO" Method="SP_CAMBIAR_CONTRASENA_CON_CODIGO">
+    <Parameter Name="CodigoRecuperacion" Parameter="codigoRecuperacion" Type="System.String" DbType="VarChar(10)" />
+    <Parameter Name="NuevaContrasenaHash" Parameter="nuevaContrasenaHash" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="ConfirmacionContrasenaHash" Parameter="confirmacionContrasenaHash" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
 </Database>
