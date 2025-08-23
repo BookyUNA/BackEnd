@@ -73,6 +73,9 @@ namespace Logica
                         case 20003:
                             res.error.Add(new Error { ErrorCode = 20003, Message = "Usuario o contraseña incorrectos" });
                             break;
+                        case 10004:
+                            res.error.Add(new Error { ErrorCode = 20003, Message = "Cuenta bloqueada" });
+                            break;
                         default:
                             res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error al iniciar sesión en la base de datos" });
                             break;
