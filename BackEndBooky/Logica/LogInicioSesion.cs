@@ -65,22 +65,63 @@ namespace Logica
                     res.resultado = false;
                     switch (errorID)
                     {
-                        case 20001:
-                            res.error.Add(new Error { ErrorCode = 20001, Message = "El correo electrónico es obligatorio" });
+                        case 10001: // Email no proporcionado
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 10001,
+                                Message = "El correo electrónico es obligatorio."
+                            });
                             break;
-                        case 20002:
-                            res.error.Add(new Error { ErrorCode = 20002, Message = "La contraseña es obligatoria" });
+
+                        case 10002: // Contraseña no proporcionada
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 10002,
+                                Message = "La contraseña es obligatoria."
+                            });
                             break;
-                        case 20003:
-                            res.error.Add(new Error { ErrorCode = 20003, Message = "Usuario o contraseña incorrectos" });
+
+                        case 10003: // Usuario no encontrado o contraseña incorrecta
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 10003,
+                                Message = "Usuario o contraseña incorrectos."
+                            });
                             break;
-                        case 10004:
-                            res.error.Add(new Error { ErrorCode = 20003, Message = "Cuenta bloqueada" });
+
+                        case 10004: // Cuenta bloqueada
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 10004,
+                                Message = "La cuenta está bloqueada. Intente más tarde."
+                            });
                             break;
-                        default:
-                            res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error al iniciar sesión en la base de datos" });
+
+                        case 10005: // Cuenta bloqueada por intentos fallidos
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 10005,
+                                Message = "Cuenta bloqueada por múltiples intentos fallidos. Intente más tarde."
+                            });
+                            break;
+
+                        case 10006: // Email no verificado
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 10006,
+                                Message = "Debe verificar su correo electrónico antes de iniciar sesión."
+                            });
+                            break;
+
+                        default: // Error no controlado
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = errorID ?? 99999,
+                                Message = "Error desconocido al iniciar sesión."
+                            });
                             break;
                     }
+
                 }
             }
             catch (SqlException)
