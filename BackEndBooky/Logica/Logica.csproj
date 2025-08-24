@@ -159,6 +159,7 @@
     <Compile Include="LogGenerarNuevoCodigo.cs" />
     <Compile Include="LogInicioSesion.cs" />
     <Compile Include="LogRecuperarContraseña.cs" />
+    <Compile Include="LogUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
