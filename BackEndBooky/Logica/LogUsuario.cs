@@ -168,74 +168,84 @@ namespace Logica
                         ref errorID
                     );
 
-                    if (resultadoBd.HasValue && resultadoBd.Value)
-                    {
-                        res.resultado = true;
-                       ResGenerarNuevoCodigo resp= GenerarCodigoVerificacion(new ReqGenerarNuevoCodigo
-                        {
-                            email = req.email
-                        });
-                        if (!resp.resultado)   
-                        {
-                            res.resultado = false;
-                            switch (errorID)
-                            {
-                                case 62006:
-                                    res.error.Add(new Error
-                                    {
-                                        ErrorCode = 60001,
-                                        Message = "El rol no existe"
-                                    });
-                                    break;
-                                case 62007:
-                                    res.error.Add(new Error
-                                    {
-                                        ErrorCode = 60002,
-                                        Message = "Cedula Registrada"
-                                    });
-                                    break;
-                                    
-                                   case 62008:
-                                    res.error.Add(new Error
-                                    {
-                                        ErrorCode = 60003,
-                                        Message = "Email Registrado"
-                                    });
-                                    break;
-                                case 62009:
-                                    res.error.Add(new Error
-                                    {
-                                        ErrorCode = 60004,
-                                        Message = "Error al registrar usuario"
-                                    });
-                                    break;
-                                default:
-                                    res.error.Add(new Error
-                                    {
-                                        ErrorCode = errorID ?? 99999,
-                                        Message = "Error desconocido al generar el código de verificación"
-                                    });
-                                    break;
-
-                            }
-                            
-                        }
-                        else
-                        {
-                            res.resultado = true;
-                            
-                        }
-                    }
-                    else
-                    {
-                        res.resultado = false;
-                        res.error.Add(new Error
-                        {
-                            ErrorCode = errorID ?? 99999,
-                            Message = "Error al registrar usuario"
-                        });
-                    }
+                    
                 }
+
+                if (resultadoBd.HasValue && resultadoBd.Value)
+                {
+                    res.resultado = true;
+                    ResGenerarNuevoCodigo resp = GenerarCodigoVerificacion(new ReqGenerarNuevoCodigo
+                    {
+                        email = req.email
+                    });
+     
+                    
+                }
+                else
+                { 
+                    res.resultado = false;
+                    switch (errorID)
+                    {
+                        case 62006:
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 60001,
+                                Message = "El rol no existe"
+                            });
+                            break;
+                        case 62007:
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 60002,
+                                Message = "Cedula Registrada"
+                            });
+                            break;
+
+                        case 62008:
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 60003,
+                                Message = "Email Registrado"
+                            });
+                            break;
+                        case 62009:
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 60004,
+                                Message = "Error al registrar usuario"
+                            });
+                            break;
+                        default:
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = errorID ?? 99999,
+                                Message = "Error desconocido al generar el código de verificación"
+                            });
+                            break;
+
+                    }
+                    
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
             catch (SqlException)
             {
