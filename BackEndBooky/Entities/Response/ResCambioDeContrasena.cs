@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Response
 {
-    public class ResCambioContraseña
+    public class ResCambioDeContrasena : ResBase
     {
-
     }
 }

@@ -30,15 +30,15 @@ namespace DAL
 		
     #region Definiciones de métodos de extensibilidad
     partial void OnCreated();
-        #endregion
-
-        public DataClasses1DataContext() :
-        base(global::DAL.Properties.Settings.Default.BookyConnectionString4, mappingSource)
-        {
-            OnCreated();
-        }
-
-        public DataClasses1DataContext(string connection) : 
+    #endregion
+		
+		public DataClasses1DataContext() : 
+				base(global::DAL.Properties.Settings.Default.BookyConnectionString2, mappingSource)
+		{
+			OnCreated();
+		}
+		
+		public DataClasses1DataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
@@ -99,6 +99,12 @@ namespace DAL
 			return ((int)(result.ReturnValue));
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CAMBIAR_CONTRASENA_CON_CODIGO")]
+		public int SP_CAMBIAR_CONTRASENA_CON_CODIGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CodigoRecuperacion", DbType="VarChar(10)")] string codigoRecuperacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NuevaContrasenaHash", DbType="NVarChar(255)")] string nuevaContrasenaHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ConfirmacionContrasenaHash", DbType="NVarChar(255)")] string confirmacionContrasenaHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), codigoRecuperacion, nuevaContrasenaHash, confirmacionContrasenaHash, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_GENERAR_CODIGO_VERIFICACION")]
 		public int SP_GENERAR_CODIGO_VERIFICACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="Email", DbType="VarChar(150)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Codigo", DbType="VarChar(10)")] ref string codigo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
 		{
