@@ -113,20 +113,16 @@ GO
 -- Descripción: Validar un código de recuperación y actualizar la contraseña de un usuario
 -- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[SP_CAMBIAR_CONTRASENA_CON_CODIGO]
-    @Codigo VARCHAR(10),                 -- Código de recuperación
-    @NuevaContrasenaHash NVARCHAR(255),  -- Contraseña ya hasheada
-    @SUCCESS BIT OUTPUT,                 -- Salida: 1 = OK, 0 = Error
-    @ERRORID INT OUTPUT                  -- Salida: Código de error
+    @CodigoRecuperacion VARCHAR(10),                 -- Código de recuperación
+    @NuevaContrasenaHash NVARCHAR(255),              -- Contraseña ya hasheada
+	@ConfirmacionContrasenaHash NVARCHAR(255),       -- Confirmación contraseña
+    @SUCCESS BIT OUTPUT,                             -- Salida: 1 = OK, 0 = Error
+    @ERRORID INT OUTPUT                              -- Salida: Código de error
 AS
 BEGIN
     SET NOCOUNT ON;
 
     DECLARE @IdUsuario INT;
-    DECLARE @CodigoValido BIT = 0;
-
-    -- Inicializar variables de salida
-    SET @SUCCESS = 0;
-    SET @ERRORID = 0;
 
     BEGIN TRY
         BEGIN TRANSACTION;
@@ -134,7 +130,7 @@ BEGIN
         -- ================================
         -- VALIDAR PARÁMETROS DE ENTRADA
         -- ================================
-        IF (@Codigo IS NULL OR LTRIM(RTRIM(@Codigo)) = '')
+        IF (@CodigoRecuperacion IS NULL OR LTRIM(RTRIM(@CodigoRecuperacion)) = '')
         BEGIN
             SET @SUCCESS = 0;
             SET @ERRORID = 30001; -- Código no proporcionado
@@ -150,25 +146,50 @@ BEGIN
             RETURN;
         END
 
+		IF (@ConfirmacionContrasenaHash IS NULL OR LTRIM(RTRIM(@ConfirmacionContrasenaHash)) = '')
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 30003; -- Contraseña no proporcionada
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+		IF (@NuevaContrasenaHash <> @ConfirmacionContrasenaHash)
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 30004; -- Contraseñas no coinciden
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
         -- ================================
         -- BUSCAR Y VALIDAR EL CÓDIGO
         -- ================================
-        SELECT TOP 1 
-            @IdUsuario = cr.IdUsuario,
-            @CodigoValido = 1
-        FROM [dbo].[CodigosRecuperacion] cr
-        INNER JOIN [dbo].[Usuarios] u ON cr.IdUsuario = u.IdUsuario
-        WHERE cr.Codigo = @Codigo
-          AND cr.Usado = 0
-          AND cr.FechaExpiracion >= GETDATE()
-          AND u.Estado = 1
-        ORDER BY cr.FechaCreacion DESC;
+        SELECT TOP 1 @IdUsuario = IdUsuario
+        FROM [dbo].[CodigosRecuperacion] 
+        WHERE Codigo = @CodigoRecuperacion
+          AND Usado = 0
+          AND FechaExpiracion > GETDATE()
+        ORDER BY FechaCreacion DESC;
 
-        -- Validar si el código existe y es válido
-        IF @CodigoValido = 0 OR @IdUsuario IS NULL
+		-- ==========================================
+        -- VALIDAR SI EL CODIGO EXISTE Y ES VALIDO
+        -- ==========================================
+        IF @IdUsuario IS NULL
         BEGIN
             SET @SUCCESS = 0;
-            SET @ERRORID = 30003; -- Código inválido, expirado o usuario inactivo
+            SET @ERRORID = 30005; -- Código inválido, expirado o usuario inactivo
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+		-- ==========================================
+        -- VALIDAR QUE EL USUARIO ESTE ACTIVO
+        -- ==========================================
+        IF EXISTS (SELECT 1 FROM Usuarios WHERE IdUsuario = @IdUsuario AND Estado = 0)
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 30006; -- Usuario inactivo
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -177,10 +198,7 @@ BEGIN
         -- ACTUALIZAR CONTRASEÑA DEL USUARIO
         -- ================================
         UPDATE [dbo].[Usuarios]
-        SET PasswordHash = @NuevaContrasenaHash,
-            IntentosLoginFallidos = 0,
-            Bloqueado = 0,
-            FechaUltimoIntentoFallido = NULL
+        SET PasswordHash = @NuevaContrasenaHash
         WHERE IdUsuario = @IdUsuario;
 
         -- ================================
@@ -188,12 +206,12 @@ BEGIN
         -- ================================
         UPDATE [dbo].[CodigosRecuperacion]
         SET Usado = 1
-        WHERE Codigo = @Codigo;
-
-        COMMIT TRANSACTION;
+        WHERE Codigo = @CodigoRecuperacion;
         
         SET @SUCCESS = 1;
         SET @ERRORID = 0;
+
+		COMMIT TRANSACTION;
 
     END TRY
     BEGIN CATCH
