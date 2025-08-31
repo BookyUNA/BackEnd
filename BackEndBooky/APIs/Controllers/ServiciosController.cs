@@ -18,7 +18,7 @@ namespace APIs.Controllers
         public ResListarServicio ListarServicios (ReqListarServicio req)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            return new LogServicios.ListarServicios(req, token);
+            return new LogServicio.ListarServicios(req, token);
         }
     }
 }
