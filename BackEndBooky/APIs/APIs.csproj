@@ -317,6 +317,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ServiciosController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
@@ -396,6 +397,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Auth\" />
+    <Folder Include="Views\Servicios\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\bootstrap.min.js.map" />
@@ -474,7 +476,7 @@
       <Name>Entities</Name>
     </ProjectReference>
     <ProjectReference Include="..\Logica\Logica.csproj">
-      <Project>{d8613ef6-63a7-403f-8141-ae98b47cf9e6}</Project>
+      <Project>{D8613EF6-63A7-403F-8141-AE98B47CF9E6}</Project>
       <Name>Logica</Name>
     </ProjectReference>
   </ItemGroup>

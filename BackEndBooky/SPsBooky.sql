@@ -772,14 +772,14 @@ BEGIN
     END CATCH
 END
 
-DROP PROCEDURE IF EXISTS [dbo].[SP_AGREGAR_USUARIO];
+USE [Booky]
 GO
--- Luego vuelve a ejecutar el CREATE OR ALTER PROCEDURE
 
-
-
-USE Booky;  
+SET ANSI_NULLS ON
 GO
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE OR ALTER PROCEDURE [dbo].[SP_AGREGAR_USUARIO]
     @NombreRol VARCHAR(50),           -- Rol del usuario
     @Cedula VARCHAR(20),              -- Cédula única
@@ -794,6 +794,7 @@ BEGIN
     SET NOCOUNT ON;
 
     DECLARE @IdRol INT;
+    DECLARE @IdUsuario INT;
 
     BEGIN TRY
         BEGIN TRANSACTION;
@@ -842,7 +843,7 @@ BEGIN
             Email,
             PasswordHash,
             Telefono,
-            EmailVerificado,      -- Email no verificado
+            EmailVerificado,
             FechaRegistro,
             Estado,
             Bloqueado,
@@ -855,12 +856,46 @@ BEGIN
             @Email,
             @PasswordHash,
             @Telefono,
-            0,                  -- EmailVerificado = 0
+            0,
             GETDATE(),
-            1,                  -- Estado activo
+            1,
             0,
             0
         );
+
+        -- Obtener el IdUsuario recién creado
+        SET @IdUsuario = SCOPE_IDENTITY();
+
+        -- ==========================
+        -- SI EL ROL ES "Profesional", CREAR PERFIL
+        -- ==========================
+        IF UPPER(@NombreRol) = 'PROFESIONAL'
+        BEGIN
+            INSERT INTO [dbo].[PerfilesProfesionales] (
+                IdUsuario,
+                Profesion,
+                Descripcion,
+                Direccion,
+                Latitud,
+                Longitud,
+                CalificacionPromedio,
+                TotalCalificaciones,
+                FechaCreacion,
+                Estado
+            )
+            VALUES (
+                @IdUsuario,
+                '',      -- Profesion vacía por defecto
+                NULL,    -- Descripcion
+                NULL,    -- Direccion
+                NULL,    -- Latitud
+                NULL,    -- Longitud
+                NULL,    -- CalificacionPromedio
+                0,       -- TotalCalificaciones
+                GETDATE(),
+                1        -- Estado activo
+            );
+        END
 
         COMMIT TRANSACTION;
 
@@ -877,6 +912,11 @@ BEGIN
     END CATCH
 END
 GO
+
+-- Luego vuelve a ejecutar el CREATE OR ALTER PROCEDURE
+
+
+
 
 
 

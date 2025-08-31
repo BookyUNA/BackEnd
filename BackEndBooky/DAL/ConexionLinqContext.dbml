@@ -16,22 +16,6 @@
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
-  <Function Name="dbo.SP_CAMBIAR_CONTRASENA_CON_CODIGO" Method="SP_CAMBIAR_CONTRASENA_CON_CODIGO">
-    <Parameter Name="CodigoRecuperacion" Parameter="codigoRecuperacion" Type="System.String" DbType="VarChar(10)" />
-    <Parameter Name="NuevaContrasenaHash" Parameter="nuevaContrasenaHash" Type="System.String" DbType="NVarChar(255)" />
-    <Parameter Name="ConfirmacionContrasenaHash" Parameter="confirmacionContrasenaHash" Type="System.String" DbType="NVarChar(255)" />
-  <Function Name="dbo.SP_REGISTRAR_USUARIO" Method="SP_REGISTRAR_USUARIO">
-    <Parameter Name="Cedula" Parameter="cedula" Type="System.String" DbType="VarChar(20)" />
-    <Parameter Name="Nombre" Parameter="nombre" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="Email" Parameter="email" Type="System.String" DbType="VarChar(150)" />
-    <Parameter Name="PasswordHash" Parameter="passwordHash" Type="System.String" DbType="VarChar(255)" />
-    <Parameter Name="Telefono" Parameter="telefono" Type="System.String" DbType="VarChar(20)" />
-    <Parameter Name="IdRol" Parameter="idRol" Type="System.Int32" DbType="Int" />
-    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
-    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <Return Type="System.Int32" />
-  </Function>
   <Function Name="dbo.SP_VERIFICAR_EMAIL_CON_CODIGO" Method="SP_VERIFICAR_EMAIL_CON_CODIGO">
     <Parameter Name="Codigo" Parameter="codigo" Type="System.String" DbType="VarChar(10)" />
     <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
@@ -41,6 +25,43 @@
   <Function Name="dbo.SP_GENERAR_CODIGO_VERIFICACION" Method="SP_GENERAR_CODIGO_VERIFICACION">
     <Parameter Name="Email" Parameter="email" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="Codigo" Parameter="codigo" Type="System.String" DbType="VarChar(10)" Direction="InOut" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_REGISTRAR_USUARIO" Method="SP_REGISTRAR_USUARIO">
+    <Parameter Name="Cedula" Parameter="cedula" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="Nombre" Parameter="nombre" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="Email" Parameter="email" Type="System.String" DbType="VarChar(150)" />
+    <Parameter Name="PasswordHash" Parameter="passwordHash" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="Telefono" Parameter="telefono" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="NombreRol" Parameter="nombreRol" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_LISTAR_SERVICIOS_PROFESIONAL" Method="SP_LISTAR_SERVICIOS_PROFESIONAL">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NombreServicio" Parameter="nombreServicio" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="SP_LISTAR_SERVICIOS_PROFESIONALResult">
+      <Column Name="IdServicio" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DuracionMinutos" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Precio" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PermiteDescuento" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="PorcentajeDescuento" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+      <Column Name="FechaCreacion" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Estado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_CAMBIAR_CONTRASENA_CON_CODIGO" Method="SP_CAMBIAR_CONTRASENA_CON_CODIGO">
+    <Parameter Name="CodigoRecuperacion" Parameter="codigoRecuperacion" Type="System.String" DbType="VarChar(10)" />
+    <Parameter Name="NuevaContrasenaHash" Parameter="nuevaContrasenaHash" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="ConfirmacionContrasenaHash" Parameter="confirmacionContrasenaHash" Type="System.String" DbType="NVarChar(255)" />
     <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />

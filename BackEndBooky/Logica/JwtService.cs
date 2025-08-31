@@ -73,8 +73,31 @@ namespace Logic
 
                 return handler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
             }
+        public static int? GetUserIdFromToken(string token)
+        {
+            try
+            {
+                // Validar y obtener los claims del token
+                var principal = ValidateToken(token);
 
-            public static bool IsTokenBlacklisted(string token)
+                // Buscar el claim "sub" o "nameidentifier" para obtener el IdUsuario
+                var idClaim = principal.Claims.FirstOrDefault(c =>
+                    c.Type == JwtRegisteredClaimNames.Sub ||
+                    c.Type == ClaimTypes.NameIdentifier);
+
+                if (idClaim != null && int.TryParse(idClaim.Value, out int idUsuario))
+                    return idUsuario;
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
+        public static bool IsTokenBlacklisted(string token)
             {
                 try
                 {
