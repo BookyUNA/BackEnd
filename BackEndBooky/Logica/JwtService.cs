@@ -80,8 +80,10 @@ namespace Logic
                 // Validar y obtener los claims del token
                 var principal = ValidateToken(token);
 
-                // Extraer el claim "sub" (lo usamos para el IdUsuario)
-                var idClaim = principal.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub);
+                // Buscar el claim "sub" o "nameidentifier" para obtener el IdUsuario
+                var idClaim = principal.Claims.FirstOrDefault(c =>
+                    c.Type == JwtRegisteredClaimNames.Sub ||
+                    c.Type == ClaimTypes.NameIdentifier);
 
                 if (idClaim != null && int.TryParse(idClaim.Value, out int idUsuario))
                     return idUsuario;
@@ -93,6 +95,7 @@ namespace Logic
                 return null;
             }
         }
+
 
         public static bool IsTokenBlacklisted(string token)
             {

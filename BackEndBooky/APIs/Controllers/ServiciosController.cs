@@ -5,20 +5,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
+
 
 namespace APIs.Controllers
 {
     [Authorize]
-    public class ServiciosController : Controller
+    public class ServiciosController : ApiController
     {
         // GET: Servicios
         [Authorize (Roles = "Profesional")]
         [HttpPost]
+        [Route("api/Servicios/ListarServiciosProfesional")]
         public ResListarServicio ListarServicios (ReqListarServicio req)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            return new LogServicio.ListarServicios(req, token);
+            var token = Request.Headers.Authorization.Parameter;
+            return new LogServicio().ListarServicios(req, token);
         }
     }
 }

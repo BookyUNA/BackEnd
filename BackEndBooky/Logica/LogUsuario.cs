@@ -158,6 +158,8 @@ namespace Logica
                 using (DataClasses1DataContext linq = new DataClasses1DataContext())
                 {
                     linq.SP_AGREGAR_USUARIO(
+
+
                         req.rol,
                         req.cedula,
                         req.nombreCompleto,

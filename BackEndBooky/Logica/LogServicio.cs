@@ -20,86 +20,64 @@ namespace Logica
 
             bool? resultadoBd = true;
             int? errorID = 0;
-            int? idUsuario = 0;
-
-
-            //Validaciones necesariasS
-
+            int? idUsuarioToken = 0;
+            idUsuarioToken = JwtService.GetUserIdFromToken(token);
             try
             {
-                
-                if (token != null)
+                // Validación de campos obligatorios
+                if (idUsuarioToken <= 0)
                 {
-                    try
+                    res.resultado = false;
+                    res.error.Add(new Error
                     {
+                        ErrorCode = 20001,
+                        Message = "Sesión vencida"
+                    });
+                    return res;
+                }
 
-                        idUsuario = JwtService.GetUserIdFromToken(token);
+                using (DataClasses1DataContext linq = new DataClasses1DataContext())
+                {
+                    var servicios = linq.SP_LISTAR_SERVICIOS_PROFESIONAL(
+                        idUsuarioToken,
+                        req.nombre,
+                        ref resultadoBd,
+                        ref errorID
+                    ).ToList();
 
+                    if (resultadoBd.HasValue && resultadoBd.Value)
+                    {
+                        res.resultado = true;
+                        res.servicios = servicios.Select(s => new Servicio
+                        {
+                            IdServicio = s.IdServicio,
+                            Nombre = s.Nombre,
+                            Descripcion = s.Descripcion,
+                            DuracionMinutos = s.DuracionMinutos,
+                            Precio = s.Precio,
+                            PermiteDescuento = s.PermiteDescuento,
+                            PorcentajeDescuento = s.PorcentajeDescuento,
+                            FechaCreacion = s.FechaCreacion,
+                            Estado = s.Estado
+                        }).ToList();
                     }
-                    catch (Exception ex)
+                    else
                     {
                         res.resultado = false;
-                        res.error.Add(new Error
+                        switch (errorID)
                         {
-                            ErrorCode = 50003,
-                            Message = "Sesión inválida"
-                        });
-                        return res;
-                    }
-                    if (idUsuario <= 0)
-                    {
-                        res.resultado = false;
-                        res.error.Add(new Error
-                        {
-                            ErrorCode = 20001,
-                            Message = "Sesión inválida"
-                        });
-                        return res;
-                    }
-
-                    using (DataClasses1DataContext linq = new DataClasses1DataContext())
-                    {
-                        var servicios = linq.SP_LISTAR_SERVICIOS_PROFESIONAL(
-                            idUsuario,
-                            req.nombre,
-                            ref resultadoBd,
-                            ref errorID
-                        ).ToList();
-
-                        if (resultadoBd.HasValue && resultadoBd.Value)
-                        {
-                            res.resultado = true;
-                            res.servicios = servicios.Select(s => new Servicio
-                            {
-                                IdServicio = s.IdServicio,
-                                Nombre = s.Nombre,
-                                Descripcion = s.Descripcion,
-                                DuracionMinutos = s.DuracionMinutos,
-                                Precio = s.Precio,
-                                PermiteDescuento = s.PermiteDescuento,
-                                PorcentajeDescuento = s.PorcentajeDescuento,
-                                FechaCreacion = s.FechaCreacion,
-                                Estado = s.Estado
-                            }).ToList();
-                        }
-                        else
-                        {
-                            res.resultado = false;
-                            switch (errorID)
-                            {
-                                case 20001:
-                                    res.error.Add(new Error { ErrorCode = 20001, Message = "El IdUsuario es obligatorio" });
-                                    break;
-                                case 20002:
-                                    res.error.Add(new Error { ErrorCode = 20002, Message = "Perfil profesional no encontrado" });
-                                    break;
-                                case 20003:
-                                    res.error.Add(new Error { ErrorCode = 20003, Message = "No hay servicios asociados a este usuario" });
-                                    break;
-                                default:
-                                    res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error inesperado en la base de datos" });
-                                    break;
-                            }
+                            case 20001:
+                                res.error.Add(new Error { ErrorCode = 20001, Message = "El IdUsuario es obligatorio" });
+                                break;
+                            case 20002:
+                                res.error.Add(new Error { ErrorCode = 20002, Message = "Perfil profesional no encontrado" });
+                                break;
+                            case 20003:
+                                res.error.Add(new Error { ErrorCode = 20003, Message = "No hay servicios asociados a este usuario" });
+                                break;
+                            default:
+                                res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error inesperado en la base de datos" });
+                                break;
                         }
                     }
                 }

@@ -28,6 +28,7 @@ namespace API.Controllers
         public ResCambioDeContrasena CambioDeContrasena([FromBody] ReqCambioDeContrasena req)
         {
             return new LogCambioDeContrasena().CambioDeContrasena(req);
+        }
        
         [HttpPost]
         [Route("api/RegistrarUsuario")]

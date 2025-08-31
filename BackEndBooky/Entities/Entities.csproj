@@ -48,7 +48,6 @@
     <Compile Include="Request\ReqAgregarUsuario.cs" />
     <Compile Include="Request\ReqGenerarNuevoCodigo.cs" />
     <Compile Include="Request\ReqBase.cs" />
-    <Compile Include="Request\ReqCambioContraseña.cs" />
     <Compile Include="Request\ReqCierreSesion.cs" />
     <Compile Include="Request\ReqInicioSesion.cs" />
     <Compile Include="Request\ReqListarServicio.cs" />
@@ -56,7 +55,6 @@
     <Compile Include="Request\ReqVerificarEmail.cs" />
     <Compile Include="Response\ResAgregarUsuario.cs" />
     <Compile Include="Response\ResBase.cs" />
-    <Compile Include="Response\ResCambioContraseña.cs" />
     <Compile Include="Response\ResCambioDeContrasena.cs" />
     <Compile Include="Response\ResCierreSesion.cs" />
     <Compile Include="Response\ResGenerarNuevoCodigo.cs" />
