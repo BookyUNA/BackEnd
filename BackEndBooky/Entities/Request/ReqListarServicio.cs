@@ -8,6 +8,7 @@ namespace Entities.Request
 {
     public class ReqListarServicio
     {
-        public string nombre { get; set; }
+        public string nombre { get; set; } = string.Empty;
+
     }
 }
