@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Entities.Request
 {
-    internal class ReqCambioContraseña
+    public class ReqVerificarEmail
     {
+        public string email { get; set; }
+        public string codigo { get; set; }
     }
 }
