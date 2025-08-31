@@ -916,6 +916,125 @@ GO
 -- Luego vuelve a ejecutar el CREATE OR ALTER PROCEDURE
 
 
+USE [Booky]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP_LISTAR_SERVICIOS_PROFESIONAL]    Script Date: 31/8/2025 10:55:39 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[SP_LISTAR_SERVICIOS_PROFESIONAL]
+    @IdUsuario INT,                     -- Id del usuario (obligatorio)
+    @NombreServicio NVARCHAR(100) = NULL, -- Filtro opcional por nombre
+    @SUCCESS BIT OUTPUT,               -- Salida: 1 = OK, 0 = Error
+    @ERRORID INT OUTPUT                -- Salida: Código de error
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @IdPerfil INT;
+
+    -- Inicializar variables de salida
+    SET @SUCCESS = 0;
+    SET @ERRORID = 0;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- ================================
+        -- VALIDAR PARÁMETROS DE ENTRADA
+        -- ================================
+        IF @IdUsuario IS NULL OR @IdUsuario <= 0
+        BEGIN
+            SET @ERRORID = 20001; -- Error: IdUsuario no proporcionado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- ================================
+        -- BUSCAR PERFIL PROFESIONAL
+        -- ================================
+        SELECT @IdPerfil = IdPerfil
+        FROM [dbo].[PerfilesProfesionales]
+        WHERE IdUsuario = @IdUsuario
+          AND Estado = 1;
+
+        IF @IdPerfil IS NULL
+        BEGIN
+            SET @ERRORID = 20002; -- Error: Perfil no encontrado
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- ================================
+        -- LISTAR SERVICIOS
+        -- ================================
+        IF @NombreServicio IS NULL OR LTRIM(RTRIM(@NombreServicio)) = ''
+        BEGIN
+            -- Listar todos los servicios asociados al perfil
+            SELECT 
+                S.IdServicio,
+                S.Nombre,
+                S.Descripcion,
+                S.DuracionMinutos,
+                S.Precio,
+                S.PermiteDescuento,
+                S.PorcentajeDescuento,
+                S.FechaCreacion,
+                S.Estado
+            FROM [dbo].[Servicios] S
+            WHERE S.IdPerfil = @IdPerfil
+              AND S.Estado = 1;
+        END
+        ELSE
+        BEGIN
+            -- Listar servicios filtrando por nombre
+            SELECT 
+                S.IdServicio,
+                S.Nombre,
+                S.Descripcion,
+                S.DuracionMinutos,
+                S.Precio,
+                S.PermiteDescuento,
+                S.PorcentajeDescuento,
+                S.FechaCreacion,
+                S.Estado
+            FROM [dbo].[Servicios] S
+            WHERE S.IdPerfil = @IdPerfil
+              AND S.Estado = 1
+              AND S.Nombre LIKE '%' + @NombreServicio + '%';
+        END
+
+        -- ================================
+        -- VALIDAR SI HAY RESULTADOS
+        -- ================================
+        IF @@ROWCOUNT = 0
+        BEGIN
+            SET @ERRORID = 20003; -- Error: No hay servicios disponibles
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Si todo salió bien
+        COMMIT TRANSACTION;
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+GO
+
+
 
 
 
