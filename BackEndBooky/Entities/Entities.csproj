@@ -51,6 +51,7 @@
     <Compile Include="Request\ReqCierreSesion.cs" />
     <Compile Include="Request\ReqInicioSesion.cs" />
     <Compile Include="Request\ReqListarServicio.cs" />
+    <Compile Include="Request\ReqMostrarInformacionMiPerfil.cs" />
     <Compile Include="Request\ReqRecuperarContraseña.cs" />
     <Compile Include="Request\ReqVerificarEmail.cs" />
     <Compile Include="Response\ResAgregarUsuario.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Response\ResGenerarNuevoCodigo.cs" />
     <Compile Include="Response\ResInicioSesion.cs" />
     <Compile Include="Response\ResListarServicio.cs" />
+    <Compile Include="Response\ResMostrarInformacionMiPerfil.cs" />
     <Compile Include="Response\ResRecuperarContraseña.cs" />
     <Compile Include="Response\ResVerificarEmail.cs" />
   </ItemGroup>

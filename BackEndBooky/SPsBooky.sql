@@ -1019,6 +1019,70 @@ GO
 
 
 
+USE [Booky]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_OBTENER_INFORMACION_MI_PERFIL]    Script Date: 30/8/2025 21:12:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+/*
+Procedimiento: SP_OBTENER_MI_PERFIL
+Objetivo: Obtener la información del perfil del usuario.
+*/
+
+ALTER   PROCEDURE [dbo].[SP_OBTENER_INFORMACION_MI_PERFIL]
+    @IdUsuario INT,                  -- Id del usuario obtenido del token
+    @SUCCESS BIT OUTPUT,             -- Salida: 1 = OK, 0 = Error
+    @ERRORID INT OUTPUT              -- Salida: Código de error
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        -- ===================================
+        -- VALIDACION DE PARAMETRO OBLIGATORIO
+        -- ===================================
+        IF (@IdUsuario IS NULL OR @IdUsuario <= 0)
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 40001; -- IdUsuario no válido
+            RETURN;
+        END
+        
+        -- =========================
+        -- VALIDAR USUARIO Y ESTADO
+        -- =========================
+        IF NOT EXISTS (SELECT 1 FROM Usuarios WHERE IdUsuario = @IdUsuario AND Estado = 1)
+        BEGIN
+            SET @SUCCESS = 0;
+            SET @ERRORID = 40002; -- Usuario no encontrado o inactivo
+            RETURN;
+        END
+
+        -- ===========================
+        -- RETORNAR DATOS DEL USUARIO
+        -- ===========================
+        SELECT 
+            Nombre,
+            Email,
+            Cedula,
+            Telefono
+        FROM Usuarios
+        WHERE IdUsuario = @IdUsuario;
+
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+    END TRY
+    BEGIN CATCH
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+
+
+
 
 
 
@@ -1034,6 +1098,7 @@ PRINT '  - SP_LOGIN_USUARIO'
 PRINT '  - SP_REGISTRAR_USUARIO'
 PRINT '  - SP_GENERAR_CODIGO_VERIFICACION'
 PRINT '  - SP_VERIFICAR_EMAIL_CON_CODIGO'
+PRINT '  - SP_OBTENER_INFORMACION_MI_PERFIL'
 GO
 
 

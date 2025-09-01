@@ -158,6 +158,7 @@
     <Compile Include="LogCierreSesion.cs" />
     <Compile Include="LogGenerarNuevoCodigo.cs" />
     <Compile Include="LogInicioSesion.cs" />
+    <Compile Include="LogMostrarInformacionMiPerfil.cs" />
     <Compile Include="LogRecuperarContraseña.cs" />
     <Compile Include="LogServicio.cs" />
     <Compile Include="LogUsuario.cs" />

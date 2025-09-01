@@ -33,7 +33,7 @@ namespace DAL
     #endregion
 		
 		public DataClasses1DataContext() : 
-				base(global::DAL.Properties.Settings.Default.BookyConnectionString3, mappingSource)
+				base(global::DAL.Properties.Settings.Default.BookyConnectionString2, mappingSource)
 		{
 			OnCreated();
 		}
@@ -137,6 +137,15 @@ namespace DAL
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(6)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(7)));
 			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_INFORMACION_MI_PERFIL")]
+		public ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult> SP_OBTENER_INFORMACION_MI_PERFIL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(1)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
+			return ((ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult>)(result.ReturnValue));
 		}
 	}
 	
@@ -305,6 +314,86 @@ namespace DAL
 				if ((this._Estado != value))
 				{
 					this._Estado = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_INFORMACION_MI_PERFILResult
+	{
+		
+		private string _Nombre;
+		
+		private string _Email;
+		
+		private string _Cedula;
+		
+		private string _Telefono;
+		
+		public SP_OBTENER_INFORMACION_MI_PERFILResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Nombre", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string Nombre
+		{
+			get
+			{
+				return this._Nombre;
+			}
+			set
+			{
+				if ((this._Nombre != value))
+				{
+					this._Nombre = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="VarChar(150) NOT NULL", CanBeNull=false)]
+		public string Email
+		{
+			get
+			{
+				return this._Email;
+			}
+			set
+			{
+				if ((this._Email != value))
+				{
+					this._Email = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Cedula", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
+		public string Cedula
+		{
+			get
+			{
+				return this._Cedula;
+			}
+			set
+			{
+				if ((this._Cedula != value))
+				{
+					this._Cedula = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Telefono", DbType="VarChar(20)")]
+		public string Telefono
+		{
+			get
+			{
+				return this._Telefono;
+			}
+			set
+			{
+				if ((this._Telefono != value))
+				{
+					this._Telefono = value;
 				}
 			}
 		}
