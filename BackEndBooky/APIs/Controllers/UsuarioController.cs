@@ -118,6 +118,17 @@ namespace APIs.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("api/MiPerfil")]
+        public ResMostrarInformacionMiPerfil MiPerfil([FromBody] ReqMostrarInformacionMiPerfil req)
+        {
+            // Se extrae el token del encabezado Authorization
+            var token = Request.Headers.Authorization?.Parameter;
+
+            return new LogMostrarInformacionMiPerfil().InformacionMiPerfil(req, token);
+        }
+
     }
 
 }
