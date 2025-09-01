@@ -77,5 +77,17 @@ namespace DAL.Properties {
                 return ((string)(this["BookyConnectionString4"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=tcp:bookyserver.database.windows.net,1433;Initial Catalog=BookyDB;Per" +
+            "sist Security Info=True;User ID=booky;Password=Toor1$34*;MultipleActiveResultSet" +
+            "s=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=True")]
+        public string ConnectionStringCloud {
+            get {
+                return ((string)(this["ConnectionStringCloud"]));
+            }
+        }
     }
 }
