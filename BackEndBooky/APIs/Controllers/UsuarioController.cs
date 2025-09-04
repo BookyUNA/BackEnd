@@ -129,6 +129,15 @@ namespace APIs.Controllers
             return new LogMostrarInformacionMiPerfil().InformacionMiPerfil(req, token);
         }
 
+        [Authorize]
+        [HttpPut]
+        [Route("api/EditarMiPerfil")]
+        public ResEditarInformacionMiPerfil EditarMiPerfil([FromBody] ReqEditarInformacionMiPerfil req)
+        {
+            var token = Request.Headers.Authorization?.Parameter;
+            return new LogEditarInformacionMiPerfil().EditarMiPerfil(req, token);
+        }
+
     }
 
 }
