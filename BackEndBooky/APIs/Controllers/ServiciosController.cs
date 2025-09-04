@@ -22,5 +22,16 @@ namespace APIs.Controllers
             var token = Request.Headers.Authorization.Parameter;
             return new LogServicio().ListarServicios(req, token);
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/CambiarEstadoServicio")]
+        public ResActivarDesactivarServicio CambiarEstadoServicio([FromBody] ReqActivarDesactivarServicio req)
+        {
+            // Se extrae el token del encabezado Authorization
+            var token = Request.Headers.Authorization?.Parameter;
+
+            return new LogActivarDesactivarServicio().ActivarDesactivarServicio(req, token);
+        }
     }
 }

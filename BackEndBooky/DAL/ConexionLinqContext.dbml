@@ -88,10 +88,18 @@
       <Column Name="Telefono" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.SP_EDITAR_INFORMACION_MI_PERFIL" Method="SP_EDITAR_INFORMACION_MI_PERFIL">
+   <Function Name="dbo.SP_EDITAR_INFORMACION_MI_PERFIL" Method="SP_EDITAR_INFORMACION_MI_PERFIL">
     <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
     <Parameter Name="Nombre" Parameter="nombre" Type="System.String" DbType="VarChar(100)" />
     <Parameter Name="Telefono" Parameter="telefono" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_ACTIVAR_DESACTIVAR_SERVICIO" Method="SP_ACTIVAR_DESACTIVAR_SERVICIO">
+    <Parameter Name="IdServicio" Parameter="idServicio" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="EstadoFinal" Parameter="estadoFinal" Type="System.Boolean" DbType="Bit" Direction="InOut" />
     <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />
