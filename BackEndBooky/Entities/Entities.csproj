@@ -47,6 +47,7 @@
     <Compile Include="Request\ReqActivarDesactivarServicio.cs" />
     <Compile Include="Request\ReqCambioDeContrasena.cs" />
     <Compile Include="Request\ReqAgregarUsuario.cs" />
+    <Compile Include="Request\ReqEditarInformacionMiPerfil.cs" />
     <Compile Include="Request\ReqGenerarNuevoCodigo.cs" />
     <Compile Include="Request\ReqBase.cs" />
     <Compile Include="Request\ReqCierreSesion.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Response\ResActivarDesactivarServicio.cs" />
     <Compile Include="Response\ResCambioDeContrasena.cs" />
     <Compile Include="Response\ResCierreSesion.cs" />
+    <Compile Include="Response\ResEditarInformacionMiPerfil.cs" />
     <Compile Include="Response\ResGenerarNuevoCodigo.cs" />
     <Compile Include="Response\ResInicioSesion.cs" />
     <Compile Include="Response\ResListarServicio.cs" />

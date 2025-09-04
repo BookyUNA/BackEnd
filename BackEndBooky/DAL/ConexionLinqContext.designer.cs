@@ -140,23 +140,32 @@ namespace DAL
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_INFORMACION_MI_PERFIL")]
-		public ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult> SP_OBTENER_INFORMACION_MI_PERFIL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, sUCCESS, eRRORID);
-			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(1)));
-			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
-			return ((ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult>)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTIVAR_DESACTIVAR_SERVICIO")]
-		public int SP_ACTIVAR_DESACTIVAR_SERVICIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdServicio", DbType="Int")] System.Nullable<int> idServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="EstadoFinal", DbType="Bit")] ref System.Nullable<bool> estadoFinal, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idServicio, idUsuario, estadoFinal, sUCCESS, eRRORID);
-			estadoFinal = ((System.Nullable<bool>)(result.GetParameterValue(2)));
-			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
-			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			return ((int)(result.ReturnValue));
-		}
+    public ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult> SP_OBTENER_INFORMACION_MI_PERFIL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+    {
+        IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, sUCCESS, eRRORID);
+        sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(1)));
+        eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
+        return ((ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult>)(result.ReturnValue));
+    }
+
+    [global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_EDITAR_INFORMACION_MI_PERFIL")]
+    public int SP_EDITAR_INFORMACION_MI_PERFIL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Nombre", DbType="VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Telefono", DbType="VarChar(20)")] string telefono, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+    {
+        IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, nombre, telefono, sUCCESS, eRRORID);
+        sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
+        eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+        return ((int)(result.ReturnValue));
+    }
+
+    [global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTIVAR_DESACTIVAR_SERVICIO")]
+    public int SP_ACTIVAR_DESACTIVAR_SERVICIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdServicio", DbType="Int")] System.Nullable<int> idServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="EstadoFinal", DbType="Bit")] ref System.Nullable<bool> estadoFinal, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+    {
+        IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idServicio, idUsuario, estadoFinal, sUCCESS, eRRORID);
+        estadoFinal = ((System.Nullable<bool>)(result.GetParameterValue(2)));
+        sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
+        eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+        return ((int)(result.ReturnValue));
+    }
 	}
 	
 	public partial class SP_LISTAR_SERVICIOS_PROFESIONALResult
