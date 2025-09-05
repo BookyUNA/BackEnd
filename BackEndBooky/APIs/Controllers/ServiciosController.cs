@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Web.Security;
 
 
 namespace APIs.Controllers
@@ -23,6 +24,22 @@ namespace APIs.Controllers
             return new LogServicio().ListarServicios(req, token);
         }
 
+        [Authorize(Roles = "Profesional")]
+        [HttpPost]
+        [Route("api/Servicios/CrearServicio")]
+        public ResCrearServicio CrearServicio(ReqCrearServicio req)
+        {
+            var token = Request.Headers.Authorization.Parameter;
+            return new LogServicio().CrearServicio(req, token);
+        }
+        [Authorize(Roles = "Profesional")]
+        [HttpPost]
+        [Route("api/Servicios/ActualizarServicio")]
+        public ResActualizarServicio ActualizarServicio(ReqActualizarServicio req)
+        {
+            var token = Request.Headers.Authorization.Parameter;
+            return new LogServicio().ActualizarServicio(req, token);
+        }
         [Authorize]
         [HttpPost]
         [Route("api/CambiarEstadoServicio")]
