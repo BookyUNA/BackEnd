@@ -154,8 +154,10 @@
   <ItemGroup>
     <Compile Include="EmailService.cs" />
     <Compile Include="JwtService.cs" />
+    <Compile Include="LogActivarDesactivarServicio.cs" />
     <Compile Include="LogCambioDeContrasena.cs" />
     <Compile Include="LogCierreSesion.cs" />
+    <Compile Include="LogEditarInformacionMiPerfil.cs" />
     <Compile Include="LogGenerarNuevoCodigo.cs" />
     <Compile Include="LogInicioSesion.cs" />
     <Compile Include="LogMostrarInformacionMiPerfil.cs" />

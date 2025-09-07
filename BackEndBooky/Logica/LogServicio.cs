@@ -103,5 +103,187 @@ namespace Logica
 
             return res;
         }
+        public ResCrearServicio CrearServicio(ReqCrearServicio req, string token)
+        {
+            ResCrearServicio res = new ResCrearServicio();
+            res.error = new List<Error>();
+
+            bool? resultadoBd = true;
+            int? errorID = 0;
+            int? idUsuarioToken = JwtService.GetUserIdFromToken(token);
+
+            try
+            {
+                // Validación de sesión
+                if (idUsuarioToken <= 0)
+                {
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = 20001,
+                        Message = "Sesión vencida"
+                    });
+                    return res;
+                }
+
+                using (DataClasses1DataContext linq = new DataClasses1DataContext())
+                {
+                    int? idServicioCreado = 0;
+
+                    linq.SP_CREAR_SERVICIO(
+                        idUsuarioToken,
+                        req.nombre,
+                        req.descripcion,
+                        req.duracionMinutos,
+                        req.precio,
+                        req.permiteDescuento,
+                        req.porcentajeDescuento,
+                        ref idServicioCreado,
+                        ref resultadoBd,
+                        ref errorID
+                    );
+
+                    if (resultadoBd.HasValue && resultadoBd.Value)
+                    {
+                        res.resultado = true;
+                        res.idServicio = idServicioCreado ?? 0;
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        switch (errorID)
+                        {
+                            case 20001:
+                                res.error.Add(new Error { ErrorCode = 20001, Message = "El IdUsuario es obligatorio" });
+                                break;
+                            case 20002:
+                                res.error.Add(new Error { ErrorCode = 20002, Message = "Perfil profesional no encontrado" });
+                                break;
+                            case 20003:
+                                res.error.Add(new Error { ErrorCode = 20003, Message = "Error al crear el servicio" });
+                                break;
+                            default:
+                                res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error inesperado en la base de datos" });
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                res.resultado = false;
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50001,
+                    Message = "Error de conexión a la base de datos"
+                });
+            }
+            catch (Exception)
+            {
+                res.resultado = false;
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50002,
+                    Message = "Error en la lógica al crear el servicio"
+                });
+            }
+
+            return res;
+        }
+
+        public ResActualizarServicio ActualizarServicio(ReqActualizarServicio req, string token)
+        {
+            ResActualizarServicio res = new ResActualizarServicio();
+            res.error = new List<Error>();
+
+            bool? resultadoBd = true;
+            int? errorID = 0;
+            int? idUsuarioToken = JwtService.GetUserIdFromToken(token);
+
+            try
+            {
+                // Validación de sesión
+                if (idUsuarioToken <= 0)
+                {
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = 20001,
+                        Message = "Sesión vencida"
+                    });
+                    return res;
+                }
+
+                using (DataClasses1DataContext linq = new DataClasses1DataContext())
+                {
+                    linq.SP_ACTUALIZAR_SERVICIO(
+                        idUsuarioToken,
+                        req.idServicio,
+                        req.nombre,
+                        req.descripcion,
+                        req.duracionMinutos,
+                        req.precio,
+                        req.permiteDescuento,
+                        req.porcentajeDescuento,
+                        req.estado,
+                        ref resultadoBd,
+                        ref errorID
+                    );
+
+                    if (resultadoBd.HasValue && resultadoBd.Value)
+                    {
+                        res.resultado = true;
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        switch (errorID)
+                        {
+                            case 20001:
+                                res.error.Add(new Error { ErrorCode = 20001, Message = "El IdUsuario es obligatorio" });
+                                break;
+                            case 20002:
+                                res.error.Add(new Error { ErrorCode = 20002, Message = "Perfil profesional no encontrado" });
+                                break;
+                            case 20003:
+                                res.error.Add(new Error { ErrorCode = 20003, Message = "El servicio no existe" });
+                                break;
+                            default:
+                                res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error inesperado en la base de datos" });
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                res.resultado = false;
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50001,
+                    Message = "Error de conexión a la base de datos"
+                });
+            }
+            catch (Exception)
+            {
+                res.resultado = false;
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50002,
+                    Message = "Error en la lógica al actualizar el servicio"
+                });
+            }
+
+            return res;
+        }
+
+
+
+
+
+
+
+
+
     }
 }
