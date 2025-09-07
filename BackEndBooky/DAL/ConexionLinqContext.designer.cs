@@ -20,9 +20,9 @@ namespace DAL
 	using System.Linq.Expressions;
 	using System.ComponentModel;
 	using System;
-	
-	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="Booky")]
+    using System.Configuration;
+
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name="Booky")]
 	public partial class DataClasses1DataContext : System.Data.Linq.DataContext
 	{
 		
@@ -30,14 +30,13 @@ namespace DAL
 		
     #region Definiciones de métodos de extensibilidad
     partial void OnCreated();
-    #endregion
-		
-		public DataClasses1DataContext() : 
-				base(global::DAL.Properties.Settings.Default.BookyConnectionString3, mappingSource)
-		{
-			OnCreated();
-		}
-		
+
+    public DataClasses1DataContext() :
+        base(ConfigurationManager.ConnectionStrings["BookyCloudConnectionString"].ConnectionString, mappingSource)
+    {
+        OnCreated();
+    }
+
 		public DataClasses1DataContext(string connection) : 
 				base(connection, mappingSource)
 		{
