@@ -278,7 +278,95 @@ namespace Logica
         }
 
 
+        public ResListarServiciosParaClientes ListarServiciosParaClientes(ReqListarServiciosParaClientes req, string token)
+        {
+            ResListarServiciosParaClientes res = new ResListarServiciosParaClientes();
+            res.error = new List<Error>();
+            res.servicios = new List<ServicioParaClientes>();
 
+            bool? resultadoBd = true;
+            int? errorID = 0;
+            int? idUsuarioToken = 0;
+            idUsuarioToken = JwtService.GetUserIdFromToken(token);
+
+            try
+            {
+                // Validación de campos obligatorios
+                if (idUsuarioToken <= 0)
+                {
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = 20001,
+                        Message = "Sesión vencida"
+                    });
+                    return res;
+                }
+
+                using (DataClasses1DataContext linq = new DataClasses1DataContext())
+                {
+                    var servicios = linq.SP_LISTAR_SERVICIOS_DISPONIBLES(
+                        req.nombreServicio,
+                        req.nombreProfesional,
+                        req.profesion,
+                        ref resultadoBd,
+                        ref errorID
+                    ).ToList();
+
+                    if (resultadoBd.HasValue && resultadoBd.Value)
+                    {
+                        res.resultado = true;
+                        res.servicios = servicios.Select(s => new ServicioParaClientes
+                        {
+                            idServicio = s.IdServicio,
+                            nombreServicio = s.NombreServicio,
+                            descripcion = s.Descripcion,
+                            duracionMinutos = (int)s.DuracionMinutos,
+                            precio =(double) s.Precio,
+                            permiteDescuento = s.PermiteDescuento,
+                            porcentajeDescuento =(double) s.PorcentajeDescuento,
+                            fechaCreacion = s.FechaCreacion,
+                           
+                            nombreProfesional = s.NombreProfesional,
+                            profesion = s.Profesion
+                        }).ToList();
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        switch (errorID)
+                        {
+                            case 20003:
+                                res.error.Add(new Error { ErrorCode = 20003, Message = "No hay servicios disponibles" });
+                                break;
+                            default:
+                                res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error inesperado en la base de datos" });
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                res.resultado = false;
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50001,
+                    Message = "Error de conexión a la base de datos"
+                });
+            }
+            catch (Exception)
+            {
+                res.resultado = false;
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50002,
+                    Message = "Error en la lógica al listar los servicios disponibles"
+                });
+            }
+
+            return res;
+        }
 
 
 

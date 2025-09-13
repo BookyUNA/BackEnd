@@ -61,5 +61,14 @@ namespace APIs.Controllers
 
             return new LogSolicitarCita().SolicitarCita(req, token);
         }
+
+        [Authorize(Roles = "Cliente")]
+        [HttpPost]
+        [Route("api/ListarServiciosFiltros")]
+        public ResListarServiciosParaClientes ListarServicios([FromBody]ReqListarServiciosParaClientes req)
+        {
+            var token = Request.Headers.Authorization.Parameter;
+            return new LogServicio().ListarServiciosParaClientes(req, token);
+        }
     }
 }

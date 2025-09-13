@@ -1205,6 +1205,92 @@ END
 
 
 
+
+
+
+  CREATE OR ALTER PROCEDURE [dbo].[SP_LISTAR_SERVICIOS_DISPONIBLES]
+    @NombreServicio NVARCHAR(100) = NULL,
+    @NombreProfesional NVARCHAR(100) = NULL,
+    @Profesion NVARCHAR(100) = NULL,
+    @SUCCESS BIT OUTPUT,
+    @ERRORID INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET @SUCCESS = 0;
+    SET @ERRORID = 0;
+    
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        
+        -- Lista todos los servicios disponibles aplicando filtros opcionales con coincidencias parciales
+        SELECT 
+            S.IdServicio,
+            S.Nombre AS NombreServicio,
+            S.Descripcion,
+            S.DuracionMinutos,
+            S.Precio,
+            S.PermiteDescuento,
+            S.PorcentajeDescuento,
+            S.FechaCreacion,
+            S.Estado,
+            P.IdPerfil,
+            U.Nombre AS NombreProfesional,
+            P.Profesion
+        FROM dbo.Servicios S
+        INNER JOIN dbo.PerfilesProfesionales P ON S.IdPerfil = P.IdPerfil AND P.Estado = 1
+        INNER JOIN dbo.Usuarios U ON P.IdUsuario = U.IdUsuario AND U.Estado = 1
+        WHERE S.Estado = 1
+          AND (
+              @NombreServicio IS NULL 
+              OR LTRIM(RTRIM(@NombreServicio)) = '' 
+              OR S.Nombre COLLATE SQL_Latin1_General_CP1_CI_AI LIKE '%' + LTRIM(RTRIM(@NombreServicio)) + '%'
+          )
+          AND (
+              @NombreProfesional IS NULL 
+              OR LTRIM(RTRIM(@NombreProfesional)) = '' 
+              OR U.Nombre COLLATE SQL_Latin1_General_CP1_CI_AI LIKE '%' + LTRIM(RTRIM(@NombreProfesional)) + '%'
+          )
+          AND (
+              @Profesion IS NULL 
+              OR LTRIM(RTRIM(@Profesion)) = '' 
+              OR P.Profesion COLLATE SQL_Latin1_General_CP1_CI_AI LIKE '%' + LTRIM(RTRIM(@Profesion)) + '%'
+          )
+        ORDER BY 
+            -- Ordenar por relevancia: coincidencias exactas primero, luego parciales
+            CASE 
+                WHEN @NombreServicio IS NOT NULL AND S.Nombre COLLATE SQL_Latin1_General_CP1_CI_AI = LTRIM(RTRIM(@NombreServicio)) THEN 1
+                WHEN @NombreProfesional IS NOT NULL AND U.Nombre COLLATE SQL_Latin1_General_CP1_CI_AI = LTRIM(RTRIM(@NombreProfesional)) THEN 1
+                WHEN @Profesion IS NOT NULL AND P.Profesion COLLATE SQL_Latin1_General_CP1_CI_AI = LTRIM(RTRIM(@Profesion)) THEN 1
+                ELSE 2
+            END,
+            S.Nombre, U.Nombre;
+        
+        IF @@ROWCOUNT = 0
+        BEGIN
+            SET @ERRORID = 20003; -- No hay servicios disponibles
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        
+        COMMIT TRANSACTION;
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+        
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+GO
+
+
+
+
+
 -- =============================================
 -- SCRIPT COMPLETADO EXITOSAMENTE
 -- =============================================
