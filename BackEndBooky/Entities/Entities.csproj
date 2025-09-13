@@ -46,6 +46,7 @@
     <Compile Include="Entity\ServicioParaClientes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\ReqActivarDesactivarServicio.cs" />
+    <Compile Include="Request\ReqActualizarPerfilProfesional.cs" />
     <Compile Include="Request\ReqActualizarServicio.cs" />
     <Compile Include="Request\ReqCambioDeContrasena.cs" />
     <Compile Include="Request\ReqAgregarUsuario.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Request\ReqMostrarInformacionMiPerfil.cs" />
     <Compile Include="Request\ReqSolicitarCita.cs" />
     <Compile Include="Request\ReqVerificarEmail.cs" />
+    <Compile Include="Response\ResActualizarPerfilProfesional.cs" />
     <Compile Include="Response\ResActualizarServicio.cs" />
     <Compile Include="Response\ResAgregarUsuario.cs" />
     <Compile Include="Response\ResBase.cs" />

@@ -1202,7 +1202,73 @@ END
 
 
 
-
+CREATE OR ALTER PROCEDURE [dbo].[SP_ACTUALIZAR_PERFIL_PROFESIONAL] 
+    @IdPerfil INT,
+    @Profesion NVARCHAR(100),
+    @Descripcion NVARCHAR(500) = NULL,
+    @Direccion NVARCHAR(200) = NULL,
+    @Latitud DECIMAL(10,8) = NULL,
+    @Longitud DECIMAL(11,8) = NULL,
+    @Estado BIT = NULL,
+    @SUCCESS BIT OUTPUT,
+    @ERRORID INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET @SUCCESS = 0;
+    SET @ERRORID = 0;
+    
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        
+        -- Validar que el IdPerfil sea obligatorio
+        IF @IdPerfil IS NULL OR @IdPerfil <= 0
+        BEGIN
+            SET @ERRORID = 20004; -- El IdPerfil es obligatorio
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        
+        -- Validar que la profesión sea obligatoria
+        IF @Profesion IS NULL OR LTRIM(RTRIM(@Profesion)) = ''
+        BEGIN
+            SET @ERRORID = 20005; -- La profesión es obligatoria
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        
+        -- Actualizar el perfil profesional
+        UPDATE dbo.PerfilesProfesionales
+        SET 
+            Profesion = LTRIM(RTRIM(@Profesion)),
+            Descripcion = ISNULL(NULLIF(LTRIM(RTRIM(@Descripcion)),''), Descripcion),
+            Direccion = ISNULL(NULLIF(LTRIM(RTRIM(@Direccion)),''), Direccion),
+            Latitud = COALESCE(@Latitud, Latitud),
+            Longitud = COALESCE(@Longitud, Longitud),
+            Estado = COALESCE(@Estado, Estado)
+        WHERE IdPerfil = @IdPerfil;
+        
+        -- Verificar que se actualizó correctamente
+        IF @@ROWCOUNT = 0
+        BEGIN
+            SET @ERRORID = 20003; -- Error al actualizar el perfil profesional
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        
+        COMMIT TRANSACTION;
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+        
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+GO
 
 
 

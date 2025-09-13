@@ -2,6 +2,7 @@
 using Entities.Entity;
 using Entities.Request;
 using Entities.Response;
+using Logic;
 using Logic.Helpers;
 using System;
 using System.Collections.Generic;
@@ -337,5 +338,91 @@ namespace Logica
             return res;
         }
 
+        public ResActualizarPerfilProfesional ActualizarPerfilProfesional(ReqActualizarPerfilProfesional req, string token)
+        {
+            ResActualizarPerfilProfesional res = new ResActualizarPerfilProfesional();
+            res.error = new List<Error>();
+
+            bool? resultadoBd = true;
+            int? errorID = 0;
+            int? idUsuarioToken = JwtService.GetUserIdFromToken(token);
+
+            try
+            {
+                // Validación de sesión
+                if (idUsuarioToken <= 0)
+                {
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = 20001,
+                        Message = "Sesión vencida"
+                    });
+                    return res;
+                }
+
+                using (DataClasses1DataContext linq = new DataClasses1DataContext())
+                {
+                    linq.SP_ACTUALIZAR_PERFIL_PROFESIONAL(
+                        req.idPerfil,
+                        req.profesion,
+                        req.descripcion,
+                        req.direccion,
+                        req.latitud,
+                        req.longitud,
+                        req.estado,
+                        ref resultadoBd,
+                        ref errorID
+                    );
+
+                    if (resultadoBd.HasValue && resultadoBd.Value)
+                    {
+                        res.resultado = true;
+                    }
+                    else
+                    {
+                        res.resultado = false;
+                        switch (errorID)
+                        {
+                            case 20002:
+                                res.error.Add(new Error { ErrorCode = 20002, Message = "Perfil profesional no encontrado" });
+                                break;
+                            case 20003:
+                                res.error.Add(new Error { ErrorCode = 20003, Message = "Error al actualizar el perfil profesional" });
+                                break;
+                            case 20004:
+                                res.error.Add(new Error { ErrorCode = 20004, Message = "El IdPerfil es obligatorio" });
+                                break;
+                            case 20005:
+                                res.error.Add(new Error { ErrorCode = 20005, Message = "La profesión es obligatoria" });
+                                break;
+                            default:
+                                res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error inesperado en la base de datos" });
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                res.resultado = false;
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50001,
+                    Message = "Error de conexión a la base de datos"
+                });
+            }
+            catch (Exception)
+            {
+                res.resultado = false;
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50002,
+                    Message = "Error en la lógica al actualizar el perfil profesional"
+                });
+            }
+
+            return res;
+        }
     }
 }

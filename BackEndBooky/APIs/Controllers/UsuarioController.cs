@@ -137,7 +137,14 @@ namespace APIs.Controllers
             var token = Request.Headers.Authorization?.Parameter;
             return new LogEditarInformacionMiPerfil().EditarMiPerfil(req, token);
         }
-
+        [Authorize (Roles ="Profesional")]
+        [HttpPut]
+        [Route("api/EditarMiPerfilProfesional")]
+        public ResActualizarPerfilProfesional EditarMiPerfilProfesional([FromBody] ReqActualizarPerfilProfesional req)
+        {
+            var token = Request.Headers.Authorization?.Parameter;
+            return new LogUsuario().ActualizarPerfilProfesional(req, token);
+        }
     }
 
 }

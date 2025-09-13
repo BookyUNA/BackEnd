@@ -204,6 +204,15 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
 			return ((ISingleResult<SP_LISTAR_SERVICIOS_DISPONIBLESResult>)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_PERFIL_PROFESIONAL")]
+		public int SP_ACTUALIZAR_PERFIL_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdPerfil", DbType="Int")] System.Nullable<int> idPerfil, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Profesion", DbType="NVarChar(100)")] string profesion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Descripcion", DbType="NVarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Direccion", DbType="NVarChar(200)")] string direccion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Latitud", DbType="Decimal(10,8)")] System.Nullable<decimal> latitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Longitud", DbType="Decimal(11,8)")] System.Nullable<decimal> longitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Estado", DbType="Bit")] System.Nullable<bool> estado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idPerfil, profesion, descripcion, direccion, latitud, longitud, estado, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(7)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(8)));
+			return ((int)(result.ReturnValue));
+		}
 	}
 	
 	public partial class SP_LISTAR_SERVICIOS_PROFESIONALResult
