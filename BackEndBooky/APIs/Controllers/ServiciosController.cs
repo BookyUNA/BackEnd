@@ -50,5 +50,16 @@ namespace APIs.Controllers
 
             return new LogActivarDesactivarServicio().ActivarDesactivarServicio(req, token);
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/SolicitarCita")]
+        public ResSolicitarCita SolicitarCita([FromBody] ReqSolicitarCita req)
+        {
+            // Se extrae el token del encabezado Authorization
+            var token = Request.Headers.Authorization?.Parameter;
+
+            return new LogSolicitarCita().SolicitarCita(req, token);
+        }
     }
 }

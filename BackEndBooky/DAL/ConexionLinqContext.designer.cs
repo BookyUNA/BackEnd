@@ -20,9 +20,9 @@ namespace DAL
 	using System.Linq.Expressions;
 	using System.ComponentModel;
 	using System;
-    using System.Configuration;
-
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name="Booky")]
+	
+	
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="Booky")]
 	public partial class DataClasses1DataContext : System.Data.Linq.DataContext
 	{
 		
@@ -30,13 +30,14 @@ namespace DAL
 		
     #region Definiciones de métodos de extensibilidad
     partial void OnCreated();
-        #endregion
-        public DataClasses1DataContext() :
-        base(ConfigurationManager.ConnectionStrings["BookyCloudConnectionString"].ConnectionString, mappingSource)
-    {
-        OnCreated();
-    }
-
+    #endregion
+		
+		public DataClasses1DataContext() : 
+				base(global::DAL.Properties.Settings.Default.BookyConnectionString2, mappingSource)
+		{
+			OnCreated();
+		}
+		
 		public DataClasses1DataContext(string connection) : 
 				base(connection, mappingSource)
 		{
@@ -182,6 +183,16 @@ namespace DAL
 			idServicioCreado = ((System.Nullable<int>)(result.GetParameterValue(7)));
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(8)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(9)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_SOLICITAR_CITA_PROFESIONAL")]
+		public int SP_SOLICITAR_CITA_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdServicio", DbType="Int")] System.Nullable<int> idServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FechaCita", DbType="DateTime")] System.Nullable<System.DateTime> fechaCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="MensajeSolicitud", DbType="NVarChar(MAX)")] string mensajeSolicitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] ref System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idServicio, fechaCita, mensajeSolicitud, idCita, sUCCESS, eRRORID);
+			idCita = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(5)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(6)));
 			return ((int)(result.ReturnValue));
 		}
 	}
