@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Entities.Response
 {
-   public class ResRecuperarContraseña : ResBase
+    public class ResSolicitarCita : ResBase
     {
-
+        public int? IdCita { get; set; }
     }
 }
