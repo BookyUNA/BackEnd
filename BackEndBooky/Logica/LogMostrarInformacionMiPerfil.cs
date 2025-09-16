@@ -53,6 +53,11 @@ namespace Logica
                         res.Correo = perfil.Email;
                         res.Cedula = perfil.Cedula;
                         res.Telefono = perfil.Telefono;
+                        res.Profesion = perfil.Profesion;
+                        res.Descripcon = perfil.Descripcion;
+                        res.Direccion = perfil.Direccion;
+                        res.CalificacionPromedio = perfil.CalificacionPromedio;
+                        res.TotalCalificaciones = perfil.TotalCalificaciones;   
                     }
                     else
                     {
