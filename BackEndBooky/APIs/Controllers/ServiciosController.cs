@@ -70,5 +70,16 @@ namespace APIs.Controllers
             var token = Request.Headers.Authorization.Parameter;
             return new LogServicio().ListarServiciosParaClientes(req, token);
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/ReprogramarCita")]
+        public ResReprogramarCita ReprogramarCita([FromBody] ReqReprogramarCita req)
+        {
+            // Se extrae el token del encabezado Authorization
+            var token = Request.Headers.Authorization?.Parameter;
+
+            return new LogReprogramarCita().ReprogramarCita(req, token);
+        }
     }
 }
