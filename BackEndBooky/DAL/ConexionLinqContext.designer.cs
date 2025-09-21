@@ -20,9 +20,9 @@ namespace DAL
 	using System.Linq.Expressions;
 	using System.ComponentModel;
 	using System;
-    using System.Configuration;
-
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name="Booky")]
+	
+	
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="Booky")]
 	public partial class DataClasses1DataContext : System.Data.Linq.DataContext
 	{
 		
@@ -30,15 +30,15 @@ namespace DAL
 		
     #region Definiciones de métodos de extensibilidad
     partial void OnCreated();
-        #endregion
-
-        public DataClasses1DataContext() :
-                       base(ConfigurationManager.ConnectionStrings["BookyCloudConnectionString"].ConnectionString, mappingSource)
-        {
-            OnCreated();
-        }
-
-        public DataClasses1DataContext(string connection) : 
+    #endregion
+		
+		public DataClasses1DataContext() : 
+				base(global::DAL.Properties.Settings.Default.BookyConnectionString3, mappingSource)
+		{
+			OnCreated();
+		}
+		
+		public DataClasses1DataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
@@ -212,6 +212,15 @@ namespace DAL
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(1)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
 			return ((ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_ESTADO_CITA")]
+		public int SP_ACTUALIZAR_ESTADO_CITA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Aprobada", DbType="Bit")] System.Nullable<bool> aprobada, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="MotivoRechazo", DbType="NVarChar(500)")] string motivoRechazo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idCita, aprobada, motivoRechazo, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			return ((int)(result.ReturnValue));
 		}
 	}
 	

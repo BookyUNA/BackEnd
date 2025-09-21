@@ -108,6 +108,70 @@ BEGIN
 END
 GO
 
+
+
+-- =============================================
+-- SP: ACTUALIZAR ESTADO DE CITA
+-- Descripción: Cambiar el estado de una cita según IdCita
+-- Si se aprueba -> Estado = 0 (aceptada)
+-- Si se rechaza -> Estado = 1 (no aprobada) + motivo de rechazo
+-- =============================================
+CREATE OR ALTER PROCEDURE [dbo].[SP_ACTUALIZAR_ESTADO_CITA]
+    @IdCita INT,                        -- Id de la cita
+    @Aprobada BIT,                      -- 1 = aprobada, 0 = rechazada
+    @MotivoRechazo NVARCHAR(500) = NULL,-- Obligatorio si se rechaza
+    @SUCCESS BIT OUTPUT,                -- Salida: 1 = OK, 0 = Error
+    @ERRORID INT OUTPUT                 -- Código de error
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Inicializar salidas
+    SET @SUCCESS = 0;
+    SET @ERRORID = 0;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Validar que exista la cita
+        IF NOT EXISTS (SELECT 1 FROM [dbo].[Citas] WHERE IdCita = @IdCita)
+        BEGIN
+            SET @ERRORID = 30001; -- Error: cita no encontrada
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Si la cita es rechazada, validar motivo
+        IF @Aprobada = 0 AND (LTRIM(RTRIM(@MotivoRechazo)) = '' OR @MotivoRechazo IS NULL)
+        BEGIN
+            SET @ERRORID = 30002; -- Error: motivo de rechazo requerido
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Actualizar cita
+        UPDATE [dbo].[Citas]
+        SET Estado = CASE WHEN @Aprobada = 1 THEN 0 ELSE 1 END, -- 0 = aceptada, 1 = rechazada
+            MotivoRechazo = CASE WHEN @Aprobada = 0 THEN @MotivoRechazo ELSE NULL END,
+            FechaRespuesta = GETDATE()
+        WHERE IdCita = @IdCita;
+
+        COMMIT TRANSACTION;
+
+        SET @SUCCESS = 1;
+        SET @ERRORID = 0;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        SET @SUCCESS = 0;
+        SET @ERRORID = ERROR_NUMBER();
+    END CATCH
+END
+GO
+
+
 -- =============================================
 -- SP: CAMBIAR CONTRASEÑA CON CÓDIGO
 -- Descripción: Validar un código de recuperación y actualizar la contraseña de un usuario

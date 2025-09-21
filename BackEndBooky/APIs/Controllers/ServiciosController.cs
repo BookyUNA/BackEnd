@@ -62,6 +62,16 @@ namespace APIs.Controllers
             return new LogSolicitarCita().SolicitarCita(req, token);
         }
 
+        [Authorize]
+        [HttpPost]
+        [Route("api/AprobarDenegarCita")]
+        public ResActualizarEstadoCita AprobarDenegarCita([FromBody] ReqActualizarEstadoCita req)
+        {
+            var token = Request.Headers.Authorization?.Parameter;
+
+            return new LogCita().ActualizarEstadoCita(req, token);
+        }
+
         [Authorize(Roles = "Cliente")]
         [HttpPost]
         [Route("api/ListarServiciosFiltros")]
