@@ -179,10 +179,16 @@
       <Column Name="TotalCalificaciones" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.SP_REPROGRAMAR_CITA_PROFESIONAL" Method="SP_REPROGRAMAR_CITA_PROFESIONAL">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NuevaFechaCita" Parameter="nuevaFechaCita" Type="System.DateTime" DbType="DateTime" />
+
   <Function Name="dbo.SP_ACTUALIZAR_ESTADO_CITA" Method="SP_ACTUALIZAR_ESTADO_CITA">
     <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
     <Parameter Name="Aprobada" Parameter="aprobada" Type="System.Boolean" DbType="Bit" />
     <Parameter Name="MotivoRechazo" Parameter="motivoRechazo" Type="System.String" DbType="NVarChar(500)" />
+
     <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />

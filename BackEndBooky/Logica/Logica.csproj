@@ -162,6 +162,7 @@
     <Compile Include="LogGenerarNuevoCodigo.cs" />
     <Compile Include="LogInicioSesion.cs" />
     <Compile Include="LogMostrarInformacionMiPerfil.cs" />
+    <Compile Include="LogReprogramarCita.cs" />
     <Compile Include="LogServicio.cs" />
     <Compile Include="LogSolicitarCita.cs" />
     <Compile Include="LogUsuario.cs" />

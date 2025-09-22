@@ -61,6 +61,7 @@
     <Compile Include="Request\ReqListarServicio.cs" />
     <Compile Include="Request\ReqListarServiciosParaClientes.cs" />
     <Compile Include="Request\ReqMostrarInformacionMiPerfil.cs" />
+    <Compile Include="Request\ReqReprogramarCita.cs" />
     <Compile Include="Request\ReqSolicitarCita.cs" />
     <Compile Include="Request\ReqVerificarEmail.cs" />
     <Compile Include="Response\ResActualizarEstadoCita.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Response\ResListarServicio.cs" />
     <Compile Include="Response\ResListarServiciosParaClientes.cs" />
     <Compile Include="Response\ResMostrarInformacionMiPerfil.cs" />
+    <Compile Include="Response\ResReprogramarCita.cs" />
     <Compile Include="Response\ResSolicitarCita.cs" />
     <Compile Include="Response\ResVerificarEmail.cs" />
   </ItemGroup>
