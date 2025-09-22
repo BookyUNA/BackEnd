@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,6 +47,7 @@
     <Compile Include="Entity\ServicioParaClientes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\ReqActivarDesactivarServicio.cs" />
+    <Compile Include="Request\ReqActualizarEstadoCita.cs" />
     <Compile Include="Request\ReqActualizarPerfilProfesional.cs" />
     <Compile Include="Request\ReqActualizarServicio.cs" />
     <Compile Include="Request\ReqCambioDeContrasena.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Request\ReqReprogramarCita.cs" />
     <Compile Include="Request\ReqSolicitarCita.cs" />
     <Compile Include="Request\ReqVerificarEmail.cs" />
+    <Compile Include="Response\ResActualizarEstadoCita.cs" />
     <Compile Include="Response\ResActualizarPerfilProfesional.cs" />
     <Compile Include="Response\ResActualizarServicio.cs" />
     <Compile Include="Response\ResAgregarUsuario.cs" />

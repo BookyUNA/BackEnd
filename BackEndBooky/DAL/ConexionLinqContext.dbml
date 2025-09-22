@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Booky" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=LAPTOP-P71EKMGV\SQLEXPRESS;Initial Catalog=Booky;Persist Security Info=True;User ID=maria;Trust Server Certificate=True" SettingsObjectName="DAL.Properties.Settings" SettingsPropertyName="BookyConnectionString2" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=ASUSMEY;Initial Catalog=Booky;Integrated Security=True;Encrypt=True;Trust Server Certificate=True" SettingsObjectName="DAL.Properties.Settings" SettingsPropertyName="BookyConnectionString3" Provider="System.Data.SqlClient" />
   <Function Name="dbo.SP_LOGIN_USUARIO" Method="SP_LOGIN_USUARIO">
     <Parameter Name="Email" Parameter="email" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="PasswordHash" Parameter="passwordHash" Type="System.String" DbType="VarChar(255)" />
@@ -183,6 +183,12 @@
     <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
     <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
     <Parameter Name="NuevaFechaCita" Parameter="nuevaFechaCita" Type="System.DateTime" DbType="DateTime" />
+
+  <Function Name="dbo.SP_ACTUALIZAR_ESTADO_CITA" Method="SP_ACTUALIZAR_ESTADO_CITA">
+    <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Aprobada" Parameter="aprobada" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="MotivoRechazo" Parameter="motivoRechazo" Type="System.String" DbType="NVarChar(500)" />
+
     <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />
