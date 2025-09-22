@@ -157,6 +157,7 @@
     <Compile Include="LogActivarDesactivarServicio.cs" />
     <Compile Include="LogCambioDeContrasena.cs" />
     <Compile Include="LogCierreSesion.cs" />
+    <Compile Include="LogCita.cs" />
     <Compile Include="LogEditarInformacionMiPerfil.cs" />
     <Compile Include="LogGenerarNuevoCodigo.cs" />
     <Compile Include="LogInicioSesion.cs" />
