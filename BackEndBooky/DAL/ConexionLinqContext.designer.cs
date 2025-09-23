@@ -20,50 +20,50 @@ namespace DAL
 	using System.Linq.Expressions;
 	using System.ComponentModel;
 	using System;
-	
-	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="Booky")]
+
+
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Booky")]
 	public partial class DataClasses1DataContext : System.Data.Linq.DataContext
 	{
-		
+
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
-		
-    #region Definiciones de métodos de extensibilidad
-    partial void OnCreated();
-    #endregion
-		
-		public DataClasses1DataContext() : 
-				base(global::DAL.Properties.Settings.Default.BookyConnectionString3, mappingSource)
+
+		#region Definiciones de métodos de extensibilidad
+		partial void OnCreated();
+		#endregion
+
+		public DataClasses1DataContext() :
+				base(global::DAL.Properties.Settings.Default.ConnectionStringCloud, mappingSource)
 		{
 			OnCreated();
 		}
-		
-		public DataClasses1DataContext(string connection) : 
+
+		public DataClasses1DataContext(string connection) :
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
-		
-		public DataClasses1DataContext(System.Data.IDbConnection connection) : 
+
+		public DataClasses1DataContext(System.Data.IDbConnection connection) :
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
-		
-		public DataClasses1DataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+
+		public DataClasses1DataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) :
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
-		
-		public DataClasses1DataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+
+		public DataClasses1DataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) :
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_LOGIN_USUARIO")]
-		public int SP_LOGIN_USUARIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="Email", DbType="VarChar(150)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PasswordHash", DbType="VarChar(255)")] string passwordHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] ref System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="RolNombre", DbType="VarChar(50)")] ref string rolNombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_LOGIN_USUARIO")]
+		public int SP_LOGIN_USUARIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Email", DbType = "VarChar(150)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PasswordHash", DbType = "VarChar(255)")] string passwordHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuario", DbType = "Int")] ref System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "RolNombre", DbType = "VarChar(50)")] ref string rolNombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), email, passwordHash, idUsuario, rolNombre, sUCCESS, eRRORID);
 			idUsuario = ((System.Nullable<int>)(result.GetParameterValue(2)));
@@ -72,9 +72,9 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(5)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_GENERAR_CODIGO_RECUPERACION")]
-		public int SP_GENERAR_CODIGO_RECUPERACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CorreoElectronico", DbType="NVarChar(255)")] string correoElectronico, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CodigoRecuperacion", DbType="VarChar(10)")] ref string codigoRecuperacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_GENERAR_CODIGO_RECUPERACION")]
+		public int SP_GENERAR_CODIGO_RECUPERACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "CorreoElectronico", DbType = "NVarChar(255)")] string correoElectronico, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "CodigoRecuperacion", DbType = "VarChar(10)")] ref string codigoRecuperacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), correoElectronico, codigoRecuperacion, sUCCESS, eRRORID);
 			codigoRecuperacion = ((string)(result.GetParameterValue(1)));
@@ -82,18 +82,18 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_VERIFICAR_EMAIL_CON_CODIGO")]
-		public int SP_VERIFICAR_EMAIL_CON_CODIGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="Codigo", DbType="VarChar(10)")] string codigo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_VERIFICAR_EMAIL_CON_CODIGO")]
+		public int SP_VERIFICAR_EMAIL_CON_CODIGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Codigo", DbType = "VarChar(10)")] string codigo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), codigo, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(1)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_GENERAR_CODIGO_VERIFICACION")]
-		public int SP_GENERAR_CODIGO_VERIFICACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="Email", DbType="VarChar(150)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Codigo", DbType="VarChar(10)")] ref string codigo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_GENERAR_CODIGO_VERIFICACION")]
+		public int SP_GENERAR_CODIGO_VERIFICACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Email", DbType = "VarChar(150)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Codigo", DbType = "VarChar(10)")] ref string codigo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), email, codigo, sUCCESS, eRRORID);
 			codigo = ((string)(result.GetParameterValue(1)));
@@ -101,9 +101,9 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_REGISTRAR_USUARIO")]
-		public int SP_REGISTRAR_USUARIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="Cedula", DbType="VarChar(20)")] string cedula, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Nombre", DbType="VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Email", DbType="VarChar(150)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PasswordHash", DbType="VarChar(255)")] string passwordHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Telefono", DbType="VarChar(20)")] string telefono, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreRol", DbType="VarChar(50)")] string nombreRol, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] ref System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_REGISTRAR_USUARIO")]
+		public int SP_REGISTRAR_USUARIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Cedula", DbType = "VarChar(20)")] string cedula, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Nombre", DbType = "VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Email", DbType = "VarChar(150)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PasswordHash", DbType = "VarChar(255)")] string passwordHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Telefono", DbType = "VarChar(20)")] string telefono, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "NombreRol", DbType = "VarChar(50)")] string nombreRol, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuario", DbType = "Int")] ref System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), cedula, nombre, email, passwordHash, telefono, nombreRol, idUsuario, sUCCESS, eRRORID);
 			idUsuario = ((System.Nullable<int>)(result.GetParameterValue(6)));
@@ -111,45 +111,45 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(8)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_LISTAR_SERVICIOS_PROFESIONAL")]
-		public ISingleResult<SP_LISTAR_SERVICIOS_PROFESIONALResult> SP_LISTAR_SERVICIOS_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreServicio", DbType="NVarChar(100)")] string nombreServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_LISTAR_SERVICIOS_PROFESIONAL")]
+		public ISingleResult<SP_LISTAR_SERVICIOS_PROFESIONALResult> SP_LISTAR_SERVICIOS_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuario", DbType = "Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "NombreServicio", DbType = "NVarChar(100)")] string nombreServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, nombreServicio, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(2)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_LISTAR_SERVICIOS_PROFESIONALResult>)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CAMBIAR_CONTRASENA_CON_CODIGO")]
-		public int SP_CAMBIAR_CONTRASENA_CON_CODIGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CodigoRecuperacion", DbType="VarChar(10)")] string codigoRecuperacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NuevaContrasenaHash", DbType="NVarChar(255)")] string nuevaContrasenaHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ConfirmacionContrasenaHash", DbType="NVarChar(255)")] string confirmacionContrasenaHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_CAMBIAR_CONTRASENA_CON_CODIGO")]
+		public int SP_CAMBIAR_CONTRASENA_CON_CODIGO([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "CodigoRecuperacion", DbType = "VarChar(10)")] string codigoRecuperacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "NuevaContrasenaHash", DbType = "NVarChar(255)")] string nuevaContrasenaHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ConfirmacionContrasenaHash", DbType = "NVarChar(255)")] string confirmacionContrasenaHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), codigoRecuperacion, nuevaContrasenaHash, confirmacionContrasenaHash, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_AGREGAR_USUARIO")]
-		public int SP_AGREGAR_USUARIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreRol", DbType="VarChar(50)")] string nombreRol, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Cedula", DbType="VarChar(20)")] string cedula, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Nombre", DbType="VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Email", DbType="VarChar(150)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PasswordHash", DbType="VarChar(255)")] string passwordHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Telefono", DbType="VarChar(20)")] string telefono, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_AGREGAR_USUARIO")]
+		public int SP_AGREGAR_USUARIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "NombreRol", DbType = "VarChar(50)")] string nombreRol, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Cedula", DbType = "VarChar(20)")] string cedula, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Nombre", DbType = "VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Email", DbType = "VarChar(150)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PasswordHash", DbType = "VarChar(255)")] string passwordHash, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Telefono", DbType = "VarChar(20)")] string telefono, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), nombreRol, cedula, nombre, email, passwordHash, telefono, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(6)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(7)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_EDITAR_INFORMACION_MI_PERFIL")]
-		public int SP_EDITAR_INFORMACION_MI_PERFIL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Nombre", DbType="VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Telefono", DbType="VarChar(20)")] string telefono, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_EDITAR_INFORMACION_MI_PERFIL")]
+		public int SP_EDITAR_INFORMACION_MI_PERFIL([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuario", DbType = "Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Nombre", DbType = "VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Telefono", DbType = "VarChar(20)")] string telefono, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, nombre, telefono, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTIVAR_DESACTIVAR_SERVICIO")]
-		public int SP_ACTIVAR_DESACTIVAR_SERVICIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdServicio", DbType="Int")] System.Nullable<int> idServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="EstadoFinal", DbType="Bit")] ref System.Nullable<bool> estadoFinal, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_ACTIVAR_DESACTIVAR_SERVICIO")]
+		public int SP_ACTIVAR_DESACTIVAR_SERVICIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdServicio", DbType = "Int")] System.Nullable<int> idServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuario", DbType = "Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EstadoFinal", DbType = "Bit")] ref System.Nullable<bool> estadoFinal, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idServicio, idUsuario, estadoFinal, sUCCESS, eRRORID);
 			estadoFinal = ((System.Nullable<bool>)(result.GetParameterValue(2)));
@@ -157,18 +157,18 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_SERVICIO")]
-		public int SP_ACTUALIZAR_SERVICIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdServicio", DbType="Int")] System.Nullable<int> idServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Nombre", DbType="VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Descripcion", DbType="VarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DuracionMinutos", DbType="Int")] System.Nullable<int> duracionMinutos, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Precio", DbType="Decimal(10,2)")] System.Nullable<decimal> precio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PermiteDescuento", DbType="Bit")] System.Nullable<bool> permiteDescuento, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PorcentajeDescuento", DbType="Decimal(5,2)")] System.Nullable<decimal> porcentajeDescuento, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Estado", DbType="Bit")] System.Nullable<bool> estado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_ACTUALIZAR_SERVICIO")]
+		public int SP_ACTUALIZAR_SERVICIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuario", DbType = "Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdServicio", DbType = "Int")] System.Nullable<int> idServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Nombre", DbType = "VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Descripcion", DbType = "VarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "DuracionMinutos", DbType = "Int")] System.Nullable<int> duracionMinutos, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Precio", DbType = "Decimal(10,2)")] System.Nullable<decimal> precio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PermiteDescuento", DbType = "Bit")] System.Nullable<bool> permiteDescuento, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PorcentajeDescuento", DbType = "Decimal(5,2)")] System.Nullable<decimal> porcentajeDescuento, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Estado", DbType = "Bit")] System.Nullable<bool> estado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idServicio, nombre, descripcion, duracionMinutos, precio, permiteDescuento, porcentajeDescuento, estado, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(9)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(10)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CREAR_SERVICIO")]
-		public int SP_CREAR_SERVICIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Nombre", DbType="VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Descripcion", DbType="VarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DuracionMinutos", DbType="Int")] System.Nullable<int> duracionMinutos, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Precio", DbType="Decimal(10,2)")] System.Nullable<decimal> precio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PermiteDescuento", DbType="Bit")] System.Nullable<bool> permiteDescuento, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PorcentajeDescuento", DbType="Decimal(5,2)")] System.Nullable<decimal> porcentajeDescuento, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdServicioCreado", DbType="Int")] ref System.Nullable<int> idServicioCreado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_CREAR_SERVICIO")]
+		public int SP_CREAR_SERVICIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuario", DbType = "Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Nombre", DbType = "VarChar(100)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Descripcion", DbType = "VarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "DuracionMinutos", DbType = "Int")] System.Nullable<int> duracionMinutos, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Precio", DbType = "Decimal(10,2)")] System.Nullable<decimal> precio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PermiteDescuento", DbType = "Bit")] System.Nullable<bool> permiteDescuento, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PorcentajeDescuento", DbType = "Decimal(5,2)")] System.Nullable<decimal> porcentajeDescuento, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdServicioCreado", DbType = "Int")] ref System.Nullable<int> idServicioCreado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, nombre, descripcion, duracionMinutos, precio, permiteDescuento, porcentajeDescuento, idServicioCreado, sUCCESS, eRRORID);
 			idServicioCreado = ((System.Nullable<int>)(result.GetParameterValue(7)));
@@ -176,9 +176,9 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(9)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_SOLICITAR_CITA_PROFESIONAL")]
-		public int SP_SOLICITAR_CITA_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdServicio", DbType="Int")] System.Nullable<int> idServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FechaCita", DbType="DateTime")] System.Nullable<System.DateTime> fechaCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="MensajeSolicitud", DbType="NVarChar(MAX)")] string mensajeSolicitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] ref System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_SOLICITAR_CITA_PROFESIONAL")]
+		public int SP_SOLICITAR_CITA_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuario", DbType = "Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdServicio", DbType = "Int")] System.Nullable<int> idServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "FechaCita", DbType = "DateTime")] System.Nullable<System.DateTime> fechaCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "MensajeSolicitud", DbType = "NVarChar(MAX)")] string mensajeSolicitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdCita", DbType = "Int")] ref System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idServicio, fechaCita, mensajeSolicitud, idCita, sUCCESS, eRRORID);
 			idCita = ((System.Nullable<int>)(result.GetParameterValue(4)));
@@ -186,613 +186,614 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(6)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_LISTAR_SERVICIOS_DISPONIBLES")]
-		public ISingleResult<SP_LISTAR_SERVICIOS_DISPONIBLESResult> SP_LISTAR_SERVICIOS_DISPONIBLES([global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreServicio", DbType="NVarChar(100)")] string nombreServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreProfesional", DbType="NVarChar(100)")] string nombreProfesional, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Profesion", DbType="NVarChar(100)")] string profesion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_LISTAR_SERVICIOS_DISPONIBLES")]
+		public ISingleResult<SP_LISTAR_SERVICIOS_DISPONIBLESResult> SP_LISTAR_SERVICIOS_DISPONIBLES([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "NombreServicio", DbType = "NVarChar(100)")] string nombreServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "NombreProfesional", DbType = "NVarChar(100)")] string nombreProfesional, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Profesion", DbType = "NVarChar(100)")] string profesion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), nombreServicio, nombreProfesional, profesion, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
 			return ((ISingleResult<SP_LISTAR_SERVICIOS_DISPONIBLESResult>)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_PERFIL_PROFESIONAL")]
-		public int SP_ACTUALIZAR_PERFIL_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdPerfil", DbType="Int")] System.Nullable<int> idPerfil, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Profesion", DbType="NVarChar(100)")] string profesion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Descripcion", DbType="NVarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Direccion", DbType="NVarChar(200)")] string direccion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Latitud", DbType="Decimal(10,8)")] System.Nullable<decimal> latitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Longitud", DbType="Decimal(11,8)")] System.Nullable<decimal> longitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Estado", DbType="Bit")] System.Nullable<bool> estado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_ACTUALIZAR_PERFIL_PROFESIONAL")]
+		public int SP_ACTUALIZAR_PERFIL_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdPerfil", DbType = "Int")] System.Nullable<int> idPerfil, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Profesion", DbType = "NVarChar(100)")] string profesion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Descripcion", DbType = "NVarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Direccion", DbType = "NVarChar(200)")] string direccion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Latitud", DbType = "Decimal(10,8)")] System.Nullable<decimal> latitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Longitud", DbType = "Decimal(11,8)")] System.Nullable<decimal> longitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Estado", DbType = "Bit")] System.Nullable<bool> estado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idPerfil, profesion, descripcion, direccion, latitud, longitud, estado, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(7)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(8)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_INFORMACION_MI_PERFIL")]
-		public ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult> SP_OBTENER_INFORMACION_MI_PERFIL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_OBTENER_INFORMACION_MI_PERFIL")]
+		public ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult> SP_OBTENER_INFORMACION_MI_PERFIL([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuario", DbType = "Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(1)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
 			return ((ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult>)(result.ReturnValue));
 		}
-		
-    
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_REPROGRAMAR_CITA_PROFESIONAL")]
-		public int SP_REPROGRAMAR_CITA_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NuevaFechaCita", DbType="DateTime")] System.Nullable<System.DateTime> nuevaFechaCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_REPROGRAMAR_CITA_PROFESIONAL")]
+		public int SP_REPROGRAMAR_CITA_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuario", DbType = "Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdCita", DbType = "Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "NuevaFechaCita", DbType = "DateTime")] System.Nullable<System.DateTime> nuevaFechaCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idCita, nuevaFechaCita, sUCCESS, eRRORID);
-		  sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
-    
-  [global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_ESTADO_CITA")]
-		public int SP_ACTUALIZAR_ESTADO_CITA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Aprobada", DbType="Bit")] System.Nullable<bool> aprobada, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="MotivoRechazo", DbType="NVarChar(500)")] string motivoRechazo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_ACTUALIZAR_ESTADO_CITA")]
+		public int SP_ACTUALIZAR_ESTADO_CITA([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdCita", DbType = "Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Aprobada", DbType = "Bit")] System.Nullable<bool> aprobada, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "MotivoRechazo", DbType = "NVarChar(500)")] string motivoRechazo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SUCCESS", DbType = "Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ERRORID", DbType = "Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idCita, aprobada, motivoRechazo, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
-	
-	
-	public partial class SP_LISTAR_SERVICIOS_PROFESIONALResult
-	{
-		
-		private int _IdServicio;
-		
-		private string _Nombre;
-		
-		private string _Descripcion;
-		
-		private System.Nullable<int> _DuracionMinutos;
-		
-		private decimal _Precio;
-		
-		private bool _PermiteDescuento;
-		
-		private System.Nullable<decimal> _PorcentajeDescuento;
-		
-		private System.DateTime _FechaCreacion;
-		
-		private bool _Estado;
-		
-		public SP_LISTAR_SERVICIOS_PROFESIONALResult()
+
+
+		public partial class SP_LISTAR_SERVICIOS_PROFESIONALResult
 		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdServicio", DbType="Int NOT NULL")]
-		public int IdServicio
-		{
-			get
+
+			private int _IdServicio;
+
+			private string _Nombre;
+
+			private string _Descripcion;
+
+			private System.Nullable<int> _DuracionMinutos;
+
+			private decimal _Precio;
+
+			private bool _PermiteDescuento;
+
+			private System.Nullable<decimal> _PorcentajeDescuento;
+
+			private System.DateTime _FechaCreacion;
+
+			private bool _Estado;
+
+			public SP_LISTAR_SERVICIOS_PROFESIONALResult()
 			{
-				return this._IdServicio;
 			}
-			set
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IdServicio", DbType = "Int NOT NULL")]
+			public int IdServicio
 			{
-				if ((this._IdServicio != value))
+				get
 				{
-					this._IdServicio = value;
+					return this._IdServicio;
+				}
+				set
+				{
+					if ((this._IdServicio != value))
+					{
+						this._IdServicio = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Nombre", DbType = "VarChar(100) NOT NULL", CanBeNull = false)]
+			public string Nombre
+			{
+				get
+				{
+					return this._Nombre;
+				}
+				set
+				{
+					if ((this._Nombre != value))
+					{
+						this._Nombre = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Descripcion", DbType = "VarChar(500)")]
+			public string Descripcion
+			{
+				get
+				{
+					return this._Descripcion;
+				}
+				set
+				{
+					if ((this._Descripcion != value))
+					{
+						this._Descripcion = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DuracionMinutos", DbType = "Int")]
+			public System.Nullable<int> DuracionMinutos
+			{
+				get
+				{
+					return this._DuracionMinutos;
+				}
+				set
+				{
+					if ((this._DuracionMinutos != value))
+					{
+						this._DuracionMinutos = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Precio", DbType = "Decimal(10,2) NOT NULL")]
+			public decimal Precio
+			{
+				get
+				{
+					return this._Precio;
+				}
+				set
+				{
+					if ((this._Precio != value))
+					{
+						this._Precio = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PermiteDescuento", DbType = "Bit NOT NULL")]
+			public bool PermiteDescuento
+			{
+				get
+				{
+					return this._PermiteDescuento;
+				}
+				set
+				{
+					if ((this._PermiteDescuento != value))
+					{
+						this._PermiteDescuento = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PorcentajeDescuento", DbType = "Decimal(5,2)")]
+			public System.Nullable<decimal> PorcentajeDescuento
+			{
+				get
+				{
+					return this._PorcentajeDescuento;
+				}
+				set
+				{
+					if ((this._PorcentajeDescuento != value))
+					{
+						this._PorcentajeDescuento = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FechaCreacion", DbType = "DateTime NOT NULL")]
+			public System.DateTime FechaCreacion
+			{
+				get
+				{
+					return this._FechaCreacion;
+				}
+				set
+				{
+					if ((this._FechaCreacion != value))
+					{
+						this._FechaCreacion = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Estado", DbType = "Bit NOT NULL")]
+			public bool Estado
+			{
+				get
+				{
+					return this._Estado;
+				}
+				set
+				{
+					if ((this._Estado != value))
+					{
+						this._Estado = value;
+					}
 				}
 			}
 		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Nombre", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string Nombre
+
+		public partial class SP_LISTAR_SERVICIOS_DISPONIBLESResult
 		{
-			get
+
+			private int _IdServicio;
+
+			private string _NombreServicio;
+
+			private string _Descripcion;
+
+			private System.Nullable<int> _DuracionMinutos;
+
+			private decimal _Precio;
+
+			private bool _PermiteDescuento;
+
+			private System.Nullable<decimal> _PorcentajeDescuento;
+
+			private System.DateTime _FechaCreacion;
+
+			private bool _Estado;
+
+			private int _IdPerfil;
+
+			private string _NombreProfesional;
+
+			private string _Profesion;
+
+			public SP_LISTAR_SERVICIOS_DISPONIBLESResult()
 			{
-				return this._Nombre;
 			}
-			set
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IdServicio", DbType = "Int NOT NULL")]
+			public int IdServicio
 			{
-				if ((this._Nombre != value))
+				get
 				{
-					this._Nombre = value;
+					return this._IdServicio;
+				}
+				set
+				{
+					if ((this._IdServicio != value))
+					{
+						this._IdServicio = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NombreServicio", DbType = "VarChar(100) NOT NULL", CanBeNull = false)]
+			public string NombreServicio
+			{
+				get
+				{
+					return this._NombreServicio;
+				}
+				set
+				{
+					if ((this._NombreServicio != value))
+					{
+						this._NombreServicio = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Descripcion", DbType = "VarChar(500)")]
+			public string Descripcion
+			{
+				get
+				{
+					return this._Descripcion;
+				}
+				set
+				{
+					if ((this._Descripcion != value))
+					{
+						this._Descripcion = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DuracionMinutos", DbType = "Int")]
+			public System.Nullable<int> DuracionMinutos
+			{
+				get
+				{
+					return this._DuracionMinutos;
+				}
+				set
+				{
+					if ((this._DuracionMinutos != value))
+					{
+						this._DuracionMinutos = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Precio", DbType = "Decimal(10,2) NOT NULL")]
+			public decimal Precio
+			{
+				get
+				{
+					return this._Precio;
+				}
+				set
+				{
+					if ((this._Precio != value))
+					{
+						this._Precio = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PermiteDescuento", DbType = "Bit NOT NULL")]
+			public bool PermiteDescuento
+			{
+				get
+				{
+					return this._PermiteDescuento;
+				}
+				set
+				{
+					if ((this._PermiteDescuento != value))
+					{
+						this._PermiteDescuento = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PorcentajeDescuento", DbType = "Decimal(5,2)")]
+			public System.Nullable<decimal> PorcentajeDescuento
+			{
+				get
+				{
+					return this._PorcentajeDescuento;
+				}
+				set
+				{
+					if ((this._PorcentajeDescuento != value))
+					{
+						this._PorcentajeDescuento = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FechaCreacion", DbType = "DateTime NOT NULL")]
+			public System.DateTime FechaCreacion
+			{
+				get
+				{
+					return this._FechaCreacion;
+				}
+				set
+				{
+					if ((this._FechaCreacion != value))
+					{
+						this._FechaCreacion = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Estado", DbType = "Bit NOT NULL")]
+			public bool Estado
+			{
+				get
+				{
+					return this._Estado;
+				}
+				set
+				{
+					if ((this._Estado != value))
+					{
+						this._Estado = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IdPerfil", DbType = "Int NOT NULL")]
+			public int IdPerfil
+			{
+				get
+				{
+					return this._IdPerfil;
+				}
+				set
+				{
+					if ((this._IdPerfil != value))
+					{
+						this._IdPerfil = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NombreProfesional", DbType = "VarChar(100) NOT NULL", CanBeNull = false)]
+			public string NombreProfesional
+			{
+				get
+				{
+					return this._NombreProfesional;
+				}
+				set
+				{
+					if ((this._NombreProfesional != value))
+					{
+						this._NombreProfesional = value;
+					}
+				}
+			}
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Profesion", DbType = "VarChar(100) NOT NULL", CanBeNull = false)]
+			public string Profesion
+			{
+				get
+				{
+					return this._Profesion;
+				}
+				set
+				{
+					if ((this._Profesion != value))
+					{
+						this._Profesion = value;
+					}
 				}
 			}
 		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Descripcion", DbType="VarChar(500)")]
-		public string Descripcion
+
+		public partial class SP_OBTENER_INFORMACION_MI_PERFILResult
 		{
-			get
+
+			private string _Nombre;
+
+			private string _Email;
+
+			private string _Cedula;
+
+			private string _Telefono;
+
+			private string _Profesion;
+
+			private string _Descripcion;
+
+			private string _Direccion;
+
+			private System.Nullable<decimal> _CalificacionPromedio;
+
+			private System.Nullable<int> _TotalCalificaciones;
+
+			public SP_OBTENER_INFORMACION_MI_PERFILResult()
 			{
-				return this._Descripcion;
 			}
-			set
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Nombre", DbType = "VarChar(100) NOT NULL", CanBeNull = false)]
+			public string Nombre
 			{
-				if ((this._Descripcion != value))
+				get
 				{
-					this._Descripcion = value;
+					return this._Nombre;
+				}
+				set
+				{
+					if ((this._Nombre != value))
+					{
+						this._Nombre = value;
+					}
 				}
 			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DuracionMinutos", DbType="Int")]
-		public System.Nullable<int> DuracionMinutos
-		{
-			get
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Email", DbType = "VarChar(150) NOT NULL", CanBeNull = false)]
+			public string Email
 			{
-				return this._DuracionMinutos;
-			}
-			set
-			{
-				if ((this._DuracionMinutos != value))
+				get
 				{
-					this._DuracionMinutos = value;
+					return this._Email;
+				}
+				set
+				{
+					if ((this._Email != value))
+					{
+						this._Email = value;
+					}
 				}
 			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Precio", DbType="Decimal(10,2) NOT NULL")]
-		public decimal Precio
-		{
-			get
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cedula", DbType = "VarChar(20) NOT NULL", CanBeNull = false)]
+			public string Cedula
 			{
-				return this._Precio;
-			}
-			set
-			{
-				if ((this._Precio != value))
+				get
 				{
-					this._Precio = value;
+					return this._Cedula;
+				}
+				set
+				{
+					if ((this._Cedula != value))
+					{
+						this._Cedula = value;
+					}
 				}
 			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PermiteDescuento", DbType="Bit NOT NULL")]
-		public bool PermiteDescuento
-		{
-			get
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Telefono", DbType = "VarChar(20)")]
+			public string Telefono
 			{
-				return this._PermiteDescuento;
-			}
-			set
-			{
-				if ((this._PermiteDescuento != value))
+				get
 				{
-					this._PermiteDescuento = value;
+					return this._Telefono;
+				}
+				set
+				{
+					if ((this._Telefono != value))
+					{
+						this._Telefono = value;
+					}
 				}
 			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PorcentajeDescuento", DbType="Decimal(5,2)")]
-		public System.Nullable<decimal> PorcentajeDescuento
-		{
-			get
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Profesion", DbType = "VarChar(100)")]
+			public string Profesion
 			{
-				return this._PorcentajeDescuento;
-			}
-			set
-			{
-				if ((this._PorcentajeDescuento != value))
+				get
 				{
-					this._PorcentajeDescuento = value;
+					return this._Profesion;
+				}
+				set
+				{
+					if ((this._Profesion != value))
+					{
+						this._Profesion = value;
+					}
 				}
 			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCreacion", DbType="DateTime NOT NULL")]
-		public System.DateTime FechaCreacion
-		{
-			get
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Descripcion", DbType = "Text", UpdateCheck = UpdateCheck.Never)]
+			public string Descripcion
 			{
-				return this._FechaCreacion;
-			}
-			set
-			{
-				if ((this._FechaCreacion != value))
+				get
 				{
-					this._FechaCreacion = value;
+					return this._Descripcion;
+				}
+				set
+				{
+					if ((this._Descripcion != value))
+					{
+						this._Descripcion = value;
+					}
 				}
 			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Estado", DbType="Bit NOT NULL")]
-		public bool Estado
-		{
-			get
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Direccion", DbType = "VarChar(255)")]
+			public string Direccion
 			{
-				return this._Estado;
-			}
-			set
-			{
-				if ((this._Estado != value))
+				get
 				{
-					this._Estado = value;
+					return this._Direccion;
+				}
+				set
+				{
+					if ((this._Direccion != value))
+					{
+						this._Direccion = value;
+					}
 				}
 			}
-		}
-	}
-	
-	public partial class SP_LISTAR_SERVICIOS_DISPONIBLESResult
-	{
-		
-		private int _IdServicio;
-		
-		private string _NombreServicio;
-		
-		private string _Descripcion;
-		
-		private System.Nullable<int> _DuracionMinutos;
-		
-		private decimal _Precio;
-		
-		private bool _PermiteDescuento;
-		
-		private System.Nullable<decimal> _PorcentajeDescuento;
-		
-		private System.DateTime _FechaCreacion;
-		
-		private bool _Estado;
-		
-		private int _IdPerfil;
-		
-		private string _NombreProfesional;
-		
-		private string _Profesion;
-		
-		public SP_LISTAR_SERVICIOS_DISPONIBLESResult()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdServicio", DbType="Int NOT NULL")]
-		public int IdServicio
-		{
-			get
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CalificacionPromedio", DbType = "Decimal(3,2)")]
+			public System.Nullable<decimal> CalificacionPromedio
 			{
-				return this._IdServicio;
-			}
-			set
-			{
-				if ((this._IdServicio != value))
+				get
 				{
-					this._IdServicio = value;
+					return this._CalificacionPromedio;
+				}
+				set
+				{
+					if ((this._CalificacionPromedio != value))
+					{
+						this._CalificacionPromedio = value;
+					}
 				}
 			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NombreServicio", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string NombreServicio
-		{
-			get
+
+			[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCalificaciones", DbType = "Int")]
+			public System.Nullable<int> TotalCalificaciones
 			{
-				return this._NombreServicio;
-			}
-			set
-			{
-				if ((this._NombreServicio != value))
+				get
 				{
-					this._NombreServicio = value;
+					return this._TotalCalificaciones;
 				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Descripcion", DbType="VarChar(500)")]
-		public string Descripcion
-		{
-			get
-			{
-				return this._Descripcion;
-			}
-			set
-			{
-				if ((this._Descripcion != value))
+				set
 				{
-					this._Descripcion = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DuracionMinutos", DbType="Int")]
-		public System.Nullable<int> DuracionMinutos
-		{
-			get
-			{
-				return this._DuracionMinutos;
-			}
-			set
-			{
-				if ((this._DuracionMinutos != value))
-				{
-					this._DuracionMinutos = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Precio", DbType="Decimal(10,2) NOT NULL")]
-		public decimal Precio
-		{
-			get
-			{
-				return this._Precio;
-			}
-			set
-			{
-				if ((this._Precio != value))
-				{
-					this._Precio = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PermiteDescuento", DbType="Bit NOT NULL")]
-		public bool PermiteDescuento
-		{
-			get
-			{
-				return this._PermiteDescuento;
-			}
-			set
-			{
-				if ((this._PermiteDescuento != value))
-				{
-					this._PermiteDescuento = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PorcentajeDescuento", DbType="Decimal(5,2)")]
-		public System.Nullable<decimal> PorcentajeDescuento
-		{
-			get
-			{
-				return this._PorcentajeDescuento;
-			}
-			set
-			{
-				if ((this._PorcentajeDescuento != value))
-				{
-					this._PorcentajeDescuento = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCreacion", DbType="DateTime NOT NULL")]
-		public System.DateTime FechaCreacion
-		{
-			get
-			{
-				return this._FechaCreacion;
-			}
-			set
-			{
-				if ((this._FechaCreacion != value))
-				{
-					this._FechaCreacion = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Estado", DbType="Bit NOT NULL")]
-		public bool Estado
-		{
-			get
-			{
-				return this._Estado;
-			}
-			set
-			{
-				if ((this._Estado != value))
-				{
-					this._Estado = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdPerfil", DbType="Int NOT NULL")]
-		public int IdPerfil
-		{
-			get
-			{
-				return this._IdPerfil;
-			}
-			set
-			{
-				if ((this._IdPerfil != value))
-				{
-					this._IdPerfil = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NombreProfesional", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string NombreProfesional
-		{
-			get
-			{
-				return this._NombreProfesional;
-			}
-			set
-			{
-				if ((this._NombreProfesional != value))
-				{
-					this._NombreProfesional = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Profesion", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string Profesion
-		{
-			get
-			{
-				return this._Profesion;
-			}
-			set
-			{
-				if ((this._Profesion != value))
-				{
-					this._Profesion = value;
-				}
-			}
-		}
-	}
-	
-	public partial class SP_OBTENER_INFORMACION_MI_PERFILResult
-	{
-		
-		private string _Nombre;
-		
-		private string _Email;
-		
-		private string _Cedula;
-		
-		private string _Telefono;
-		
-		private string _Profesion;
-		
-		private string _Descripcion;
-		
-		private string _Direccion;
-		
-		private System.Nullable<decimal> _CalificacionPromedio;
-		
-		private System.Nullable<int> _TotalCalificaciones;
-		
-		public SP_OBTENER_INFORMACION_MI_PERFILResult()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Nombre", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string Nombre
-		{
-			get
-			{
-				return this._Nombre;
-			}
-			set
-			{
-				if ((this._Nombre != value))
-				{
-					this._Nombre = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="VarChar(150) NOT NULL", CanBeNull=false)]
-		public string Email
-		{
-			get
-			{
-				return this._Email;
-			}
-			set
-			{
-				if ((this._Email != value))
-				{
-					this._Email = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Cedula", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
-		public string Cedula
-		{
-			get
-			{
-				return this._Cedula;
-			}
-			set
-			{
-				if ((this._Cedula != value))
-				{
-					this._Cedula = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Telefono", DbType="VarChar(20)")]
-		public string Telefono
-		{
-			get
-			{
-				return this._Telefono;
-			}
-			set
-			{
-				if ((this._Telefono != value))
-				{
-					this._Telefono = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Profesion", DbType="VarChar(100)")]
-		public string Profesion
-		{
-			get
-			{
-				return this._Profesion;
-			}
-			set
-			{
-				if ((this._Profesion != value))
-				{
-					this._Profesion = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Descripcion", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string Descripcion
-		{
-			get
-			{
-				return this._Descripcion;
-			}
-			set
-			{
-				if ((this._Descripcion != value))
-				{
-					this._Descripcion = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Direccion", DbType="VarChar(255)")]
-		public string Direccion
-		{
-			get
-			{
-				return this._Direccion;
-			}
-			set
-			{
-				if ((this._Direccion != value))
-				{
-					this._Direccion = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CalificacionPromedio", DbType="Decimal(3,2)")]
-		public System.Nullable<decimal> CalificacionPromedio
-		{
-			get
-			{
-				return this._CalificacionPromedio;
-			}
-			set
-			{
-				if ((this._CalificacionPromedio != value))
-				{
-					this._CalificacionPromedio = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TotalCalificaciones", DbType="Int")]
-		public System.Nullable<int> TotalCalificaciones
-		{
-			get
-			{
-				return this._TotalCalificaciones;
-			}
-			set
-			{
-				if ((this._TotalCalificaciones != value))
-				{
-					this._TotalCalificaciones = value;
+					if ((this._TotalCalificaciones != value))
+					{
+						this._TotalCalificaciones = value;
+					}
 				}
 			}
 		}
