@@ -185,7 +185,6 @@
     <Parameter Name="NuevaFechaCita" Parameter="nuevaFechaCita" Type="System.DateTime" DbType="DateTime" />
     <Return Type="System.Int32" />
   </Function>
-
   <Function Name="dbo.SP_ACTUALIZAR_ESTADO_CITA" Method="SP_ACTUALIZAR_ESTADO_CITA">
     <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
     <Parameter Name="Aprobada" Parameter="aprobada" Type="System.Boolean" DbType="Bit" />
@@ -193,5 +192,30 @@
     <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_REGISTRAR_PAGO_ONVO" Method="SP_REGISTRAR_PAGO_ONVO">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="ReferenceId" Parameter="referenceId" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="Amount" Parameter="amount" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="Currency" Parameter="currency" Type="System.String" DbType="NVarChar(10)" />
+    <Parameter Name="Description" Parameter="description" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_OBTENER_USUARIO_POR_ID" Method="SP_OBTENER_USUARIO_POR_ID">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="SP_OBTENER_USUARIO_POR_IDResult">
+      <Column Name="IdUsuario" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Cedula" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="IdRol" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Telefono" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="FechaRegistro" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Estado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
   </Function>
 </Database>
