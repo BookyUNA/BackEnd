@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\CitaCliente.cs" />
+    <Compile Include="Entity\CitaProfesional.cs" />
     <Compile Include="Entity\Error.cs" />
     <Compile Include="Entity\Servicio.cs" />
     <Compile Include="Entity\ServicioParaClientes.cs" />
@@ -58,6 +60,8 @@
     <Compile Include="Request\ReqBase.cs" />
     <Compile Include="Request\ReqCierreSesion.cs" />
     <Compile Include="Request\ReqInicioSesion.cs" />
+    <Compile Include="Request\ReqListarCitasCliente.cs" />
+    <Compile Include="Request\ReqListarCitasProfesional.cs" />
     <Compile Include="Request\ReqListarServicio.cs" />
     <Compile Include="Request\ReqListarServiciosParaClientes.cs" />
     <Compile Include="Request\ReqMostrarInformacionMiPerfil.cs" />
@@ -76,6 +80,8 @@
     <Compile Include="Response\ResEditarInformacionMiPerfil.cs" />
     <Compile Include="Response\ResGenerarNuevoCodigo.cs" />
     <Compile Include="Response\ResInicioSesion.cs" />
+    <Compile Include="Response\ResListarCitasCliente.cs" />
+    <Compile Include="Response\ResListarCitasProfesional.cs" />
     <Compile Include="Response\ResListarServicio.cs" />
     <Compile Include="Response\ResListarServiciosParaClientes.cs" />
     <Compile Include="Response\ResMostrarInformacionMiPerfil.cs" />
