@@ -179,12 +179,7 @@
       <Column Name="TotalCalificaciones" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.SP_REPROGRAMAR_CITA_PROFESIONAL" Method="SP_REPROGRAMAR_CITA_PROFESIONAL">
-    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
-    <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
-    <Parameter Name="NuevaFechaCita" Parameter="nuevaFechaCita" Type="System.DateTime" DbType="DateTime" />
-    <Return Type="System.Int32" />
-  </Function>
+  
   <Function Name="dbo.SP_ACTUALIZAR_ESTADO_CITA" Method="SP_ACTUALIZAR_ESTADO_CITA">
     <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
     <Parameter Name="Aprobada" Parameter="aprobada" Type="System.Boolean" DbType="Bit" />
@@ -266,7 +261,8 @@
       <Column Name="EmailProfesional" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
       <Column Name="TelefonoProfesional" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="NombreServicio" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-
+    </ElementType>
+  </Function>
   <Function Name="dbo.SP_OBTENER_USUARIO_POR_ID" Method="SP_OBTENER_USUARIO_POR_ID">
     <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
     <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
