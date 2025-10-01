@@ -62,14 +62,13 @@ namespace Logica
 
                 using (DataClasses1DataContext linq = new DataClasses1DataContext())
                 {
-                    /*linq.SP_REPROGRAMAR_CITA_PROFESIONAL(
+                    linq.SP_REPROGRAMAR_CITA_PROFESIONAL(
                         idUsuarioToken,
                         req.IdCita,
                         req.NuevaFechaCita,
                         ref resultadoBd,
                         ref errorID
                     );
-                    */
 
                     // Evaluar respuesta del SP
                     if (resultadoBd.HasValue && resultadoBd.Value)
