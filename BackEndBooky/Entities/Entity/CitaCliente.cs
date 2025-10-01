@@ -8,6 +8,7 @@ namespace Entities.Entity
 {
     public class CitaCliente
     {
+        public int IdCita { get; set; }
         public DateTime FechaCita { get; set; }
         public int? DuracionMinutos { get; set; }
         public double PrecioAcordado { get; set; }

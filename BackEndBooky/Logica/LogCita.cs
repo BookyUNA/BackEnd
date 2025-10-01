@@ -151,6 +151,7 @@ namespace Logica
                         res.resultado = true;
                         res.Citas = citas.Select(c => new CitaCliente
                         {
+                            IdCita = c.IdCita,
                             FechaCita = c.FechaCita,
                             DuracionMinutos = c.DuracionMinutos,
                             PrecioAcordado = (double)c.PrecioAcordado,
@@ -257,6 +258,7 @@ namespace Logica
                         res.resultado = true;
                         res.Citas = citas.Select(c => new CitaProfesional
                         {
+                            IdCita = c.IdCita,
                             FechaCita = c.FechaCita,
                             DuracionMinutos = c.DuracionMinutos,
                             PrecioAcordado = (double)c.PrecioAcordado,
