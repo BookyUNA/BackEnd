@@ -62,7 +62,7 @@ namespace Logica
                 {
                     linq.SP_ACTUALIZAR_ESTADO_CITA(
                         req.IdCita,
-                        req.Aprobada,   // BIT en SQL
+                        req.Aprobada,   
                         req.MotivoRechazo,
                         ref resultadoBd,
                         ref errorID
