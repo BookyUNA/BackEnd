@@ -113,8 +113,143 @@ namespace APIs.Controllers
             }
         }
 
-    }
 
+
+        [HttpPost]
+        [Route("clientes")]
+        public IHttpActionResult CrearCliente([FromBody] ReqOnvoCustomer request)
+        {
+            try
+            {
+                string token = Request.Headers.Authorization?.Parameter;
+                if (string.IsNullOrEmpty(token))
+                    return Unauthorized();
+
+                var resultado = _logOnvo.CrearClienteAsync(request, token);
+
+                if (resultado.resultado)
+                    return Ok(resultado);
+                else
+                    return BadRequest(resultado.mensaje);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        // ========================================
+        // EJEMPLO 2: Guardar tarjeta para un cliente
+        // ========================================
+        [HttpPost]
+        [Route("metodos-pago")]
+        public IHttpActionResult GuardarTarjeta([FromBody] ReqOnvoPaymentMethod request)
+        {
+            try
+            {
+                string token = Request.Headers.Authorization?.Parameter; ;
+                if (string.IsNullOrEmpty(token))
+                    return Unauthorized();
+
+                var resultado = _logOnvo.GuardarTarjetaAsync(request, token);
+
+                if (resultado.resultado)
+                    return Ok(resultado);
+                else
+                    return BadRequest(resultado.mensaje);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        // ========================================
+        // EJEMPLO 3: Generar URL de pago
+        // ========================================
+        [HttpPost]
+        [Route("payment-links")]
+        public IHttpActionResult GenerarUrlPago([FromBody] ReqOnvoPaymentLink request)
+        {
+            try
+            {
+                string token = Request.Headers.Authorization?.Parameter;
+                if (string.IsNullOrEmpty(token))
+                    return Unauthorized();
+
+                var resultado = _logOnvo.GenerarUrlPagoAsync(request, token);
+
+                if (resultado.resultado)
+                {
+                    return Ok(new
+                    {
+                        success = true,
+                        data = new
+                        {
+                            paymentLinkId = resultado.paymentLinkId,
+                            paymentUrl = resultado.paymentUrl,
+                            amount = resultado.amount,
+                            currency = resultado.currency,
+                            expiresAt = resultado.expiresAt
+                        }
+                    });
+                }
+                else
+                {
+                    return BadRequest(resultado.mensaje);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+    
+     
+
+
+    // ========================================
+// NUEVO: Obtener pagos por cliente
+// ========================================
+[HttpGet]
+        [Route("api/Onvo/GetPaymentsByCustomer/{customerId}")]
+        public IHttpActionResult GetPaymentsByCustomer(string customerId)
+        {
+            try
+            {
+                string token = Request.Headers.Authorization?.Parameter;
+                if (string.IsNullOrEmpty(token))
+                    return Unauthorized();
+
+                if (string.IsNullOrEmpty(customerId))
+                    return BadRequest("El parámetro customerId es requerido");
+
+                var resultado = _logOnvo.ObtenerPagosPorClienteAsync(customerId, token);
+
+                if (resultado.resultado)
+                    return Ok(new
+                    {
+                        success = true,
+                        count = resultado.pagos.Count,
+                        pagos = resultado.pagos
+                    });
+                else
+                    return Content(System.Net.HttpStatusCode.NotFound, new
+                    {
+                        success = false,
+                        errores = resultado.error.Select(e => e.Message)
+                    });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in GetPaymentsByCustomer: {ex.Message}");
+                return InternalServerError(ex);
+            }
+        }
+
+
+    }
 }/*
 
         [HttpGet]

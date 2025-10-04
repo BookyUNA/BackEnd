@@ -276,4 +276,92 @@
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.SP_REGISTRAR_CLIENTE_ONVO" Method="SP_REGISTRAR_CLIENTE_ONVO">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="OnvoCustomerId" Parameter="onvoCustomerId" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="Email" Parameter="email" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="Nombre" Parameter="nombre" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="Telefono" Parameter="telefono" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="Resultado" Parameter="resultado" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ErrorID" Parameter="errorID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_OBTENER_PAYMENT_LINKS_USUARIO" Method="SP_OBTENER_PAYMENT_LINKS_USUARIO">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Status" Parameter="status" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="SP_OBTENER_PAYMENT_LINKS_USUARIOResult">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdUsuario" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OnvoCustomerId" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="OnvoPaymentLinkId" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ReferenceId" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentUrl" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Currency" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ExpiresAt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FechaCreacion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FechaActualizacion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_OBTENER_PAYMENT_LINK_POR_ID" Method="SP_OBTENER_PAYMENT_LINK_POR_ID">
+    <Parameter Name="OnvoPaymentLinkId" Parameter="onvoPaymentLinkId" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="SP_OBTENER_PAYMENT_LINK_POR_IDResult">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdUsuario" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OnvoCustomerId" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="OnvoPaymentLinkId" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ReferenceId" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentUrl" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Currency" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ExpiresAt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FechaCreacion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FechaActualizacion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_OBTENER_METODOS_PAGO_CLIENTE" Method="SP_OBTENER_METODOS_PAGO_CLIENTE">
+    <Parameter Name="OnvoCustomerId" Parameter="onvoCustomerId" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="SP_OBTENER_METODOS_PAGO_CLIENTEResult">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdUsuario" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OnvoCustomerId" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="OnvoPaymentMethodId" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Last4" Type="System.String" DbType="VarChar(4)" CanBeNull="true" />
+      <Column Name="Brand" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ExpMonth" Type="System.String" DbType="VarChar(2)" CanBeNull="true" />
+      <Column Name="ExpYear" Type="System.String" DbType="VarChar(4)" CanBeNull="true" />
+      <Column Name="FechaCreacion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Activo" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_REGISTRAR_METODO_PAGO_ONVO" Method="SP_REGISTRAR_METODO_PAGO_ONVO">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="OnvoCustomerId" Parameter="onvoCustomerId" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="OnvoPaymentMethodId" Parameter="onvoPaymentMethodId" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="Last4" Parameter="last4" Type="System.String" DbType="VarChar(4)" />
+    <Parameter Name="Brand" Parameter="brand" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="ExpMonth" Parameter="expMonth" Type="System.String" DbType="VarChar(2)" />
+    <Parameter Name="ExpYear" Parameter="expYear" Type="System.String" DbType="VarChar(4)" />
+    <Parameter Name="Resultado" Parameter="resultado" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ErrorID" Parameter="errorID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_REGISTRAR_PAYMENT_LINK_ONVO" Method="SP_REGISTRAR_PAYMENT_LINK_ONVO">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="OnvoCustomerId" Parameter="onvoCustomerId" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="OnvoPaymentLinkId" Parameter="onvoPaymentLinkId" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="ReferenceId" Parameter="referenceId" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="PaymentUrl" Parameter="paymentUrl" Type="System.String" DbType="VarChar(500)" />
+    <Parameter Name="Amount" Parameter="amount" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="Currency" Parameter="currency" Type="System.String" DbType="VarChar(10)" />
+    <Parameter Name="Description" Parameter="description" Type="System.String" DbType="VarChar(500)" />
+    <Parameter Name="ExpiresAt" Parameter="expiresAt" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="Resultado" Parameter="resultado" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ErrorID" Parameter="errorID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
 </Database>
