@@ -31,5 +31,14 @@ namespace APIs.Controllers
             var token = Request.Headers.Authorization.Parameter;
             return new LogCita().ListarCitasProfesional(req, token);
         }
+
+        [Authorize(Roles = "Cliente")]
+        [HttpPost]
+        [Route("api/CancelarCita")]
+        public ResCancelarCita CancelarCita([FromBody] ReqCancelarCita req)
+        {
+            var token = Request.Headers.Authorization.Parameter;
+            return new LogCita().CancelarCita(req, token);
+        }
     }
 }

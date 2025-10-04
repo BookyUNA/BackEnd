@@ -267,6 +267,15 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CANCELAR_CITA_CLIENTE")]
+		public int SP_CANCELAR_CITA_CLIENTE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="MotivoCancelacion", DbType="NVarChar(255)")] string motivoCancelacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idCita, motivoCancelacion, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			return ((int)(result.ReturnValue));
+		}
 	}
 	
 	public partial class SP_LISTAR_SERVICIOS_DISPONIBLESResult
