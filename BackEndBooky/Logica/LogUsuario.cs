@@ -364,7 +364,7 @@ namespace Logica
                 using (DataClasses1DataContext linq = new DataClasses1DataContext())
                 {
                     linq.SP_ACTUALIZAR_PERFIL_PROFESIONAL(
-                        req.idPerfil,
+                        idUsuarioToken,
                         req.profesion,
                         req.descripcion,
                         req.direccion,

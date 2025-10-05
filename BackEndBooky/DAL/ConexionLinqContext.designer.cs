@@ -33,7 +33,7 @@ namespace DAL
     #endregion
 		
 		public DataClasses1DataContext() : 
-				base(global::DAL.Properties.Settings.Default.BookyConnectionString2, mappingSource)
+				base(global::DAL.Properties.Settings.Default.BookyConnectionString3, mappingSource)
 		{
 			OnCreated();
 		}
@@ -187,15 +187,6 @@ namespace DAL
 			return ((ISingleResult<SP_LISTAR_SERVICIOS_DISPONIBLESResult>)(result.ReturnValue));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_PERFIL_PROFESIONAL")]
-		public int SP_ACTUALIZAR_PERFIL_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdPerfil", DbType="Int")] System.Nullable<int> idPerfil, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Profesion", DbType="NVarChar(100)")] string profesion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Descripcion", DbType="NVarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Direccion", DbType="NVarChar(200)")] string direccion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Latitud", DbType="Decimal(10,8)")] System.Nullable<decimal> latitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Longitud", DbType="Decimal(11,8)")] System.Nullable<decimal> longitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Estado", DbType="Bit")] System.Nullable<bool> estado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idPerfil, profesion, descripcion, direccion, latitud, longitud, estado, sUCCESS, eRRORID);
-			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(7)));
-			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(8)));
-			return ((int)(result.ReturnValue));
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_INFORMACION_MI_PERFIL")]
 		public ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult> SP_OBTENER_INFORMACION_MI_PERFIL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
 		{
@@ -203,15 +194,6 @@ namespace DAL
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(1)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
 			return ((ISingleResult<SP_OBTENER_INFORMACION_MI_PERFILResult>)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_ESTADO_CITA")]
-		public int SP_ACTUALIZAR_ESTADO_CITA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Aprobada", DbType="Bit")] System.Nullable<bool> aprobada, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="MotivoRechazo", DbType="NVarChar(500)")] string motivoRechazo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idCita, aprobada, motivoRechazo, sUCCESS, eRRORID);
-			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
-			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			return ((int)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_REGISTRAR_PAGO_ONVO")]
@@ -267,13 +249,79 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
 			return ((int)(result.ReturnValue));
 		}
-		
+	
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CANCELAR_CITA_CLIENTE")]
 		public int SP_CANCELAR_CITA_CLIENTE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="MotivoCancelacion", DbType="NVarChar(255)")] string motivoCancelacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idCita, motivoCancelacion, sUCCESS, eRRORID);
+      sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			return ((int)(result.ReturnValue));
+    }
+    
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_ESTADO_CITA")]
+		public int SP_ACTUALIZAR_ESTADO_CITA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Aprobada", DbType="Bit")] System.Nullable<bool> aprobada, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="MotivoRechazo", DbType="NVarChar(500)")] string motivoRechazo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idCita, aprobada, motivoRechazo, sUCCESS, eRRORID);
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			return ((int)(result.ReturnValue));
+		}
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_PERFIL_PROFESIONAL")]
+		public int SP_ACTUALIZAR_PERFIL_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Profesion", DbType="NVarChar(100)")] string profesion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Descripcion", DbType="NVarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Direccion", DbType="NVarChar(200)")] string direccion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Latitud", DbType="Decimal(10,8)")] System.Nullable<decimal> latitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Longitud", DbType="Decimal(11,8)")] System.Nullable<decimal> longitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Estado", DbType="Bit")] System.Nullable<bool> estado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, profesion, descripcion, direccion, latitud, longitud, estado, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(7)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(8)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_REGISTRAR_CLIENTE_ONVO")]
+		public int SP_REGISTRAR_CLIENTE_ONVO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="OnvoCustomerId", DbType="VarChar(100)")] string onvoCustomerId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Email", DbType="VarChar(255)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Nombre", DbType="VarChar(255)")] string nombre, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Telefono", DbType="VarChar(50)")] string telefono, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Resultado", DbType="Bit")] ref System.Nullable<bool> resultado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ErrorID", DbType="Int")] ref System.Nullable<int> errorID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, onvoCustomerId, email, nombre, telefono, resultado, errorID);
+			resultado = ((System.Nullable<bool>)(result.GetParameterValue(5)));
+			errorID = ((System.Nullable<int>)(result.GetParameterValue(6)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_PAYMENT_LINKS_USUARIO")]
+		public ISingleResult<SP_OBTENER_PAYMENT_LINKS_USUARIOResult> SP_OBTENER_PAYMENT_LINKS_USUARIO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Status", DbType="VarChar(50)")] string status)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, status);
+			return ((ISingleResult<SP_OBTENER_PAYMENT_LINKS_USUARIOResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_PAYMENT_LINK_POR_ID")]
+		public ISingleResult<SP_OBTENER_PAYMENT_LINK_POR_IDResult> SP_OBTENER_PAYMENT_LINK_POR_ID([global::System.Data.Linq.Mapping.ParameterAttribute(Name="OnvoPaymentLinkId", DbType="VarChar(100)")] string onvoPaymentLinkId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), onvoPaymentLinkId);
+			return ((ISingleResult<SP_OBTENER_PAYMENT_LINK_POR_IDResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_METODOS_PAGO_CLIENTE")]
+		public ISingleResult<SP_OBTENER_METODOS_PAGO_CLIENTEResult> SP_OBTENER_METODOS_PAGO_CLIENTE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="OnvoCustomerId", DbType="VarChar(100)")] string onvoCustomerId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), onvoCustomerId);
+			return ((ISingleResult<SP_OBTENER_METODOS_PAGO_CLIENTEResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_REGISTRAR_METODO_PAGO_ONVO")]
+		public int SP_REGISTRAR_METODO_PAGO_ONVO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="OnvoCustomerId", DbType="VarChar(100)")] string onvoCustomerId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="OnvoPaymentMethodId", DbType="VarChar(100)")] string onvoPaymentMethodId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Last4", DbType="VarChar(4)")] string last4, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Brand", DbType="VarChar(50)")] string brand, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ExpMonth", DbType="VarChar(2)")] string expMonth, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ExpYear", DbType="VarChar(4)")] string expYear, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Resultado", DbType="Bit")] ref System.Nullable<bool> resultado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ErrorID", DbType="Int")] ref System.Nullable<int> errorID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, onvoCustomerId, onvoPaymentMethodId, last4, brand, expMonth, expYear, resultado, errorID);
+			resultado = ((System.Nullable<bool>)(result.GetParameterValue(7)));
+			errorID = ((System.Nullable<int>)(result.GetParameterValue(8)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_REGISTRAR_PAYMENT_LINK_ONVO")]
+		public int SP_REGISTRAR_PAYMENT_LINK_ONVO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="OnvoCustomerId", DbType="VarChar(100)")] string onvoCustomerId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="OnvoPaymentLinkId", DbType="VarChar(100)")] string onvoPaymentLinkId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ReferenceId", DbType="VarChar(100)")] string referenceId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PaymentUrl", DbType="VarChar(500)")] string paymentUrl, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Amount", DbType="Decimal(18,2)")] System.Nullable<decimal> amount, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Currency", DbType="VarChar(10)")] string currency, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Description", DbType="VarChar(500)")] string description, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ExpiresAt", DbType="DateTime")] System.Nullable<System.DateTime> expiresAt, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Resultado", DbType="Bit")] ref System.Nullable<bool> resultado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ErrorID", DbType="Int")] ref System.Nullable<int> errorID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, onvoCustomerId, onvoPaymentLinkId, referenceId, paymentUrl, amount, currency, description, expiresAt, resultado, errorID);
+			resultado = ((System.Nullable<bool>)(result.GetParameterValue(9)));
+			errorID = ((System.Nullable<int>)(result.GetParameterValue(10)));
 			return ((int)(result.ReturnValue));
 		}
 	}
@@ -1761,6 +1809,678 @@ namespace DAL
 				if ((this._NombreServicio != value))
 				{
 					this._NombreServicio = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_PAYMENT_LINKS_USUARIOResult
+	{
+		
+		private int _Id;
+		
+		private int _IdUsuario;
+		
+		private string _OnvoCustomerId;
+		
+		private string _OnvoPaymentLinkId;
+		
+		private string _ReferenceId;
+		
+		private string _PaymentUrl;
+		
+		private decimal _Amount;
+		
+		private string _Currency;
+		
+		private string _Description;
+		
+		private string _Status;
+		
+		private System.Nullable<System.DateTime> _ExpiresAt;
+		
+		private System.Nullable<System.DateTime> _FechaCreacion;
+		
+		private System.Nullable<System.DateTime> _FechaActualizacion;
+		
+		public SP_OBTENER_PAYMENT_LINKS_USUARIOResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL")]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this._Id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdUsuario", DbType="Int NOT NULL")]
+		public int IdUsuario
+		{
+			get
+			{
+				return this._IdUsuario;
+			}
+			set
+			{
+				if ((this._IdUsuario != value))
+				{
+					this._IdUsuario = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnvoCustomerId", DbType="VarChar(100)")]
+		public string OnvoCustomerId
+		{
+			get
+			{
+				return this._OnvoCustomerId;
+			}
+			set
+			{
+				if ((this._OnvoCustomerId != value))
+				{
+					this._OnvoCustomerId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnvoPaymentLinkId", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string OnvoPaymentLinkId
+		{
+			get
+			{
+				return this._OnvoPaymentLinkId;
+			}
+			set
+			{
+				if ((this._OnvoPaymentLinkId != value))
+				{
+					this._OnvoPaymentLinkId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReferenceId", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string ReferenceId
+		{
+			get
+			{
+				return this._ReferenceId;
+			}
+			set
+			{
+				if ((this._ReferenceId != value))
+				{
+					this._ReferenceId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaymentUrl", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
+		public string PaymentUrl
+		{
+			get
+			{
+				return this._PaymentUrl;
+			}
+			set
+			{
+				if ((this._PaymentUrl != value))
+				{
+					this._PaymentUrl = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Amount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal Amount
+		{
+			get
+			{
+				return this._Amount;
+			}
+			set
+			{
+				if ((this._Amount != value))
+				{
+					this._Amount = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Currency", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string Currency
+		{
+			get
+			{
+				return this._Currency;
+			}
+			set
+			{
+				if ((this._Currency != value))
+				{
+					this._Currency = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(500)")]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this._Description = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="VarChar(50)")]
+		public string Status
+		{
+			get
+			{
+				return this._Status;
+			}
+			set
+			{
+				if ((this._Status != value))
+				{
+					this._Status = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExpiresAt", DbType="DateTime")]
+		public System.Nullable<System.DateTime> ExpiresAt
+		{
+			get
+			{
+				return this._ExpiresAt;
+			}
+			set
+			{
+				if ((this._ExpiresAt != value))
+				{
+					this._ExpiresAt = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCreacion", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaCreacion
+		{
+			get
+			{
+				return this._FechaCreacion;
+			}
+			set
+			{
+				if ((this._FechaCreacion != value))
+				{
+					this._FechaCreacion = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaActualizacion", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaActualizacion
+		{
+			get
+			{
+				return this._FechaActualizacion;
+			}
+			set
+			{
+				if ((this._FechaActualizacion != value))
+				{
+					this._FechaActualizacion = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_PAYMENT_LINK_POR_IDResult
+	{
+		
+		private int _Id;
+		
+		private int _IdUsuario;
+		
+		private string _OnvoCustomerId;
+		
+		private string _OnvoPaymentLinkId;
+		
+		private string _ReferenceId;
+		
+		private string _PaymentUrl;
+		
+		private decimal _Amount;
+		
+		private string _Currency;
+		
+		private string _Description;
+		
+		private string _Status;
+		
+		private System.Nullable<System.DateTime> _ExpiresAt;
+		
+		private System.Nullable<System.DateTime> _FechaCreacion;
+		
+		private System.Nullable<System.DateTime> _FechaActualizacion;
+		
+		public SP_OBTENER_PAYMENT_LINK_POR_IDResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL")]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this._Id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdUsuario", DbType="Int NOT NULL")]
+		public int IdUsuario
+		{
+			get
+			{
+				return this._IdUsuario;
+			}
+			set
+			{
+				if ((this._IdUsuario != value))
+				{
+					this._IdUsuario = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnvoCustomerId", DbType="VarChar(100)")]
+		public string OnvoCustomerId
+		{
+			get
+			{
+				return this._OnvoCustomerId;
+			}
+			set
+			{
+				if ((this._OnvoCustomerId != value))
+				{
+					this._OnvoCustomerId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnvoPaymentLinkId", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string OnvoPaymentLinkId
+		{
+			get
+			{
+				return this._OnvoPaymentLinkId;
+			}
+			set
+			{
+				if ((this._OnvoPaymentLinkId != value))
+				{
+					this._OnvoPaymentLinkId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReferenceId", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string ReferenceId
+		{
+			get
+			{
+				return this._ReferenceId;
+			}
+			set
+			{
+				if ((this._ReferenceId != value))
+				{
+					this._ReferenceId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaymentUrl", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
+		public string PaymentUrl
+		{
+			get
+			{
+				return this._PaymentUrl;
+			}
+			set
+			{
+				if ((this._PaymentUrl != value))
+				{
+					this._PaymentUrl = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Amount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal Amount
+		{
+			get
+			{
+				return this._Amount;
+			}
+			set
+			{
+				if ((this._Amount != value))
+				{
+					this._Amount = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Currency", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string Currency
+		{
+			get
+			{
+				return this._Currency;
+			}
+			set
+			{
+				if ((this._Currency != value))
+				{
+					this._Currency = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(500)")]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this._Description = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="VarChar(50)")]
+		public string Status
+		{
+			get
+			{
+				return this._Status;
+			}
+			set
+			{
+				if ((this._Status != value))
+				{
+					this._Status = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExpiresAt", DbType="DateTime")]
+		public System.Nullable<System.DateTime> ExpiresAt
+		{
+			get
+			{
+				return this._ExpiresAt;
+			}
+			set
+			{
+				if ((this._ExpiresAt != value))
+				{
+					this._ExpiresAt = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCreacion", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaCreacion
+		{
+			get
+			{
+				return this._FechaCreacion;
+			}
+			set
+			{
+				if ((this._FechaCreacion != value))
+				{
+					this._FechaCreacion = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaActualizacion", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaActualizacion
+		{
+			get
+			{
+				return this._FechaActualizacion;
+			}
+			set
+			{
+				if ((this._FechaActualizacion != value))
+				{
+					this._FechaActualizacion = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_METODOS_PAGO_CLIENTEResult
+	{
+		
+		private int _Id;
+		
+		private int _IdUsuario;
+		
+		private string _OnvoCustomerId;
+		
+		private string _OnvoPaymentMethodId;
+		
+		private string _Last4;
+		
+		private string _Brand;
+		
+		private string _ExpMonth;
+		
+		private string _ExpYear;
+		
+		private System.Nullable<System.DateTime> _FechaCreacion;
+		
+		private System.Nullable<bool> _Activo;
+		
+		public SP_OBTENER_METODOS_PAGO_CLIENTEResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL")]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this._Id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdUsuario", DbType="Int NOT NULL")]
+		public int IdUsuario
+		{
+			get
+			{
+				return this._IdUsuario;
+			}
+			set
+			{
+				if ((this._IdUsuario != value))
+				{
+					this._IdUsuario = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnvoCustomerId", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string OnvoCustomerId
+		{
+			get
+			{
+				return this._OnvoCustomerId;
+			}
+			set
+			{
+				if ((this._OnvoCustomerId != value))
+				{
+					this._OnvoCustomerId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnvoPaymentMethodId", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string OnvoPaymentMethodId
+		{
+			get
+			{
+				return this._OnvoPaymentMethodId;
+			}
+			set
+			{
+				if ((this._OnvoPaymentMethodId != value))
+				{
+					this._OnvoPaymentMethodId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Last4", DbType="VarChar(4)")]
+		public string Last4
+		{
+			get
+			{
+				return this._Last4;
+			}
+			set
+			{
+				if ((this._Last4 != value))
+				{
+					this._Last4 = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Brand", DbType="VarChar(50)")]
+		public string Brand
+		{
+			get
+			{
+				return this._Brand;
+			}
+			set
+			{
+				if ((this._Brand != value))
+				{
+					this._Brand = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExpMonth", DbType="VarChar(2)")]
+		public string ExpMonth
+		{
+			get
+			{
+				return this._ExpMonth;
+			}
+			set
+			{
+				if ((this._ExpMonth != value))
+				{
+					this._ExpMonth = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExpYear", DbType="VarChar(4)")]
+		public string ExpYear
+		{
+			get
+			{
+				return this._ExpYear;
+			}
+			set
+			{
+				if ((this._ExpYear != value))
+				{
+					this._ExpYear = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCreacion", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaCreacion
+		{
+			get
+			{
+				return this._FechaCreacion;
+			}
+			set
+			{
+				if ((this._FechaCreacion != value))
+				{
+					this._FechaCreacion = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Activo", DbType="Bit")]
+		public System.Nullable<bool> Activo
+		{
+			get
+			{
+				return this._Activo;
+			}
+			set
+			{
+				if ((this._Activo != value))
+				{
+					this._Activo = value;
 				}
 			}
 		}
