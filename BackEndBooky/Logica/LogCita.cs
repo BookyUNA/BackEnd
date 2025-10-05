@@ -410,6 +410,9 @@ namespace Logica
                             case 40007:
                                 res.error.Add(new Error { ErrorCode = 40007, Message = "Solo puede cancelar citas en estado Pendiente o Confirmada" });
                                 break;
+                            case 40008:
+                                res.error.Add(new Error { ErrorCode = 40008, Message = "La cita solo se puede cancelar con al menos 24 horas de anticipación" });
+                                break;
                             default:
                                 res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error inesperado en la base de datos" });
                                 break;
