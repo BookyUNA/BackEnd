@@ -116,7 +116,7 @@ namespace APIs.Controllers
 
 
         [HttpPost]
-        [Route("clientes")]
+        [Route("api/Onvo/clientes")]
         public IHttpActionResult CrearCliente([FromBody] ReqOnvoCustomer request)
         {
             try
@@ -142,7 +142,7 @@ namespace APIs.Controllers
         // EJEMPLO 2: Guardar tarjeta para un cliente
         // ========================================
         [HttpPost]
-        [Route("metodos-pago")]
+        [Route("api/Onvo/metodos-pago")]
         public IHttpActionResult GuardarTarjeta([FromBody] ReqOnvoPaymentMethod request)
         {
             try
