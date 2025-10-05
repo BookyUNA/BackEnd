@@ -205,14 +205,14 @@ namespace APIs.Controllers
             }
         }
 
-    
-     
 
 
-    // ========================================
-// NUEVO: Obtener pagos por cliente
-// ========================================
-[HttpGet]
+
+
+        // ========================================
+        // NUEVO: Obtener pagos por cliente
+        // ========================================
+        [HttpGet]
         [Route("api/Onvo/GetPaymentsByCustomer/{customerId}")]
         public IHttpActionResult GetPaymentsByCustomer(string customerId)
         {
@@ -249,8 +249,187 @@ namespace APIs.Controllers
         }
 
 
+    
+
+
+
+
+
+
+
+        // ========================================
+    // Obtener historial de pagos por cliente con filtro opcional
+    // ========================================
+    [HttpGet]
+            [Route("api/Onvo/clientes/{customerId}/pagos")]
+            public IHttpActionResult ObtenerHistorialPagos(string customerId, string status = null)
+            {
+                try
+                {
+                    string token = Request.Headers.Authorization?.Parameter;
+                    if (string.IsNullOrEmpty(token))
+                        return Unauthorized();
+
+                    if (string.IsNullOrEmpty(customerId))
+                        return BadRequest("El parámetro customerId es requerido");
+
+                    var resultado = _logOnvo.ObtenerHistorialPagosClienteAsync(customerId, status, token);
+
+                    if (resultado.resultado)
+                        return Ok(new
+                        {
+                            success = true,
+                            total = resultado.totalRegistros,
+                            data = resultado.pagos
+                        });
+                    else
+                        return Content(System.Net.HttpStatusCode.NotFound, new
+                        {
+                            success = false,
+                            errores = resultado.error.Select(e => e.Message)
+                        });
+
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error in ObtenerHistorialPagos: {ex.Message}");
+                    return InternalServerError(ex);
+                }
+            }
+
+            // ========================================
+            // Obtener resumen estadístico de pagos
+            // ========================================
+            [HttpGet]
+            [Route("api/Onvo/clientes/{customerId}/resumen-pagos")]
+            public IHttpActionResult ObtenerResumenPagos(string customerId)
+            {
+                try
+                {
+                    string token = Request.Headers.Authorization?.Parameter;
+                    if (string.IsNullOrEmpty(token))
+                        return Unauthorized();
+
+                    if (string.IsNullOrEmpty(customerId))
+                        return BadRequest("El parámetro customerId es requerido");
+
+                    var resultado = _logOnvo.ObtenerResumenPagosClienteAsync(customerId, token);
+
+                    if (resultado.resultado)
+                        return Ok(new
+                        {
+                            success = true,
+                            data = new
+                            {
+                                totalPagos = resultado.totalPagos,
+                                completados = resultado.pagosCompletados,
+                                pendientes = resultado.pagosPendientes,
+                                cancelados = resultado.pagosCancelados,
+                                expirados = resultado.pagosExpirados,
+                                montos = new
+                                {
+                                    totalPagado = resultado.totalPagado,
+                                    totalPendiente = resultado.totalPendiente,
+                                    currency = resultado.currency
+                                }
+                            }
+                        });
+                    else
+                        return Content(System.Net.HttpStatusCode.NotFound, new
+                        {
+                            success = false,
+                            errores = resultado.error.Select(e => e.Message)
+                        });
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error in ObtenerResumenPagos: {ex.Message}");
+                    return InternalServerError(ex);
+                }
+            }
+
+            // ========================================
+            // Obtener solo pagos pendientes
+            // ========================================
+            [HttpGet]
+            [Route("api/Onvo/clientes/{customerId}/pagos/pendientes")]
+            public IHttpActionResult ObtenerPagosPendientes(string customerId)
+            {
+                try
+                {
+                    string token = Request.Headers.Authorization?.Parameter;
+                    if (string.IsNullOrEmpty(token))
+                        return Unauthorized();
+
+                    var resultado = _logOnvo.ObtenerPagosPendientesAsync(customerId, token);
+
+                    if (resultado.resultado)
+                        return Ok(new { success = true, data = resultado.pagos });
+                    else
+                        return Content(System.Net.HttpStatusCode.NotFound, new
+                        {
+                            success = false,
+                            errores = resultado.error.Select(e => e.Message)
+                        });
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
+            }
+
+            // ========================================
+            // Obtener solo pagos completados
+            // ========================================
+            [HttpGet]
+            [Route("api/Onvo/clientes/{customerId}/pagos/completados")]
+            public IHttpActionResult ObtenerPagosCompletados(string customerId)
+            {
+                try
+                {
+                    string token = Request.Headers.Authorization?.Parameter;
+                    if (string.IsNullOrEmpty(token))
+                        return Unauthorized();
+
+                    var resultado = _logOnvo.ObtenerPagosCompletadosAsync(customerId, token);
+
+                    if (resultado.resultado)
+                        return Ok(new { success = true, data = resultado.pagos });
+                    else
+                        return Content(System.Net.HttpStatusCode.NotFound, new
+                        {
+                            success = false,
+                            errores = resultado.error.Select(e => e.Message)
+                        });
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
+            }
+
+        }
     }
-}/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 
         [HttpGet]
         [Route("api/Onvo/GetPayment/{paymentId}")]

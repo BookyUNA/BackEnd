@@ -324,6 +324,20 @@ namespace DAL
 			errorID = ((System.Nullable<int>)(result.GetParameterValue(10)));
 			return ((int)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_RESUMEN_PAGOS_CLIENTE")]
+		public ISingleResult<SP_OBTENER_RESUMEN_PAGOS_CLIENTEResult> SP_OBTENER_RESUMEN_PAGOS_CLIENTE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="OnvoCustomerId", DbType="VarChar(100)")] string onvoCustomerId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), onvoCustomerId);
+			return ((ISingleResult<SP_OBTENER_RESUMEN_PAGOS_CLIENTEResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_PAYMENT_LINKS_POR_CLIENTE")]
+		public ISingleResult<SP_OBTENER_PAYMENT_LINKS_POR_CLIENTEResult> SP_OBTENER_PAYMENT_LINKS_POR_CLIENTE([global::System.Data.Linq.Mapping.ParameterAttribute(Name="OnvoCustomerId", DbType="VarChar(100)")] string onvoCustomerId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Status", DbType="VarChar(50)")] string status)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), onvoCustomerId, status);
+			return ((ISingleResult<SP_OBTENER_PAYMENT_LINKS_POR_CLIENTEResult>)(result.ReturnValue));
+		}
 	}
 	
 	public partial class SP_LISTAR_SERVICIOS_DISPONIBLESResult
@@ -2481,6 +2495,418 @@ namespace DAL
 				if ((this._Activo != value))
 				{
 					this._Activo = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_RESUMEN_PAGOS_CLIENTEResult
+	{
+		
+		private System.Nullable<int> _TotalPagos;
+		
+		private System.Nullable<int> _PagosCompletados;
+		
+		private System.Nullable<int> _PagosPendientes;
+		
+		private System.Nullable<int> _PagosCancelados;
+		
+		private System.Nullable<int> _PagosExpirados;
+		
+		private System.Nullable<decimal> _TotalPagado;
+		
+		private System.Nullable<decimal> _TotalPendiente;
+		
+		private string _Currency;
+		
+		public SP_OBTENER_RESUMEN_PAGOS_CLIENTEResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TotalPagos", DbType="Int")]
+		public System.Nullable<int> TotalPagos
+		{
+			get
+			{
+				return this._TotalPagos;
+			}
+			set
+			{
+				if ((this._TotalPagos != value))
+				{
+					this._TotalPagos = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PagosCompletados", DbType="Int")]
+		public System.Nullable<int> PagosCompletados
+		{
+			get
+			{
+				return this._PagosCompletados;
+			}
+			set
+			{
+				if ((this._PagosCompletados != value))
+				{
+					this._PagosCompletados = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PagosPendientes", DbType="Int")]
+		public System.Nullable<int> PagosPendientes
+		{
+			get
+			{
+				return this._PagosPendientes;
+			}
+			set
+			{
+				if ((this._PagosPendientes != value))
+				{
+					this._PagosPendientes = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PagosCancelados", DbType="Int")]
+		public System.Nullable<int> PagosCancelados
+		{
+			get
+			{
+				return this._PagosCancelados;
+			}
+			set
+			{
+				if ((this._PagosCancelados != value))
+				{
+					this._PagosCancelados = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PagosExpirados", DbType="Int")]
+		public System.Nullable<int> PagosExpirados
+		{
+			get
+			{
+				return this._PagosExpirados;
+			}
+			set
+			{
+				if ((this._PagosExpirados != value))
+				{
+					this._PagosExpirados = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TotalPagado", DbType="Decimal(38,2)")]
+		public System.Nullable<decimal> TotalPagado
+		{
+			get
+			{
+				return this._TotalPagado;
+			}
+			set
+			{
+				if ((this._TotalPagado != value))
+				{
+					this._TotalPagado = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TotalPendiente", DbType="Decimal(38,2)")]
+		public System.Nullable<decimal> TotalPendiente
+		{
+			get
+			{
+				return this._TotalPendiente;
+			}
+			set
+			{
+				if ((this._TotalPendiente != value))
+				{
+					this._TotalPendiente = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Currency", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string Currency
+		{
+			get
+			{
+				return this._Currency;
+			}
+			set
+			{
+				if ((this._Currency != value))
+				{
+					this._Currency = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_PAYMENT_LINKS_POR_CLIENTEResult
+	{
+		
+		private int _Id;
+		
+		private int _IdUsuario;
+		
+		private string _OnvoCustomerId;
+		
+		private string _OnvoPaymentLinkId;
+		
+		private string _ReferenceId;
+		
+		private string _PaymentUrl;
+		
+		private decimal _Amount;
+		
+		private string _Currency;
+		
+		private string _Description;
+		
+		private string _Status;
+		
+		private System.Nullable<System.DateTime> _ExpiresAt;
+		
+		private System.Nullable<System.DateTime> _FechaCreacion;
+		
+		private System.Nullable<System.DateTime> _FechaActualizacion;
+		
+		private string _StatusDescripcion;
+		
+		public SP_OBTENER_PAYMENT_LINKS_POR_CLIENTEResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL")]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this._Id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdUsuario", DbType="Int NOT NULL")]
+		public int IdUsuario
+		{
+			get
+			{
+				return this._IdUsuario;
+			}
+			set
+			{
+				if ((this._IdUsuario != value))
+				{
+					this._IdUsuario = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnvoCustomerId", DbType="VarChar(100)")]
+		public string OnvoCustomerId
+		{
+			get
+			{
+				return this._OnvoCustomerId;
+			}
+			set
+			{
+				if ((this._OnvoCustomerId != value))
+				{
+					this._OnvoCustomerId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnvoPaymentLinkId", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string OnvoPaymentLinkId
+		{
+			get
+			{
+				return this._OnvoPaymentLinkId;
+			}
+			set
+			{
+				if ((this._OnvoPaymentLinkId != value))
+				{
+					this._OnvoPaymentLinkId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReferenceId", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string ReferenceId
+		{
+			get
+			{
+				return this._ReferenceId;
+			}
+			set
+			{
+				if ((this._ReferenceId != value))
+				{
+					this._ReferenceId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaymentUrl", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
+		public string PaymentUrl
+		{
+			get
+			{
+				return this._PaymentUrl;
+			}
+			set
+			{
+				if ((this._PaymentUrl != value))
+				{
+					this._PaymentUrl = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Amount", DbType="Decimal(18,2) NOT NULL")]
+		public decimal Amount
+		{
+			get
+			{
+				return this._Amount;
+			}
+			set
+			{
+				if ((this._Amount != value))
+				{
+					this._Amount = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Currency", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string Currency
+		{
+			get
+			{
+				return this._Currency;
+			}
+			set
+			{
+				if ((this._Currency != value))
+				{
+					this._Currency = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(500)")]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this._Description = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="VarChar(50)")]
+		public string Status
+		{
+			get
+			{
+				return this._Status;
+			}
+			set
+			{
+				if ((this._Status != value))
+				{
+					this._Status = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExpiresAt", DbType="DateTime")]
+		public System.Nullable<System.DateTime> ExpiresAt
+		{
+			get
+			{
+				return this._ExpiresAt;
+			}
+			set
+			{
+				if ((this._ExpiresAt != value))
+				{
+					this._ExpiresAt = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCreacion", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaCreacion
+		{
+			get
+			{
+				return this._FechaCreacion;
+			}
+			set
+			{
+				if ((this._FechaCreacion != value))
+				{
+					this._FechaCreacion = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaActualizacion", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaActualizacion
+		{
+			get
+			{
+				return this._FechaActualizacion;
+			}
+			set
+			{
+				if ((this._FechaActualizacion != value))
+				{
+					this._FechaActualizacion = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StatusDescripcion", DbType="VarChar(50)")]
+		public string StatusDescripcion
+		{
+			get
+			{
+				return this._StatusDescripcion;
+			}
+			set
+			{
+				if ((this._StatusDescripcion != value))
+				{
+					this._StatusDescripcion = value;
 				}
 			}
 		}

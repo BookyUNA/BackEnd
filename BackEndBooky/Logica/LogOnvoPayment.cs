@@ -7,6 +7,7 @@ using Logica.Service;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 
 public class LogOnvoPayment
 {
@@ -731,4 +732,153 @@ public class LogOnvoPayment
     }
 
     #endregion
+
+
+    #region OBTENER HISTORIAL DE PAGOS
+
+    /// <summary>
+    /// Obtiene todos los payment links de un cliente con filtro opcional por status
+    /// </summary>
+    public ResOnvoHistorialPagos ObtenerHistorialPagosClienteAsync(string customerId, string status, string token)
+    {
+        ResOnvoHistorialPagos res = new ResOnvoHistorialPagos();
+        res.error = new List<Error>();
+        res.pagos = new List<OnvoPaymentLinkDetalle>();
+
+        try
+        {
+            int? idUsuarioToken = JwtService.GetUserIdFromToken(token);
+            if (!idUsuarioToken.HasValue || idUsuarioToken <= 0)
+            {
+                res.resultado = false;
+                res.error.Add(new Error { ErrorCode = 40000, Message = "Sesión vencida o token inválido" });
+                return res;
+            }
+
+            using (var linq = new DataClasses1DataContext())
+            {
+                // Obtener payment links de la BD
+                var pagos = linq.SP_OBTENER_PAYMENT_LINKS_POR_CLIENTE(customerId, status);
+
+                if (pagos != null)
+                {
+                    foreach (var pago in pagos)
+                    {
+                        res.pagos.Add(new OnvoPaymentLinkDetalle
+                        {
+                            Id = pago.Id,
+                            PaymentLinkId = pago.OnvoPaymentLinkId,
+                            ReferenceId = pago.ReferenceId,
+                            PaymentUrl = pago.PaymentUrl,
+                            Amount = pago.Amount  ,
+                            Currency = pago.Currency,
+                            Description = pago.Description,
+                            Status = pago.Status,
+                            StatusDescripcion = pago.StatusDescripcion,
+                            ExpiresAt = pago.ExpiresAt,
+                            FechaCreacion = pago.FechaCreacion ?? DateTime.Now,
+                            FechaActualizacion = pago.FechaActualizacion
+                        });
+                    }
+
+                    res.resultado = true;
+                    res.totalRegistros = res.pagos.Count;
+                    res.mensaje = $"Se encontraron {res.totalRegistros} registros";
+                }
+                else
+                {
+                    res.resultado = true;
+                    res.totalRegistros = 0;
+                    res.mensaje = "No se encontraron pagos para este cliente";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Exception in ObtenerHistorialPagosClienteAsync: {ex.Message}");
+            res.resultado = false;
+            res.error.Add(new Error { ErrorCode = 50021, Message = $"Error al obtener historial: {ex.Message}" });
+        }
+
+        return res;
+    }
+
+    /// <summary>
+    /// Obtiene un resumen estadístico de pagos del cliente
+    /// </summary>
+    public ResOnvoResumenPagos ObtenerResumenPagosClienteAsync(string customerId, string token)
+    {
+        ResOnvoResumenPagos res = new ResOnvoResumenPagos();
+        res.error = new List<Error>();
+
+        try
+        {
+            int? idUsuarioToken = JwtService.GetUserIdFromToken(token);
+            if (!idUsuarioToken.HasValue || idUsuarioToken <= 0)
+            {
+                res.resultado = false;
+                res.error.Add(new Error { ErrorCode = 40000, Message = "Sesión vencida o token inválido" });
+                return res;
+            }
+
+            using (var linq = new DataClasses1DataContext())
+            {
+                var resumen = linq.SP_OBTENER_RESUMEN_PAGOS_CLIENTE(customerId).FirstOrDefault();
+
+                if (resumen != null)
+                {
+                    res.resultado = true;
+                    res.totalPagos = resumen.TotalPagos ?? 0;
+                    res.pagosCompletados = resumen.PagosCompletados ?? 0;
+                    res.pagosPendientes = resumen.PagosPendientes ?? 0;
+                    res.pagosCancelados = resumen.PagosCancelados ?? 0;
+                    res.pagosExpirados = resumen.PagosExpirados ?? 0;
+                    res.totalPagado = resumen.TotalPagado ?? 0;
+                    res.totalPendiente = resumen.TotalPendiente ?? 0;
+                    res.currency = resumen.Currency;
+                    
+                }
+                else
+                {
+                    res.resultado = true;
+                 
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Exception in ObtenerResumenPagosClienteAsync: {ex.Message}");
+            res.resultado = false;
+            res.error.Add(new Error { ErrorCode = 50022, Message = $"Error al obtener resumen: {ex.Message}" });
+        }
+
+        return res;
+    }
+
+    /// <summary>
+    /// Obtiene pagos pendientes de un cliente
+    /// </summary>
+    public ResOnvoHistorialPagos ObtenerPagosPendientesAsync(string customerId, string token)
+    {
+        return ObtenerHistorialPagosClienteAsync(customerId, "active", token);
+    }
+
+    /// <summary>
+    /// Obtiene pagos completados de un cliente
+    /// </summary>
+    public ResOnvoHistorialPagos ObtenerPagosCompletadosAsync(string customerId, string token)
+    {
+        return ObtenerHistorialPagosClienteAsync(customerId, "completed", token);
+    }
+
+    /// <summary>
+    /// Obtiene pagos cancelados de un cliente
+    /// </summary>
+    public ResOnvoHistorialPagos ObtenerPagosCanceladosAsync(string customerId, string token)
+    {
+        return ObtenerHistorialPagosClienteAsync(customerId, "cancelled", token);
+    }
+
+    #endregion
+
 }
