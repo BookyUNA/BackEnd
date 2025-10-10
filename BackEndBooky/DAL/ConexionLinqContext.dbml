@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Booky" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=ASUSMEY;Initial Catalog=Booky;Integrated Security=True;Encrypt=True;Trust Server Certificate=True" SettingsObjectName="DAL.Properties.Settings" SettingsPropertyName="BookyConnectionString3" Provider="System.Data.SqlClient" />
   <Function Name="dbo.SP_LOGIN_USUARIO" Method="SP_LOGIN_USUARIO">
     <Parameter Name="Email" Parameter="email" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="PasswordHash" Parameter="passwordHash" Type="System.String" DbType="VarChar(255)" />
@@ -403,6 +402,23 @@
       <Column Name="FechaCreacion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="FechaActualizacion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="StatusDescripcion" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_CALIFICAR_PROFESIONAL" Method="SP_CALIFICAR_PROFESIONAL">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Calificacion" Parameter="calificacion" Type="System.Decimal" DbType="Decimal(3,2)" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL" Method="SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdPerfilProfesional" Parameter="idPerfilProfesional" Type="System.Int32" DbType="Int" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult">
+      <Column Name="CalificacionPromedio" Type="System.Decimal" DbType="Decimal(3,2)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

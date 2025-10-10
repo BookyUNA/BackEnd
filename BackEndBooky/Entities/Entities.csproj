@@ -57,6 +57,8 @@
     <Compile Include="Request\ReqActualizarEstadoCita.cs" />
     <Compile Include="Request\ReqActualizarPerfilProfesional.cs" />
     <Compile Include="Request\ReqActualizarServicio.cs" />
+    <Compile Include="Request\ReqCalificarProfesional.cs" />
+    <Compile Include="Request\ReqCalificacionPromedio.cs" />
     <Compile Include="Request\ReqCambioDeContrasena.cs" />
     <Compile Include="Request\ReqAgregarUsuario.cs" />
     <Compile Include="Request\ReqCancelarCita.cs" />
@@ -88,6 +90,8 @@
     <Compile Include="Response\ResAgregarUsuario.cs" />
     <Compile Include="Response\ResBase.cs" />
     <Compile Include="Response\ResActivarDesactivarServicio.cs" />
+    <Compile Include="Response\ResCalificacionPromedio.cs" />
+    <Compile Include="Response\ResCalificarProfesional.cs" />
     <Compile Include="Response\ResCambioDeContrasena.cs" />
     <Compile Include="Response\ResCancelarCita.cs" />
     <Compile Include="Response\ResCierreSesion.cs" />
