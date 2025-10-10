@@ -338,6 +338,24 @@ namespace DAL
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), onvoCustomerId, status);
 			return ((ISingleResult<SP_OBTENER_PAYMENT_LINKS_POR_CLIENTEResult>)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CALIFICAR_PROFESIONAL")]
+		public int SP_CALIFICAR_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Calificacion", DbType="Decimal(3,2)")] System.Nullable<decimal> calificacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idCita, calificacion, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL")]
+		public ISingleResult<SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult> SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdPerfilProfesional", DbType="Int")] System.Nullable<int> idPerfilProfesional, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idPerfilProfesional, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(2)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(3)));
+			return ((ISingleResult<SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult>)(result.ReturnValue));
+		}
 	}
 	
 	public partial class SP_LISTAR_SERVICIOS_DISPONIBLESResult
@@ -2907,6 +2925,32 @@ namespace DAL
 				if ((this._StatusDescripcion != value))
 				{
 					this._StatusDescripcion = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult
+	{
+		
+		private System.Nullable<decimal> _CalificacionPromedio;
+		
+		public SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CalificacionPromedio", DbType="Decimal(3,2)")]
+		public System.Nullable<decimal> CalificacionPromedio
+		{
+			get
+			{
+				return this._CalificacionPromedio;
+			}
+			set
+			{
+				if ((this._CalificacionPromedio != value))
+				{
+					this._CalificacionPromedio = value;
 				}
 			}
 		}
