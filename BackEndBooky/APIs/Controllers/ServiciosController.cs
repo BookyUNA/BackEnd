@@ -91,5 +91,27 @@ namespace APIs.Controllers
 
             return new LogReprogramarCita().ReprogramarCita(req, token);
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/AgregarHorarios")]
+        public ResAgregarHorarioProfesional AgregarHorarioProfesional([FromBody] ReqAgregarHorarioProfesional req)
+        {
+           
+            var token = Request.Headers.Authorization?.Parameter;
+
+            return new LogHorarioProfesional().AgregarHorarios(req, token);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/CrearEvento")]
+        public ResCrearEvento CrearEvento([FromBody] ReqCrearEvento req)
+        {
+
+            var token = Request.Headers.Authorization?.Parameter;
+
+            return new LogHorarioProfesional().CrearEvento(req, token);
+        }
     }
 }

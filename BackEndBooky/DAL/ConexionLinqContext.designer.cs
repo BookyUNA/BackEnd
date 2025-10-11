@@ -33,7 +33,7 @@ namespace DAL
     #endregion
 		
 		public DataClasses1DataContext() : 
-				base(global::DAL.Properties.Settings.Default.ConnectionStringCloud, mappingSource)
+				base(global::DAL.Properties.Settings.Default.BookyConnectionString3, mappingSource)
 		{
 			OnCreated();
 		}
@@ -355,6 +355,26 @@ namespace DAL
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(2)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_AGREGAR_HORARIO_PROFESIONAL")]
+		public int SP_AGREGAR_HORARIO_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="HoraInicio", DbType="Time")] System.Nullable<System.TimeSpan> horaInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="HoraFin", DbType="Time")] System.Nullable<System.TimeSpan> horaFin, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FechaDiaSemana", DbType="Date")] System.Nullable<System.DateTime> fechaDiaSemana, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Estado", DbType="VarChar(20)")] string estado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, horaInicio, horaFin, fechaDiaSemana, estado, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(5)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(6)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CREAR_EVENTO_PROFESIONAL")]
+		public int SP_CREAR_EVENTO_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreEvento", DbType="VarChar(200)")] string nombreEvento, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Descripcion", DbType="VarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FechaHoraInicio", DbType="DateTime")] System.Nullable<System.DateTime> fechaHoraInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FechaHoraFin", DbType="DateTime")] System.Nullable<System.DateTime> fechaHoraFin, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdEventoCreado", DbType="Int")] ref System.Nullable<int> idEventoCreado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="HorariosAfectados", DbType="Int")] ref System.Nullable<int> horariosAfectados, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, nombreEvento, descripcion, fechaHoraInicio, fechaHoraFin, idEventoCreado, horariosAfectados, sUCCESS, eRRORID);
+			idEventoCreado = ((System.Nullable<int>)(result.GetParameterValue(5)));
+			horariosAfectados = ((System.Nullable<int>)(result.GetParameterValue(6)));
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(7)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(8)));
+			return ((int)(result.ReturnValue));
 		}
 	}
 	

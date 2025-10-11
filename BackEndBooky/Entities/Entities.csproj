@@ -45,6 +45,7 @@
     <Compile Include="Entity\CitaCliente.cs" />
     <Compile Include="Entity\CitaProfesional.cs" />
     <Compile Include="Entity\Error.cs" />
+    <Compile Include="Entity\HorarioProfesional.cs" />
     <Compile Include="Entity\OnvoApiException.cs" />
     <Compile Include="Entity\OnvoConfiguration.cs" />
     <Compile Include="Entity\OnvoPaymentLinkDetalle.cs" />
@@ -57,11 +58,13 @@
     <Compile Include="Request\ReqActualizarEstadoCita.cs" />
     <Compile Include="Request\ReqActualizarPerfilProfesional.cs" />
     <Compile Include="Request\ReqActualizarServicio.cs" />
+    <Compile Include="Request\ReqAgregarHorarioProfesional.cs" />
     <Compile Include="Request\ReqCalificarProfesional.cs" />
     <Compile Include="Request\ReqCalificacionPromedio.cs" />
     <Compile Include="Request\ReqCambioDeContrasena.cs" />
     <Compile Include="Request\ReqAgregarUsuario.cs" />
     <Compile Include="Request\ReqCancelarCita.cs" />
+    <Compile Include="Request\ReqCrearEvento.cs" />
     <Compile Include="Request\ReqCrearServicio.cs" />
     <Compile Include="Request\ReqEditarInformacionMiPerfil.cs" />
     <Compile Include="Request\ReqGenerarNuevoCodigo.cs" />
@@ -87,6 +90,7 @@
     <Compile Include="Response\ResActualizarEstadoCita.cs" />
     <Compile Include="Response\ResActualizarPerfilProfesional.cs" />
     <Compile Include="Response\ResActualizarServicio.cs" />
+    <Compile Include="Response\ResAgregarHorarioProfesional.cs" />
     <Compile Include="Response\ResAgregarUsuario.cs" />
     <Compile Include="Response\ResBase.cs" />
     <Compile Include="Response\ResActivarDesactivarServicio.cs" />
@@ -95,6 +99,7 @@
     <Compile Include="Response\ResCambioDeContrasena.cs" />
     <Compile Include="Response\ResCancelarCita.cs" />
     <Compile Include="Response\ResCierreSesion.cs" />
+    <Compile Include="Response\ResCrearEvento.cs" />
     <Compile Include="Response\ResCrearServicio.cs" />
     <Compile Include="Response\ResEditarInformacionMiPerfil.cs" />
     <Compile Include="Response\ResGenerarNuevoCodigo.cs" />
