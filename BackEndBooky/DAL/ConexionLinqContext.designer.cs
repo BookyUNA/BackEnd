@@ -33,7 +33,7 @@ namespace DAL
     #endregion
 		
 		public DataClasses1DataContext() : 
-				base(global::DAL.Properties.Settings.Default.BookyConnectionString3, mappingSource)
+				base(global::DAL.Properties.Settings.Default.ConnectionStringCloud, mappingSource)
 		{
 			OnCreated();
 		}
