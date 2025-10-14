@@ -27,6 +27,9 @@ namespace Entities.Entity
 
         // Profesional
         public string Profesion { get; set; }
+        public int IdProfesional { get; set; }
+        public decimal? CalificacionPromedio { get; set; }
+        public string EstadoCalificacion { get; set; }
         public string DescripcionPerfil { get; set; }
         public string Direccion { get; set; }
         public string NombreProfesional { get; set; }

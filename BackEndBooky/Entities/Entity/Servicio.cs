@@ -10,6 +10,7 @@ namespace Entities.Entity
     {
 
         public int IdServicio { get; set; }
+        public int IdProfesional { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public int? DuracionMinutos { get; set; }
