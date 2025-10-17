@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Booky" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=ASUSMEY;Initial Catalog=Booky;Integrated Security=True;Encrypt=True;Trust Server Certificate=True" SettingsObjectName="DAL.Properties.Settings" SettingsPropertyName="BookyConnectionString3" Provider="System.Data.SqlClient" />
   <Function Name="dbo.SP_LOGIN_USUARIO" Method="SP_LOGIN_USUARIO">
     <Parameter Name="Email" Parameter="email" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="PasswordHash" Parameter="passwordHash" Type="System.String" DbType="VarChar(255)" />
@@ -99,16 +98,6 @@
     <Parameter Name="PermiteDescuento" Parameter="permiteDescuento" Type="System.Boolean" DbType="Bit" />
     <Parameter Name="PorcentajeDescuento" Parameter="porcentajeDescuento" Type="System.Decimal" DbType="Decimal(5,2)" />
     <Parameter Name="IdServicioCreado" Parameter="idServicioCreado" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
-    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <Return Type="System.Int32" />
-  </Function>
-  <Function Name="dbo.SP_SOLICITAR_CITA_PROFESIONAL" Method="SP_SOLICITAR_CITA_PROFESIONAL">
-    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
-    <Parameter Name="IdServicio" Parameter="idServicio" Type="System.Int32" DbType="Int" />
-    <Parameter Name="FechaCita" Parameter="fechaCita" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="MensajeSolicitud" Parameter="mensajeSolicitud" Type="System.String" DbType="NVarChar(MAX)" />
-    <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />
@@ -450,5 +439,20 @@
       <Column Name="FechaCreacion" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="Estado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
     </ElementType>
+  </Function>
+  <Function Name="dbo.SP_SOLICITAR_CITA_PROFESIONAL" Method="SP_SOLICITAR_CITA_PROFESIONAL">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdServicio" Parameter="idServicio" Type="System.Int32" DbType="Int" />
+    <Parameter Name="FechaCita" Parameter="fechaCita" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="MensajeSolicitud" Parameter="mensajeSolicitud" Type="System.String" DbType="NVarChar(MAX)" />
+    <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="NombreCliente" Parameter="nombreCliente" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Parameter Name="CorreoCliente" Parameter="correoCliente" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Parameter Name="NombreProfesional" Parameter="nombreProfesional" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Parameter Name="CorreoProfesional" Parameter="correoProfesional" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Parameter Name="NombreServicio" Parameter="nombreServicio" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Return Type="System.Int32" />
   </Function>
 </Database>
