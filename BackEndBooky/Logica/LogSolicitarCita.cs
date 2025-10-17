@@ -124,7 +124,6 @@ namespace Logica
                                 Message = "La cita fue creada, pero ocurrió un error al enviar las notificaciones por correo."
                             });
                         }
-
                     }
                     else
                     {

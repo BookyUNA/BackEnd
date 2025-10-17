@@ -39,7 +39,7 @@ namespace DAL
 		}
 
         public DataClasses1DataContext() :
-                base(global::DAL.Properties.Settings.Default.BookyConnectionString2, mappingSource)
+                base(global::DAL.Properties.Settings.Default.BookyConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -202,15 +202,6 @@ namespace DAL
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(1)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
 			return ((ISingleResult<SP_OBTENER_USUARIO_POR_IDResult>)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_REPROGRAMAR_CITA_PROFESIONAL")]
-		public int SP_REPROGRAMAR_CITA_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NuevaFechaCita", DbType="DateTime")] System.Nullable<System.DateTime> nuevaFechaCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idCita, nuevaFechaCita, sUCCESS, eRRORID);
-			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
-			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			return ((int)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CANCELAR_CITA_CLIENTE")]
@@ -379,6 +370,20 @@ namespace DAL
 			nombreProfesional = ((string)(result.GetParameterValue(9)));
 			correoProfesional = ((string)(result.GetParameterValue(10)));
 			nombreServicio = ((string)(result.GetParameterValue(11)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_REPROGRAMAR_CITA_PROFESIONAL")]
+		public int SP_REPROGRAMAR_CITA_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NuevaFechaCita", DbType="DateTime")] System.Nullable<System.DateTime> nuevaFechaCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreCliente", DbType="NVarChar(100)")] ref string nombreCliente, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CorreoCliente", DbType="NVarChar(100)")] ref string correoCliente, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreProfesional", DbType="NVarChar(100)")] ref string nombreProfesional, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CorreoProfesional", DbType="NVarChar(100)")] ref string correoProfesional, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreServicio", DbType="NVarChar(100)")] ref string nombreServicio)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idCita, nuevaFechaCita, sUCCESS, eRRORID, nombreCliente, correoCliente, nombreProfesional, correoProfesional, nombreServicio);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			nombreCliente = ((string)(result.GetParameterValue(5)));
+			correoCliente = ((string)(result.GetParameterValue(6)));
+			nombreProfesional = ((string)(result.GetParameterValue(7)));
+			correoProfesional = ((string)(result.GetParameterValue(8)));
+			nombreServicio = ((string)(result.GetParameterValue(9)));
 			return ((int)(result.ReturnValue));
 		}
 	}

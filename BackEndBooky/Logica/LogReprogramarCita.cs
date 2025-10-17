@@ -3,6 +3,7 @@ using Entities.Entity;
 using Entities.Request;
 using Entities.Response;
 using Logic;
+using Logic.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -21,6 +22,11 @@ namespace Logica
             bool? resultadoBd = true;
             int? errorID = 0;
             int? idUsuarioToken = 0;
+            string nombreCliente = null;
+            string correoCliente = null;
+            string nombreProfesional = null;
+            string correoProfesional = null;
+            string nombreServicio = null;
 
             try
             {
@@ -67,13 +73,54 @@ namespace Logica
                         req.IdCita,
                         req.NuevaFechaCita,
                         ref resultadoBd,
-                        ref errorID
+                        ref errorID,
+                        ref nombreCliente,
+                        ref correoCliente,
+                        ref nombreProfesional,
+                        ref correoProfesional,
+                        ref nombreServicio
                     );
 
                     // Evaluar respuesta del SP
                     if (resultadoBd.HasValue && resultadoBd.Value)
                     {
                         res.resultado = true;
+
+                        // 🔹 Envío de correos
+                        try
+                        {
+                            string fechaFormateada = req.NuevaFechaCita.ToString("dd/MM/yyyy HH:mm");
+
+                            // Correo para el cliente
+                            EmailService.EnviarCorreo(
+                                correoCliente,
+                                "Cita reprogramada - Booky",
+                                $"Hola {nombreCliente},<br><br>" +
+                                $"Tu cita con <b>{nombreProfesional}</b> ha sido reprogramada exitosamente.<br>" +
+                                $"<b>Servicio:</b> {nombreServicio}<br>" +
+                                $"<b>Nueva fecha:</b> {fechaFormateada}<br><br>" +
+                                "Gracias por usar <b>Booky</b>."
+                            );
+
+                            // Correo para el profesional
+                            EmailService.EnviarCorreo(
+                                correoProfesional,
+                                "Cita reprogramada - Booky",
+                                $"Hola {nombreProfesional},<br><br>" +
+                                $"El cliente <b>{nombreCliente}</b> ha reprogramado su cita para el servicio <b>{nombreServicio}</b>.<br>" +
+                                $"<b>Nueva fecha:</b> {fechaFormateada}<br><br>" +
+                                "Por favor revisa tu panel para verificar los cambios.<br><br>" +
+                                "Gracias por usar <b>Booky</b>."
+                            );
+                        }
+                        catch (Exception)
+                        {
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 60001,
+                                Message = "La cita fue reprogramada, pero ocurrió un error al enviar las notificaciones por correo."
+                            });
+                        }
                     }
                     else
                     {

@@ -164,14 +164,6 @@
       <Column Name="Estado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.SP_REPROGRAMAR_CITA_PROFESIONAL" Method="SP_REPROGRAMAR_CITA_PROFESIONAL">
-    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
-    <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
-    <Parameter Name="NuevaFechaCita" Parameter="nuevaFechaCita" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
-    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <Return Type="System.Int32" />
-  </Function>
   <Function Name="dbo.SP_CANCELAR_CITA_CLIENTE" Method="SP_CANCELAR_CITA_CLIENTE">
     <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
     <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
@@ -446,6 +438,19 @@
     <Parameter Name="FechaCita" Parameter="fechaCita" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="MensajeSolicitud" Parameter="mensajeSolicitud" Type="System.String" DbType="NVarChar(MAX)" />
     <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="NombreCliente" Parameter="nombreCliente" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Parameter Name="CorreoCliente" Parameter="correoCliente" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Parameter Name="NombreProfesional" Parameter="nombreProfesional" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Parameter Name="CorreoProfesional" Parameter="correoProfesional" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Parameter Name="NombreServicio" Parameter="nombreServicio" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_REPROGRAMAR_CITA_PROFESIONAL" Method="SP_REPROGRAMAR_CITA_PROFESIONAL">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NuevaFechaCita" Parameter="nuevaFechaCita" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Parameter Name="NombreCliente" Parameter="nombreCliente" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
