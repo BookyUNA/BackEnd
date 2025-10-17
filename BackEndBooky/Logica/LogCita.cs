@@ -3,6 +3,7 @@ using Entities.Entity;
 using Entities.Request;
 using Entities.Response;
 using Logic;
+using Logic.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -18,6 +19,11 @@ namespace Logica
             res.error = new List<Error>();
             bool? resultadoBd = false;
             int? errorID = 0;
+            string nombreCliente = null;
+            string correoCliente = null;
+            string nombreProfesional = null;
+            string nombreServicio = null;
+            DateTime? fechaCita = null;
 
             try
             {
@@ -65,12 +71,60 @@ namespace Logica
                         req.Aprobada,   
                         req.MotivoRechazo,
                         ref resultadoBd,
-                        ref errorID
+                        ref errorID,
+                        ref nombreCliente,
+                        ref correoCliente,
+                        ref nombreProfesional,
+                        ref nombreServicio,
+                        ref fechaCita
                     );
 
                     if (resultadoBd.HasValue && resultadoBd.Value)
                     {
                         res.resultado = true;
+
+                        // Envío de correo al cliente
+                        try
+                        {
+                            string fechaFormateada = fechaCita?.ToString("dd/MM/yyyy HH:mm");
+
+                            if (req.Aprobada)
+                            {
+                                // Cita aprobada
+                                EmailService.EnviarCorreo(
+                                    correoCliente,
+                                    "Cita confirmada - Booky",
+                                    $"Hola {nombreCliente},<br><br>" +
+                                    $"Tu cita con el profesional <b>{nombreProfesional}</b> ha sido <b>confirmada</b>. ¡Te esperamos!<br>" +
+                                    $"<b>Servicio:</b> {nombreServicio}<br>" +
+                                    $"<b>Fecha:</b> {fechaFormateada}<br><br>" +
+                                    "Gracias por usar <b>Booky</b>."
+                                );
+                            }
+                            else
+                            {
+                                // Cita rechazada
+                                EmailService.EnviarCorreo(
+                                    correoCliente,
+                                    "Cita rechazada - Booky",
+                                    $"Hola {nombreCliente},<br><br>" +
+                                    $"Tu cita con el profesional <b>{nombreProfesional}</b> ha sido <b>rechazada</b>.<br>" +
+                                    $"<b>Servicio:</b> {nombreServicio}<br>" +
+                                    $"<b>Fecha:</b> {fechaFormateada}<br>" +
+                                    $"<b>Motivo:</b> {req.MotivoRechazo}<br><br>" +
+                                    "Puedes agendar otra cita en el momento que prefieras.<br><br>" +
+                                    "Gracias por usar <b>Booky</b>."
+                                );
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 60001,
+                                Message = "El estado fue actualizado, pero ocurrió un error al enviar el correo de notificación."
+                            });
+                        }
                     }
                     else
                     {

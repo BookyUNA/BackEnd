@@ -38,13 +38,13 @@ namespace DAL
 			OnCreated();
 		}
 
-        public DataClasses1DataContext() :
+		public DataClasses1DataContext() :
                 base(global::DAL.Properties.Settings.Default.BookyConnectionString, mappingSource)
         {
             OnCreated();
         }
-
-        public DataClasses1DataContext(System.Data.IDbConnection connection) : 
+		
+		public DataClasses1DataContext(System.Data.IDbConnection connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
@@ -213,15 +213,6 @@ namespace DAL
 			return ((int)(result.ReturnValue));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_ESTADO_CITA")]
-		public int SP_ACTUALIZAR_ESTADO_CITA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Aprobada", DbType="Bit")] System.Nullable<bool> aprobada, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="MotivoRechazo", DbType="NVarChar(500)")] string motivoRechazo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idCita, aprobada, motivoRechazo, sUCCESS, eRRORID);
-			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
-			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			return ((int)(result.ReturnValue));
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_PERFIL_PROFESIONAL")]
 		public int SP_ACTUALIZAR_PERFIL_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Profesion", DbType="NVarChar(100)")] string profesion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Descripcion", DbType="NVarChar(500)")] string descripcion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Direccion", DbType="NVarChar(200)")] string direccion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Latitud", DbType="Decimal(10,8)")] System.Nullable<decimal> latitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Longitud", DbType="Decimal(11,8)")] System.Nullable<decimal> longitud, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Estado", DbType="Bit")] System.Nullable<bool> estado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
 		{
@@ -384,6 +375,20 @@ namespace DAL
 			nombreProfesional = ((string)(result.GetParameterValue(7)));
 			correoProfesional = ((string)(result.GetParameterValue(8)));
 			nombreServicio = ((string)(result.GetParameterValue(9)));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_ACTUALIZAR_ESTADO_CITA")]
+		public int SP_ACTUALIZAR_ESTADO_CITA([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Aprobada", DbType="Bit")] System.Nullable<bool> aprobada, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="MotivoRechazo", DbType="NVarChar(500)")] string motivoRechazo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreCliente", DbType="NVarChar(200)")] ref string nombreCliente, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CorreoCliente", DbType="NVarChar(200)")] ref string correoCliente, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreProfesional", DbType="NVarChar(200)")] ref string nombreProfesional, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NombreServicio", DbType="NVarChar(200)")] ref string nombreServicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FechaCita", DbType="DateTime")] ref System.Nullable<System.DateTime> fechaCita)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idCita, aprobada, motivoRechazo, sUCCESS, eRRORID, nombreCliente, correoCliente, nombreProfesional, nombreServicio, fechaCita);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(3)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			nombreCliente = ((string)(result.GetParameterValue(5)));
+			correoCliente = ((string)(result.GetParameterValue(6)));
+			nombreProfesional = ((string)(result.GetParameterValue(7)));
+			nombreServicio = ((string)(result.GetParameterValue(8)));
+			fechaCita = ((System.Nullable<System.DateTime>)(result.GetParameterValue(9)));
 			return ((int)(result.ReturnValue));
 		}
 	}
