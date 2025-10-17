@@ -30,7 +30,13 @@ namespace DAL
 		
     #region Definiciones de métodos de extensibilidad
     partial void OnCreated();
-        #endregion
+    #endregion
+		
+		public DataClasses1DataContext(string connection) : 
+				base(connection, mappingSource)
+		{
+			OnCreated();
+		}
 
         public DataClasses1DataContext() :
                 base(global::DAL.Properties.Settings.Default.BookyConnectionString2, mappingSource)
