@@ -39,7 +39,7 @@ namespace DAL
 		}
 
 		public DataClasses1DataContext() :
-                base(global::DAL.Properties.Settings.Default.BookyConnectionString, mappingSource)
+                base(global::DAL.Properties.Settings.Default.ConnectionStringCloud, mappingSource)
         {
             OnCreated();
         }
