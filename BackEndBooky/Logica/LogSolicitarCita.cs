@@ -3,6 +3,7 @@ using Entities.Entity;
 using Entities.Request;
 using Entities.Response;
 using Logic;
+using Logic.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -22,6 +23,9 @@ namespace Logica
             int? errorID = 0;
             int? idCita = null;
             int? idUsuarioToken = 0;
+            string nombreCliente = null, correoCliente = null;
+            string nombreProfesional = null, correoProfesional = null;
+            string nombreServicio = null;
 
             try
             {
@@ -70,7 +74,12 @@ namespace Logica
                         req.MensajeSolicitud,
                         ref idCita,
                         ref resultadoBd,
-                        ref errorID
+                        ref errorID,
+                        ref nombreCliente,
+                        ref correoCliente,
+                        ref nombreProfesional,
+                        ref correoProfesional,
+                        ref nombreServicio
                     );
 
                     // Evaluar respuesta del SP
@@ -78,6 +87,43 @@ namespace Logica
                     {
                         res.resultado = true;
                         res.IdCita = idCita;
+
+                        try
+                        {
+                            string fechaFormateada = req.FechaCita.ToString("dd/MM/yyyy HH:mm");
+
+                            // Correo para el cliente
+                            EmailService.EnviarCorreo(
+                                correoCliente,
+                                "Nueva solicitud de cita - Booky",
+                                $"Hola {nombreCliente},<br><br>" +
+                                $"Tu cita con <b>{nombreProfesional}</b> ha sido registrada exitosamente.<br>" +
+                                $"<b>Servicio:</b> {nombreServicio}<br>" +
+                                $"<b>Fecha:</b> {fechaFormateada}<br><br>" +
+                                "Gracias por usar <b>Booky</b>."
+                            );
+
+                            // Correo para el profesional
+                            EmailService.EnviarCorreo(
+                                correoProfesional,
+                                "Nueva solicitud de cita - Booky",
+                                $"Hola {nombreProfesional},<br><br>" +
+                                $"Has recibido una nueva solicitud de cita de <b>{nombreCliente}</b>.<br>" +
+                                $"<b>Servicio:</b> {nombreServicio}<br>" +
+                                $"<b>Fecha solicitada:</b> {fechaFormateada}<br>" +
+                                $"<b>Mensaje del cliente:</b> {req.MensajeSolicitud ?? "(sin mensaje)"}<br><br>" +
+                                "Por favor revisa tu panel para confirmar o rechazar la cita.<br><br>" +
+                                "Gracias por usar <b>Booky</b>."
+                            );
+                        }
+                        catch (Exception)
+                        {
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 60001,
+                                Message = "La cita fue creada, pero ocurrió un error al enviar las notificaciones por correo."
+                            });
+                        }
                     }
                     else
                     {

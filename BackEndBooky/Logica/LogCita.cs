@@ -19,6 +19,11 @@ namespace Logica
             res.error = new List<Error>();
             bool? resultadoBd = false;
             int? errorID = 0;
+            string nombreCliente = null;
+            string correoCliente = null;
+            string nombreProfesional = null;
+            string nombreServicio = null;
+            DateTime? fechaCita = null;
 
             try
             {
@@ -67,7 +72,12 @@ namespace Logica
                         req.Aprobada,
                         req.MotivoRechazo,
                         ref resultadoBd,
-                        ref errorID
+                        ref errorID,
+                        ref nombreCliente,
+                        ref correoCliente,
+                        ref nombreProfesional,
+                        ref nombreServicio,
+                        ref fechaCita
                     );
 
                     if (resultadoBd.HasValue && resultadoBd.Value)
@@ -267,7 +277,10 @@ namespace Logica
                             EmailUsuario = c.EmailUsuario,
                             TelefonoUsuario = c.TelefonoUsuario,
 
+                            IdProfesional = c.IdProfesional,
                             Profesion = c.Profesion,
+                            CalificacionPromedio = c.CalificacionPromedio,
+                            EstadoCalificacion = c.EstadoCalificacion,
                             DescripcionPerfil = c.DescripcionPerfil,
                             Direccion = c.Direccion,
                             NombreProfesional = c.NombreProfesional,
@@ -374,7 +387,10 @@ namespace Logica
                             EmailUsuario = c.EmailUsuario,
                             TelefonoUsuario = c.TelefonoUsuario,
 
+                            IdProfesional = c.IdProfesional,
                             Profesion = c.Profesion,
+                            CalificacionPromedio = c.CalificacionPromedio,
+                            EstadoCalificacion = c.EstadoCalificacion,
                             DescripcionPerfil = c.DescripcionPerfil,
                             Direccion = c.Direccion,
                             NombreProfesional = c.NombreProfesional,

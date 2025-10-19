@@ -51,6 +51,7 @@ namespace Logica
                         res.servicios = servicios.Select(s => new Servicio
                         {
                             IdServicio = s.IdServicio,
+                            IdProfesional = s.IdPerfil,
                             Nombre = s.Nombre,
                             Descripcion = s.Descripcion,
                             DuracionMinutos = s.DuracionMinutos,
