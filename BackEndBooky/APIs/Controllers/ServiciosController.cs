@@ -113,5 +113,17 @@ namespace APIs.Controllers
 
             return new LogHorarioProfesional().CrearEvento(req, token);
         }
+
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/obtenerPorcentajeCancelacion")]
+        public ResMetricasCancelacion porcentajeCancelacion()
+        {
+
+            var token = Request.Headers.Authorization?.Parameter;
+
+            return new LogMetricasCancelacion().ObtenerMetricasCancelacion(token);
+        }
     }
 }

@@ -444,4 +444,45 @@
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.SP_OBTENER_DATOS_CITA_CORREO" Method="SP_OBTENER_DATOS_CITA_CORREO">
+    <Parameter Name="IdCita" Parameter="idCita" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_OBTENER_DATOS_CITA_CORREOResult">
+      <Column Name="IdCita" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FechaCita" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DuracionMinutos" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PrecioAcordado" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Estado" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="MotivoCancelacion" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="MensajeSolicitud" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="FechaSolicitud" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="FechaRespuesta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdCliente" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreCliente" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="EmailCliente" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="TelefonoCliente" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="IdProfesional" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreProfesional" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="EmailProfesional" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="TelefonoProfesional" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Profesion" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="DescripcionPerfil" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="Direccion" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_CalcularPorcentajeCancelacion" Method="SP_CalcularPorcentajeCancelacion">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PorcentajeCancelacion" Parameter="porcentajeCancelacion" Type="System.Decimal" DbType="Decimal(5,2)" Direction="InOut" />
+    <Parameter Name="CategoriaRiesgo" Parameter="categoriaRiesgo" Type="System.String" DbType="VarChar(20)" Direction="InOut" />
+    <Parameter Name="TotalCitas" Parameter="totalCitas" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="CitasCanceladas" Parameter="citasCanceladas" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="SP_CalcularPorcentajeCancelacionResult">
+      <Column Name="IdUsuario" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TotalCitas" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CitasCanceladas" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CitasCompletadas" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CitasRechazadas" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PorcentajeCancelacion" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+      <Column Name="CategoriaRiesgo" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+    </ElementType>
+  </Function>
 </Database>

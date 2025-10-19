@@ -108,6 +108,7 @@
     <Compile Include="Response\ResListarCitasProfesional.cs" />
     <Compile Include="Response\ResListarServicio.cs" />
     <Compile Include="Response\ResListarServiciosParaClientes.cs" />
+    <Compile Include="Response\ResMetricasCancelacion.cs" />
     <Compile Include="Response\ResMostrarInformacionMiPerfil.cs" />
     <Compile Include="Response\ResOnvo.cs" />
     <Compile Include="Response\ResOnvoCustomer.cs" />

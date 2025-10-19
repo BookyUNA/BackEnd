@@ -3,6 +3,7 @@ using Entities.Entity;
 using Entities.Request;
 using Entities.Response;
 using Logic;
+using Logic.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -60,9 +61,10 @@ namespace Logica
 
                 using (DataClasses1DataContext linq = new DataClasses1DataContext())
                 {
+                    // Ejecutar SP para actualizar el estado
                     linq.SP_ACTUALIZAR_ESTADO_CITA(
                         req.IdCita,
-                        req.Aprobada,   
+                        req.Aprobada,
                         req.MotivoRechazo,
                         ref resultadoBd,
                         ref errorID
@@ -71,9 +73,107 @@ namespace Logica
                     if (resultadoBd.HasValue && resultadoBd.Value)
                     {
                         res.resultado = true;
+
+                        // === OBTENER DATOS PARA EL CORREO ===
+                        var datosCita = linq.SP_OBTENER_DATOS_CITA_CORREO(req.IdCita).FirstOrDefault();
+
+                        if (datosCita != null)
+                        {
+                            try
+                            {
+                                // === CORREO PARA EL CLIENTE ===
+                                string asuntoCliente, cuerpoCliente;
+                                if (req.Aprobada)
+                                {
+                                    asuntoCliente = "Confirmación de cita aprobada";
+                                                                    cuerpoCliente = $@"
+                                Estimado/a {datosCita.NombreCliente},
+
+                                Su cita con el profesional {datosCita.NombreProfesional} ha sido **aprobada** exitosamente.
+
+                                🗓 Fecha de la cita: {datosCita.FechaCita:dd/MM/yyyy HH:mm}
+                                ⏱ Duración: {datosCita.DuracionMinutos} minutos
+                                💰 Precio acordado: {datosCita.PrecioAcordado:C}
+                                📍 Dirección: {datosCita.Direccion}
+
+                                Por favor, asegúrese de asistir puntualmente.
+
+                                Gracias por utilizar nuestro sistema.";
+                                                                }
+                                                                else
+                                                                {
+                                                                    asuntoCliente = "Notificación de cita rechazada";
+                                                                    cuerpoCliente = $@"
+                                Estimado/a {datosCita.NombreCliente},
+
+                                Su cita con el profesional {datosCita.NombreProfesional} ha sido **rechazada**.
+
+                                🗓 Fecha solicitada: {datosCita.FechaCita:dd/MM/yyyy HH:mm}
+                                💼 Profesional: {datosCita.NombreProfesional} ({datosCita.Profesion})
+
+                                Motivo del rechazo:
+                                ➡ {req.MotivoRechazo}
+
+                                Le invitamos a reagendar una nueva cita si lo desea.";
+                                }
+
+                                EmailService.EnviarCorreo(datosCita.EmailCliente, asuntoCliente, cuerpoCliente);
+
+                                // === CORREO PARA EL PROFESIONAL ===
+                                string asuntoProfesional, cuerpoProfesional;
+                                if (req.Aprobada)
+                                {
+                                    asuntoProfesional = "Cita confirmada con un cliente";
+                                    cuerpoProfesional = $@"
+                                Estimado/a {datosCita.NombreProfesional},
+
+                                Usted ha aprobado una cita con el cliente {datosCita.NombreCliente}.
+
+                                🗓 Fecha de la cita: {datosCita.FechaCita:dd/MM/yyyy HH:mm}
+                                ⏱ Duración: {datosCita.DuracionMinutos} minutos
+                                💰 Precio acordado: {datosCita.PrecioAcordado:C}
+                                📞 Teléfono del cliente: {datosCita.TelefonoCliente}
+
+                                Por favor, prepárese para la atención.";
+                                                                }
+                                                                else
+                                                                {
+                                                                    asuntoProfesional = "Cita rechazada registrada";
+                                                                    cuerpoProfesional = $@"
+                                Estimado/a {datosCita.NombreProfesional},
+
+                                Usted ha rechazado una cita con el cliente {datosCita.NombreCliente}.
+
+                                🗓 Fecha solicitada: {datosCita.FechaCita:dd/MM/yyyy HH:mm}
+                                Motivo de rechazo:
+                                ➡ {req.MotivoRechazo}
+
+                                La información ha sido registrada correctamente.";
+                                                                }
+
+                                EmailService.EnviarCorreo(datosCita.EmailProfesional, asuntoProfesional, cuerpoProfesional);
+                            }
+                            catch (Exception exCorreo)
+                            {
+                                res.error.Add(new Error
+                                {
+                                    ErrorCode = 60001,
+                                    Message = "Estado actualizado, pero ocurrió un error al enviar los correos"
+                                });
+                            }
+                        }
+                        else
+                        {
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 60002,
+                                Message = "Estado actualizado, pero no se pudieron obtener los datos para el correo"
+                            });
+                        }
                     }
                     else
                     {
+                        // Manejo de errores del SP de actualización
                         res.resultado = false;
                         switch (errorID)
                         {
@@ -353,6 +453,7 @@ namespace Logica
                     return res;
                 }
 
+                // Validaciones de entrada
                 if (req.IdCita <= 0)
                 {
                     res.resultado = false;
@@ -377,6 +478,7 @@ namespace Logica
 
                 using (DataClasses1DataContext linq = new DataClasses1DataContext())
                 {
+                    // Llamada al procedimiento para cancelar la cita
                     linq.SP_CANCELAR_CITA_CLIENTE(
                         idUsuarioToken,
                         req.IdCita,
@@ -385,13 +487,72 @@ namespace Logica
                         ref errorID
                     );
 
-                    // Evaluar respuesta del SP
                     if (resultadoBd.HasValue && resultadoBd.Value)
                     {
                         res.resultado = true;
+
+                        // === OBTENER DATOS DE LA CITA PARA CORREO ===
+                        var datosCita = linq.SP_OBTENER_DATOS_CITA_CORREO(req.IdCita).FirstOrDefault();
+
+                        if (datosCita != null)
+                        {
+                            try
+                            {
+                                // === Correo para el Cliente ===
+                                string asuntoCliente = "Confirmación de cancelación de cita";
+                                string cuerpoCliente = $@"
+Estimado/a {datosCita.NombreCliente},
+
+Su cita con el profesional {datosCita.NombreProfesional} ha sido cancelada exitosamente.
+
+🗓 Fecha original: {datosCita.FechaCita:dd/MM/yyyy HH:mm}
+💼 Profesional: {datosCita.NombreProfesional} ({datosCita.Profesion})
+📍 Dirección: {datosCita.Direccion}
+
+Motivo de cancelación: {req.MotivoCancelacion}
+
+Gracias por utilizar nuestro servicio.";
+
+                                EmailService.EnviarCorreo(datosCita.EmailCliente, asuntoCliente, cuerpoCliente);
+
+                                // === Correo para el Profesional ===
+                                string asuntoProfesional = "Notificación de cita cancelada por el cliente";
+                                string cuerpoProfesional = $@"
+Estimado/a {datosCita.NombreProfesional},
+
+El cliente {datosCita.NombreCliente} ha cancelado la cita programada.
+
+🗓 Fecha original: {datosCita.FechaCita:dd/MM/yyyy HH:mm}
+⏱ Duración: {datosCita.DuracionMinutos} minutos
+💰 Precio acordado: {datosCita.PrecioAcordado:C}
+
+Motivo de cancelación: {req.MotivoCancelacion}
+
+Por favor, actualice su agenda según corresponda.";
+
+                                EmailService.EnviarCorreo(datosCita.EmailProfesional, asuntoProfesional, cuerpoProfesional);
+                            }
+                            catch (Exception exCorreo)
+                            {
+                                res.error.Add(new Error
+                                {
+                                    ErrorCode = 60001,
+                                    Message = "Cita cancelada, pero ocurrió un error al enviar los correos"
+                                });
+                            }
+                        }
+                        else
+                        {
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = 60002,
+                                Message = "Cita cancelada, pero no se pudieron obtener los datos para enviar el correo"
+                            });
+                        }
                     }
                     else
                     {
+                        // Manejo de errores del SP de cancelación
                         res.resultado = false;
                         switch (errorID)
                         {
@@ -420,7 +581,7 @@ namespace Logica
                     }
                 }
             }
-            catch (SqlException sqlEx)
+            catch (SqlException)
             {
                 res.resultado = false;
                 res.error.Add(new Error
@@ -429,7 +590,7 @@ namespace Logica
                     Message = "Error de base de datos al cancelar la cita"
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 res.resultado = false;
                 res.error.Add(new Error
@@ -440,5 +601,6 @@ namespace Logica
             }
             return res;
         }
+
     }
 }

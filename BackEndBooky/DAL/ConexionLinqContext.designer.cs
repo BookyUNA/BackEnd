@@ -33,7 +33,7 @@ namespace DAL
     #endregion
 		
 		public DataClasses1DataContext() : 
-				base(global::DAL.Properties.Settings.Default.ConnectionStringCloud, mappingSource)
+				base(global::DAL.Properties.Settings.Default.BookyConnectionString3, mappingSource)
 		{
 			OnCreated();
 		}
@@ -375,6 +375,24 @@ namespace DAL
 			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(7)));
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(8)));
 			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_DATOS_CITA_CORREO")]
+		public ISingleResult<SP_OBTENER_DATOS_CITA_CORREOResult> SP_OBTENER_DATOS_CITA_CORREO([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdCita", DbType="Int")] System.Nullable<int> idCita)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idCita);
+			return ((ISingleResult<SP_OBTENER_DATOS_CITA_CORREOResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CalcularPorcentajeCancelacion")]
+		public ISingleResult<SP_CalcularPorcentajeCancelacionResult> SP_CalcularPorcentajeCancelacion([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PorcentajeCancelacion", DbType="Decimal(5,2)")] ref System.Nullable<decimal> porcentajeCancelacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CategoriaRiesgo", DbType="VarChar(20)")] ref string categoriaRiesgo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TotalCitas", DbType="Int")] ref System.Nullable<int> totalCitas, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CitasCanceladas", DbType="Int")] ref System.Nullable<int> citasCanceladas)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, porcentajeCancelacion, categoriaRiesgo, totalCitas, citasCanceladas);
+			porcentajeCancelacion = ((System.Nullable<decimal>)(result.GetParameterValue(1)));
+			categoriaRiesgo = ((string)(result.GetParameterValue(2)));
+			totalCitas = ((System.Nullable<int>)(result.GetParameterValue(3)));
+			citasCanceladas = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			return ((ISingleResult<SP_CalcularPorcentajeCancelacionResult>)(result.ReturnValue));
 		}
 	}
 	
@@ -2971,6 +2989,508 @@ namespace DAL
 				if ((this._CalificacionPromedio != value))
 				{
 					this._CalificacionPromedio = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_DATOS_CITA_CORREOResult
+	{
+		
+		private int _IdCita;
+		
+		private System.DateTime _FechaCita;
+		
+		private System.Nullable<int> _DuracionMinutos;
+		
+		private decimal _PrecioAcordado;
+		
+		private string _Estado;
+		
+		private string _MotivoCancelacion;
+		
+		private string _MensajeSolicitud;
+		
+		private System.DateTime _FechaSolicitud;
+		
+		private System.Nullable<System.DateTime> _FechaRespuesta;
+		
+		private int _IdCliente;
+		
+		private string _NombreCliente;
+		
+		private string _EmailCliente;
+		
+		private string _TelefonoCliente;
+		
+		private int _IdProfesional;
+		
+		private string _NombreProfesional;
+		
+		private string _EmailProfesional;
+		
+		private string _TelefonoProfesional;
+		
+		private string _Profesion;
+		
+		private string _DescripcionPerfil;
+		
+		private string _Direccion;
+		
+		public SP_OBTENER_DATOS_CITA_CORREOResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdCita", DbType="Int NOT NULL")]
+		public int IdCita
+		{
+			get
+			{
+				return this._IdCita;
+			}
+			set
+			{
+				if ((this._IdCita != value))
+				{
+					this._IdCita = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCita", DbType="DateTime NOT NULL")]
+		public System.DateTime FechaCita
+		{
+			get
+			{
+				return this._FechaCita;
+			}
+			set
+			{
+				if ((this._FechaCita != value))
+				{
+					this._FechaCita = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DuracionMinutos", DbType="Int")]
+		public System.Nullable<int> DuracionMinutos
+		{
+			get
+			{
+				return this._DuracionMinutos;
+			}
+			set
+			{
+				if ((this._DuracionMinutos != value))
+				{
+					this._DuracionMinutos = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PrecioAcordado", DbType="Decimal(10,2) NOT NULL")]
+		public decimal PrecioAcordado
+		{
+			get
+			{
+				return this._PrecioAcordado;
+			}
+			set
+			{
+				if ((this._PrecioAcordado != value))
+				{
+					this._PrecioAcordado = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Estado", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
+		public string Estado
+		{
+			get
+			{
+				return this._Estado;
+			}
+			set
+			{
+				if ((this._Estado != value))
+				{
+					this._Estado = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MotivoCancelacion", DbType="VarChar(255)")]
+		public string MotivoCancelacion
+		{
+			get
+			{
+				return this._MotivoCancelacion;
+			}
+			set
+			{
+				if ((this._MotivoCancelacion != value))
+				{
+					this._MotivoCancelacion = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MensajeSolicitud", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		public string MensajeSolicitud
+		{
+			get
+			{
+				return this._MensajeSolicitud;
+			}
+			set
+			{
+				if ((this._MensajeSolicitud != value))
+				{
+					this._MensajeSolicitud = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaSolicitud", DbType="DateTime NOT NULL")]
+		public System.DateTime FechaSolicitud
+		{
+			get
+			{
+				return this._FechaSolicitud;
+			}
+			set
+			{
+				if ((this._FechaSolicitud != value))
+				{
+					this._FechaSolicitud = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaRespuesta", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaRespuesta
+		{
+			get
+			{
+				return this._FechaRespuesta;
+			}
+			set
+			{
+				if ((this._FechaRespuesta != value))
+				{
+					this._FechaRespuesta = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdCliente", DbType="Int NOT NULL")]
+		public int IdCliente
+		{
+			get
+			{
+				return this._IdCliente;
+			}
+			set
+			{
+				if ((this._IdCliente != value))
+				{
+					this._IdCliente = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NombreCliente", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string NombreCliente
+		{
+			get
+			{
+				return this._NombreCliente;
+			}
+			set
+			{
+				if ((this._NombreCliente != value))
+				{
+					this._NombreCliente = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailCliente", DbType="VarChar(150) NOT NULL", CanBeNull=false)]
+		public string EmailCliente
+		{
+			get
+			{
+				return this._EmailCliente;
+			}
+			set
+			{
+				if ((this._EmailCliente != value))
+				{
+					this._EmailCliente = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TelefonoCliente", DbType="VarChar(20)")]
+		public string TelefonoCliente
+		{
+			get
+			{
+				return this._TelefonoCliente;
+			}
+			set
+			{
+				if ((this._TelefonoCliente != value))
+				{
+					this._TelefonoCliente = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdProfesional", DbType="Int NOT NULL")]
+		public int IdProfesional
+		{
+			get
+			{
+				return this._IdProfesional;
+			}
+			set
+			{
+				if ((this._IdProfesional != value))
+				{
+					this._IdProfesional = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NombreProfesional", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string NombreProfesional
+		{
+			get
+			{
+				return this._NombreProfesional;
+			}
+			set
+			{
+				if ((this._NombreProfesional != value))
+				{
+					this._NombreProfesional = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailProfesional", DbType="VarChar(150) NOT NULL", CanBeNull=false)]
+		public string EmailProfesional
+		{
+			get
+			{
+				return this._EmailProfesional;
+			}
+			set
+			{
+				if ((this._EmailProfesional != value))
+				{
+					this._EmailProfesional = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TelefonoProfesional", DbType="VarChar(20)")]
+		public string TelefonoProfesional
+		{
+			get
+			{
+				return this._TelefonoProfesional;
+			}
+			set
+			{
+				if ((this._TelefonoProfesional != value))
+				{
+					this._TelefonoProfesional = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Profesion", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string Profesion
+		{
+			get
+			{
+				return this._Profesion;
+			}
+			set
+			{
+				if ((this._Profesion != value))
+				{
+					this._Profesion = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DescripcionPerfil", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		public string DescripcionPerfil
+		{
+			get
+			{
+				return this._DescripcionPerfil;
+			}
+			set
+			{
+				if ((this._DescripcionPerfil != value))
+				{
+					this._DescripcionPerfil = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Direccion", DbType="VarChar(255)")]
+		public string Direccion
+		{
+			get
+			{
+				return this._Direccion;
+			}
+			set
+			{
+				if ((this._Direccion != value))
+				{
+					this._Direccion = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_CalcularPorcentajeCancelacionResult
+	{
+		
+		private System.Nullable<int> _IdUsuario;
+		
+		private System.Nullable<int> _TotalCitas;
+		
+		private System.Nullable<int> _CitasCanceladas;
+		
+		private System.Nullable<int> _CitasCompletadas;
+		
+		private System.Nullable<int> _CitasRechazadas;
+		
+		private System.Nullable<decimal> _PorcentajeCancelacion;
+		
+		private string _CategoriaRiesgo;
+		
+		public SP_CalcularPorcentajeCancelacionResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdUsuario", DbType="Int")]
+		public System.Nullable<int> IdUsuario
+		{
+			get
+			{
+				return this._IdUsuario;
+			}
+			set
+			{
+				if ((this._IdUsuario != value))
+				{
+					this._IdUsuario = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TotalCitas", DbType="Int")]
+		public System.Nullable<int> TotalCitas
+		{
+			get
+			{
+				return this._TotalCitas;
+			}
+			set
+			{
+				if ((this._TotalCitas != value))
+				{
+					this._TotalCitas = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CitasCanceladas", DbType="Int")]
+		public System.Nullable<int> CitasCanceladas
+		{
+			get
+			{
+				return this._CitasCanceladas;
+			}
+			set
+			{
+				if ((this._CitasCanceladas != value))
+				{
+					this._CitasCanceladas = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CitasCompletadas", DbType="Int")]
+		public System.Nullable<int> CitasCompletadas
+		{
+			get
+			{
+				return this._CitasCompletadas;
+			}
+			set
+			{
+				if ((this._CitasCompletadas != value))
+				{
+					this._CitasCompletadas = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CitasRechazadas", DbType="Int")]
+		public System.Nullable<int> CitasRechazadas
+		{
+			get
+			{
+				return this._CitasRechazadas;
+			}
+			set
+			{
+				if ((this._CitasRechazadas != value))
+				{
+					this._CitasRechazadas = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PorcentajeCancelacion", DbType="Decimal(5,2)")]
+		public System.Nullable<decimal> PorcentajeCancelacion
+		{
+			get
+			{
+				return this._PorcentajeCancelacion;
+			}
+			set
+			{
+				if ((this._PorcentajeCancelacion != value))
+				{
+					this._PorcentajeCancelacion = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CategoriaRiesgo", DbType="VarChar(20)")]
+		public string CategoriaRiesgo
+		{
+			get
+			{
+				return this._CategoriaRiesgo;
+			}
+			set
+			{
+				if ((this._CategoriaRiesgo != value))
+				{
+					this._CategoriaRiesgo = value;
 				}
 			}
 		}
