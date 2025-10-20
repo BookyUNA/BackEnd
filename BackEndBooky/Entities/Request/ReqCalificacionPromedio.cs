@@ -8,6 +8,6 @@ namespace Entities.Request
 {
     public class ReqCalificacionPromedio
     {
-        public int IdPerfil { get; set; }
+        public int IdProfesional { get; set; }
     }
 }

@@ -38,7 +38,7 @@ namespace Logica
                     return res;
                 }
 
-                if (req.IdPerfil <= 0)
+                if (req.IdProfesional <= 0)
                 {
                     res.resultado = false;
                     res.error.Add(new Error
@@ -53,7 +53,7 @@ namespace Logica
                 {
                     var resultado = linq.SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL(
                         idUsuarioToken,
-                        req.IdPerfil,
+                        req.IdProfesional,
                         ref resultadoBd,
                         ref errorID
                     );
@@ -80,7 +80,10 @@ namespace Logica
                                 res.error.Add(new Error { ErrorCode = 40004, Message = "Profesional no encontrado o inactivo" });
                                 break;
                             case 40005:
-                                res.error.Add(new Error { ErrorCode = 40005, Message = "No hay calificaciones registradas" });
+                                res.error.Add(new Error { ErrorCode = 40005, Message = "No hay un perfil activo para este profesional" });
+                                break;
+                            case 40006:
+                                res.error.Add(new Error { ErrorCode = 40006, Message = "No hay calificaciones registradas" });
                                 break;
                             default:
                                 res.error.Add(new Error { ErrorCode = errorID ?? 99999, Message = "Error inesperado en la base de datos" });

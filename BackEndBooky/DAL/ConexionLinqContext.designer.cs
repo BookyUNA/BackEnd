@@ -32,19 +32,19 @@ namespace DAL
     partial void OnCreated();
     #endregion
 		
-		public DataClasses1DataContext() : 
-				base(global::DAL.Properties.Settings.Default.BookyConnectionString3, mappingSource)
-		{
-			OnCreated();
-		}
-		
 		public DataClasses1DataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
-		
-		public DataClasses1DataContext(System.Data.IDbConnection connection) : 
+
+        public DataClasses1DataContext() :
+                base(global::DAL.Properties.Settings.Default.ConnectionStringCloud, mappingSource)
+        {
+            OnCreated();
+        }
+
+        public DataClasses1DataContext(System.Data.IDbConnection connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
@@ -293,15 +293,6 @@ namespace DAL
 			return ((int)(result.ReturnValue));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL")]
-		public ISingleResult<SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult> SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdPerfilProfesional", DbType="Int")] System.Nullable<int> idPerfilProfesional, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idPerfilProfesional, sUCCESS, eRRORID);
-			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(2)));
-			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(3)));
-			return ((ISingleResult<SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult>)(result.ReturnValue));
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_AGREGAR_HORARIO_PROFESIONAL")]
 		public int SP_AGREGAR_HORARIO_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="HoraInicio", DbType="Time")] System.Nullable<System.TimeSpan> horaInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="HoraFin", DbType="Time")] System.Nullable<System.TimeSpan> horaFin, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FechaDiaSemana", DbType="Date")] System.Nullable<System.DateTime> fechaDiaSemana, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Estado", DbType="VarChar(20)")] string estado, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
 		{
@@ -426,6 +417,15 @@ namespace DAL
 			totalCitas = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			citasCanceladas = ((System.Nullable<int>)(result.GetParameterValue(4)));
 			return ((ISingleResult<SP_CalcularPorcentajeCancelacionResult1>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL")]
+		public ISingleResult<SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult> SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdProfesional", DbType="Int")] System.Nullable<int> idProfesional, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, idProfesional, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(2)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(3)));
+			return ((ISingleResult<SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult>)(result.ReturnValue));
 		}
 	}
 	
@@ -2054,32 +2054,6 @@ namespace DAL
 				if ((this._StatusDescripcion != value))
 				{
 					this._StatusDescripcion = value;
-				}
-			}
-		}
-	}
-	
-	public partial class SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult
-	{
-		
-		private System.Nullable<decimal> _CalificacionPromedio;
-		
-		public SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CalificacionPromedio", DbType="Decimal(3,2)")]
-		public System.Nullable<decimal> CalificacionPromedio
-		{
-			get
-			{
-				return this._CalificacionPromedio;
-			}
-			set
-			{
-				if ((this._CalificacionPromedio != value))
-				{
-					this._CalificacionPromedio = value;
 				}
 			}
 		}
@@ -4152,6 +4126,32 @@ namespace DAL
 				if ((this._CategoriaRiesgo != value))
 				{
 					this._CategoriaRiesgo = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult
+	{
+		
+		private System.Nullable<decimal> _CalificacionPromedio;
+		
+		public SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CalificacionPromedio", DbType="Decimal(3,2)")]
+		public System.Nullable<decimal> CalificacionPromedio
+		{
+			get
+			{
+				return this._CalificacionPromedio;
+			}
+			set
+			{
+				if ((this._CalificacionPromedio != value))
+				{
+					this._CalificacionPromedio = value;
 				}
 			}
 		}
