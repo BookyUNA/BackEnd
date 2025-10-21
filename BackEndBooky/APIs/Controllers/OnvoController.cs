@@ -15,17 +15,20 @@ namespace APIs.Controllers
     public class OnvoController : ApiController
     {
         private readonly LogOnvoPayment _logOnvo;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // Constructor para Unity (CON parámetros)
         public OnvoController(LogOnvoPayment logOnvo)
         {
             _logOnvo = logOnvo ?? throw new ArgumentNullException(nameof(logOnvo));
+            log.Info("OnvoController created with dependency injection");
             System.Diagnostics.Debug.WriteLine("OnvoController created with dependency injection");
         }
 
         public OnvoController()
         {
             _logOnvo = new LogOnvoPayment();
+            log.Info("OnvoController created with default constructor (fallback)");
             System.Diagnostics.Debug.WriteLine("OnvoController created with default constructor (fallback)");
         }
 
@@ -33,11 +36,15 @@ namespace APIs.Controllers
         [Route("api/Onvo/CreatePayment")]
         public ResOnvoPayment CreatePayment([FromBody] ReqOnvoPayment req)
         {
+            log.Info("=== INICIO CreatePayment ===");
             try
             {
+                log.Info($"Request recibido: {Newtonsoft.Json.JsonConvert.SerializeObject(req)}");
+
                 // Validar que _logOnvo no sea null
                 if (_logOnvo == null)
                 {
+                    log.Error("ERROR CRÍTICO: _logOnvo is null in CreatePayment");
                     System.Diagnostics.Debug.WriteLine("ERROR: _logOnvo is null in CreatePayment");
                     return new ResOnvoPayment
                     {
@@ -56,6 +63,7 @@ namespace APIs.Controllers
                 // Validar el request
                 if (req == null)
                 {
+                    log.Warn("Request es null");
                     return new ResOnvoPayment
                     {
                         resultado = false,
@@ -71,10 +79,12 @@ namespace APIs.Controllers
                 }
 
                 var token = Request.Headers.Authorization?.Parameter;
+                log.Info($"Token presente: {!string.IsNullOrEmpty(token)}");
 
                 // Validar token
                 if (string.IsNullOrEmpty(token))
                 {
+                    log.Warn("Token de autorización faltante");
                     return new ResOnvoPayment
                     {
                         resultado = false,
@@ -89,12 +99,18 @@ namespace APIs.Controllers
                     };
                 }
 
-                System.Diagnostics.Debug.WriteLine($"Processing payment for amount: {req.Amount}");
+                log.Info($"Processing payment for amount: {req.Amount}");
+                var resultado = _logOnvo.CrearPagoAsync(req, token);
+                log.Info($"Resultado obtenido: {resultado?.resultado}");
+                log.Info("=== FIN CreatePayment (exitoso) ===");
 
-                return _logOnvo.CrearPagoAsync(req, token);
+                return resultado;
             }
             catch (Exception ex)
             {
+                log.Error($"ERROR en CreatePayment: {ex.Message}", ex);
+                log.Error($"Stack trace: {ex.StackTrace}");
+                log.Error($"Inner exception: {ex.InnerException?.Message}");
                 System.Diagnostics.Debug.WriteLine($"Error in CreatePayment: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
 
@@ -113,75 +129,183 @@ namespace APIs.Controllers
             }
         }
 
-
-
         [HttpPost]
         [Route("api/Onvo/clientes")]
         public IHttpActionResult CrearCliente([FromBody] ReqOnvoCustomer request)
         {
+            log.Info("=== INICIO CrearCliente ===");
+            log.Info($"Timestamp: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff}");
+
             try
             {
-                string token = Request.Headers.Authorization?.Parameter;
-                if (string.IsNullOrEmpty(token))
-                    return Unauthorized();
+                log.Info("PASO 1: Request recibido en CrearCliente");
+                log.Info($"PASO 1: Request es null: {request == null}");
 
+                if (request != null)
+                {
+                    try
+                    {
+                        var jsonRequest = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+                        log.Info($"PASO 2: Datos del request: {jsonRequest}");
+                    }
+                    catch (Exception serEx)
+                    {
+                        log.Warn($"PASO 2: No se pudo serializar request: {serEx.Message}");
+                    }
+                }
+
+                log.Info("PASO 3: Obteniendo token de autorización");
+                string token = Request.Headers.Authorization?.Parameter;
+                log.Info($"PASO 4: Token obtenido - Presente: {!string.IsNullOrEmpty(token)}, Length: {token?.Length ?? 0}");
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    log.Warn("PASO 5: Token vacío, retornando Unauthorized");
+                    return Unauthorized();
+                }
+
+                log.Info("PASO 6: Verificando _logOnvo");
+                if (_logOnvo == null)
+                {
+                    log.Error("PASO 6 ERROR CRÍTICO: _logOnvo es null en CrearCliente");
+                    return InternalServerError(new Exception("Servicio de pago no inicializado"));
+                }
+
+                log.Info("PASO 7: Llamando a _logOnvo.CrearClienteAsync");
                 var resultado = _logOnvo.CrearClienteAsync(request, token);
 
+                log.Info($"PASO 8: Resultado obtenido de CrearClienteAsync");
+                log.Info($"PASO 8: resultado es null: {resultado == null}");
+                if (resultado != null)
+                {
+                    log.Info($"PASO 8: resultado.resultado: {resultado.resultado}");
+                    log.Info($"PASO 8: resultado.mensaje: {resultado.mensaje}");
+                }
+
                 if (resultado.resultado)
-                    return Ok(resultado);
+                {
+                    log.Info("PASO 9: Cliente creado exitosamente, creando respuesta Ok");
+                    try
+                    {
+                        var response = Ok(resultado);
+                        log.Info("PASO 10: Respuesta Ok creada exitosamente");
+                        log.Info("=== FIN CrearCliente (exitoso) ===");
+                        return response;
+                    }
+                    catch (Exception okEx)
+                    {
+                        log.Error($"PASO 10 ERROR: Error al crear respuesta Ok: {okEx.Message}");
+                        log.Error($"PASO 10 Stack: {okEx.StackTrace}");
+                        throw;
+                    }
+                }
                 else
+                {
+                    log.Warn($"PASO 9: Creación fallida: {resultado.mensaje}");
+                    log.Info("=== FIN CrearCliente (BadRequest) ===");
                     return BadRequest(resultado.mensaje);
+                }
             }
             catch (Exception ex)
             {
+                log.Error("=== ERROR CRÍTICO en CrearCliente ===");
+                log.Error($"Tipo de excepción: {ex.GetType().Name}");
+                log.Error($"Mensaje: {ex.Message}");
+                log.Error($"Stack trace: {ex.StackTrace}");
+
+                if (ex.InnerException != null)
+                {
+                    log.Error($"Inner Exception: {ex.InnerException.Message}");
+                    log.Error($"Inner Stack trace: {ex.InnerException.StackTrace}");
+                }
+
+                log.Info("=== FIN CrearCliente (con error) ===");
                 return InternalServerError(ex);
             }
         }
 
-        // ========================================
-        // EJEMPLO 2: Guardar tarjeta para un cliente
-        // ========================================
         [HttpPost]
         [Route("api/Onvo/metodos-pago")]
         public IHttpActionResult GuardarTarjeta([FromBody] ReqOnvoPaymentMethod request)
         {
+            log.Info("=== INICIO GuardarTarjeta ===");
             try
             {
-                string token = Request.Headers.Authorization?.Parameter; ;
-                if (string.IsNullOrEmpty(token))
-                    return Unauthorized();
+                log.Info($"PASO 1: Request recibido: {request != null}");
 
+                string token = Request.Headers.Authorization?.Parameter;
+                log.Info($"PASO 2: Token presente: {!string.IsNullOrEmpty(token)}");
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    log.Warn("PASO 3: Token faltante en GuardarTarjeta");
+                    return Unauthorized();
+                }
+
+                if (_logOnvo == null)
+                {
+                    log.Error("PASO 4 ERROR: _logOnvo es null en GuardarTarjeta");
+                    return InternalServerError(new Exception("Servicio no inicializado"));
+                }
+
+                log.Info("PASO 5: Llamando a GuardarTarjetaAsync");
                 var resultado = _logOnvo.GuardarTarjetaAsync(request, token);
+                log.Info($"PASO 6: Resultado: {resultado?.resultado}");
 
                 if (resultado.resultado)
+                {
+                    log.Info("PASO 7: Tarjeta guardada exitosamente");
+                    log.Info("=== FIN GuardarTarjeta (exitoso) ===");
                     return Ok(resultado);
+                }
                 else
+                {
+                    log.Warn($"PASO 7: GuardarTarjeta falló: {resultado.mensaje}");
+                    log.Info("=== FIN GuardarTarjeta (BadRequest) ===");
                     return BadRequest(resultado.mensaje);
+                }
             }
             catch (Exception ex)
             {
+                log.Error($"ERROR en GuardarTarjeta: {ex.Message}", ex);
+                log.Error($"Stack trace: {ex.StackTrace}");
+                log.Info("=== FIN GuardarTarjeta (con error) ===");
                 return InternalServerError(ex);
             }
         }
 
-        // ========================================
-        // EJEMPLO 3: Generar URL de pago
-        // ========================================
         [HttpPost]
-        [Route("payment-links")]
+        [Route("api/Onvo/payment-links")]
         public IHttpActionResult GenerarUrlPago([FromBody] ReqOnvoPaymentLink request)
         {
+            log.Info("=== INICIO GenerarUrlPago ===");
             try
             {
-                string token = Request.Headers.Authorization?.Parameter;
-                if (string.IsNullOrEmpty(token))
-                    return Unauthorized();
+                log.Info($"PASO 1: Request recibido: {request != null}");
 
+                string token = Request.Headers.Authorization?.Parameter;
+                log.Info($"PASO 2: Token presente: {!string.IsNullOrEmpty(token)}");
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    log.Warn("PASO 3: Token faltante en GenerarUrlPago");
+                    return Unauthorized();
+                }
+
+                if (_logOnvo == null)
+                {
+                    log.Error("PASO 4 ERROR: _logOnvo es null en GenerarUrlPago");
+                    return InternalServerError(new Exception("Servicio no inicializado"));
+                }
+
+                log.Info("PASO 5: Llamando a GenerarUrlPagoAsync");
                 var resultado = _logOnvo.GenerarUrlPagoAsync(request, token);
+                log.Info($"PASO 6: Resultado: {resultado?.resultado}");
 
                 if (resultado.resultado)
                 {
-                    return Ok(new
+                    log.Info("PASO 7: Generando respuesta exitosa");
+                    var response = Ok(new
                     {
                         success = true,
                         data = new
@@ -193,21 +317,25 @@ namespace APIs.Controllers
                             expiresAt = resultado.expiresAt
                         }
                     });
+                    log.Info("PASO 8: Respuesta creada exitosamente");
+                    log.Info("=== FIN GenerarUrlPago (exitoso) ===");
+                    return response;
                 }
                 else
                 {
+                    log.Warn($"PASO 7: GenerarUrlPago falló: {resultado.mensaje}");
+                    log.Info("=== FIN GenerarUrlPago (BadRequest) ===");
                     return BadRequest(resultado.mensaje);
                 }
             }
             catch (Exception ex)
             {
+                log.Error($"ERROR en GenerarUrlPago: {ex.Message}", ex);
+                log.Error($"Stack trace: {ex.StackTrace}");
+                log.Info("=== FIN GenerarUrlPago (con error) ===");
                 return InternalServerError(ex);
             }
         }
-
-
-
-
 
         // ========================================
         // NUEVO: Obtener pagos por cliente
@@ -216,445 +344,300 @@ namespace APIs.Controllers
         [Route("api/Onvo/GetPaymentsByCustomer/{customerId}")]
         public IHttpActionResult GetPaymentsByCustomer(string customerId)
         {
+            log.Info("=== INICIO GetPaymentsByCustomer ===");
             try
             {
+                log.Info($"PASO 1: CustomerId recibido: {customerId}");
+
                 string token = Request.Headers.Authorization?.Parameter;
+                log.Info($"PASO 2: Token presente: {!string.IsNullOrEmpty(token)}");
+
                 if (string.IsNullOrEmpty(token))
+                {
+                    log.Warn("PASO 3: Token faltante");
                     return Unauthorized();
+                }
 
                 if (string.IsNullOrEmpty(customerId))
+                {
+                    log.Warn("PASO 3: CustomerId vacío");
                     return BadRequest("El parámetro customerId es requerido");
+                }
 
+                log.Info("PASO 4: Llamando a ObtenerPagosPorClienteAsync");
                 var resultado = _logOnvo.ObtenerPagosPorClienteAsync(customerId, token);
+                log.Info($"PASO 5: Resultado obtenido: {resultado?.resultado}");
 
                 if (resultado.resultado)
+                {
+                    log.Info($"PASO 6: Pagos obtenidos exitosamente. Count: {resultado.pagos.Count}");
+                    log.Info("=== FIN GetPaymentsByCustomer (exitoso) ===");
                     return Ok(new
                     {
                         success = true,
                         count = resultado.pagos.Count,
                         pagos = resultado.pagos
                     });
+                }
                 else
+                {
+                    log.Warn($"PASO 6: No se encontraron pagos");
+                    log.Info("=== FIN GetPaymentsByCustomer (NotFound) ===");
                     return Content(System.Net.HttpStatusCode.NotFound, new
                     {
                         success = false,
                         errores = resultado.error.Select(e => e.Message)
                     });
+                }
             }
             catch (Exception ex)
             {
+                log.Error($"ERROR en GetPaymentsByCustomer: {ex.Message}", ex);
+                log.Error($"Stack trace: {ex.StackTrace}");
                 System.Diagnostics.Debug.WriteLine($"Error in GetPaymentsByCustomer: {ex.Message}");
+                log.Info("=== FIN GetPaymentsByCustomer (con error) ===");
                 return InternalServerError(ex);
             }
         }
 
+        // ========================================
+        // Obtener historial de pagos por cliente con filtro opcional
+        // ========================================
+        [HttpGet]
+        [Route("api/Onvo/clientes/{customerId}/pagos")]
+        public IHttpActionResult ObtenerHistorialPagos(string customerId, string status = null)
+        {
+            log.Info("=== INICIO ObtenerHistorialPagos ===");
+            try
+            {
+                log.Info($"PASO 1: CustomerId: {customerId}, Status: {status ?? "null"}");
 
-    
+                string token = Request.Headers.Authorization?.Parameter;
+                log.Info($"PASO 2: Token presente: {!string.IsNullOrEmpty(token)}");
 
+                if (string.IsNullOrEmpty(token))
+                {
+                    log.Warn("PASO 3: Token faltante");
+                    return Unauthorized();
+                }
 
+                if (string.IsNullOrEmpty(customerId))
+                {
+                    log.Warn("PASO 3: CustomerId vacío");
+                    return BadRequest("El parámetro customerId es requerido");
+                }
 
+                log.Info("PASO 4: Llamando a ObtenerHistorialPagosClienteAsync");
+                var resultado = _logOnvo.ObtenerHistorialPagosClienteAsync(customerId, status, token);
+                log.Info($"PASO 5: Resultado obtenido: {resultado?.resultado}");
 
-
-
+                if (resultado.resultado)
+                {
+                    log.Info($"PASO 6: Historial obtenido. Total registros: {resultado.totalRegistros}");
+                    log.Info("=== FIN ObtenerHistorialPagos (exitoso) ===");
+                    return Ok(new
+                    {
+                        success = true,
+                        total = resultado.totalRegistros,
+                        data = resultado.pagos
+                    });
+                }
+                else
+                {
+                    log.Warn("PASO 6: No se encontró historial");
+                    log.Info("=== FIN ObtenerHistorialPagos (NotFound) ===");
+                    return Content(System.Net.HttpStatusCode.NotFound, new
+                    {
+                        success = false,
+                        errores = resultado.error.Select(e => e.Message)
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error($"ERROR en ObtenerHistorialPagos: {ex.Message}", ex);
+                log.Error($"Stack trace: {ex.StackTrace}");
+                System.Diagnostics.Debug.WriteLine($"Error in ObtenerHistorialPagos: {ex.Message}");
+                log.Info("=== FIN ObtenerHistorialPagos (con error) ===");
+                return InternalServerError(ex);
+            }
+        }
 
         // ========================================
-    // Obtener historial de pagos por cliente con filtro opcional
-    // ========================================
-    [HttpGet]
-            [Route("api/Onvo/clientes/{customerId}/pagos")]
-            public IHttpActionResult ObtenerHistorialPagos(string customerId, string status = null)
-            {
-                try
-                {
-                    string token = Request.Headers.Authorization?.Parameter;
-                    if (string.IsNullOrEmpty(token))
-                        return Unauthorized();
-
-                    if (string.IsNullOrEmpty(customerId))
-                        return BadRequest("El parámetro customerId es requerido");
-
-                    var resultado = _logOnvo.ObtenerHistorialPagosClienteAsync(customerId, status, token);
-
-                    if (resultado.resultado)
-                        return Ok(new
-                        {
-                            success = true,
-                            total = resultado.totalRegistros,
-                            data = resultado.pagos
-                        });
-                    else
-                        return Content(System.Net.HttpStatusCode.NotFound, new
-                        {
-                            success = false,
-                            errores = resultado.error.Select(e => e.Message)
-                        });
-
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Error in ObtenerHistorialPagos: {ex.Message}");
-                    return InternalServerError(ex);
-                }
-            }
-
-            // ========================================
-            // Obtener resumen estadístico de pagos
-            // ========================================
-            [HttpGet]
-            [Route("api/Onvo/clientes/{customerId}/resumen-pagos")]
-            public IHttpActionResult ObtenerResumenPagos(string customerId)
-            {
-                try
-                {
-                    string token = Request.Headers.Authorization?.Parameter;
-                    if (string.IsNullOrEmpty(token))
-                        return Unauthorized();
-
-                    if (string.IsNullOrEmpty(customerId))
-                        return BadRequest("El parámetro customerId es requerido");
-
-                    var resultado = _logOnvo.ObtenerResumenPagosClienteAsync(customerId, token);
-
-                    if (resultado.resultado)
-                        return Ok(new
-                        {
-                            success = true,
-                            data = new
-                            {
-                                totalPagos = resultado.totalPagos,
-                                completados = resultado.pagosCompletados,
-                                pendientes = resultado.pagosPendientes,
-                                cancelados = resultado.pagosCancelados,
-                                expirados = resultado.pagosExpirados,
-                                montos = new
-                                {
-                                    totalPagado = resultado.totalPagado,
-                                    totalPendiente = resultado.totalPendiente,
-                                    currency = resultado.currency
-                                }
-                            }
-                        });
-                    else
-                        return Content(System.Net.HttpStatusCode.NotFound, new
-                        {
-                            success = false,
-                            errores = resultado.error.Select(e => e.Message)
-                        });
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Error in ObtenerResumenPagos: {ex.Message}");
-                    return InternalServerError(ex);
-                }
-            }
-
-            // ========================================
-            // Obtener solo pagos pendientes
-            // ========================================
-            [HttpGet]
-            [Route("api/Onvo/clientes/{customerId}/pagos/pendientes")]
-            public IHttpActionResult ObtenerPagosPendientes(string customerId)
-            {
-                try
-                {
-                    string token = Request.Headers.Authorization?.Parameter;
-                    if (string.IsNullOrEmpty(token))
-                        return Unauthorized();
-
-                    var resultado = _logOnvo.ObtenerPagosPendientesAsync(customerId, token);
-
-                    if (resultado.resultado)
-                        return Ok(new { success = true, data = resultado.pagos });
-                    else
-                        return Content(System.Net.HttpStatusCode.NotFound, new
-                        {
-                            success = false,
-                            errores = resultado.error.Select(e => e.Message)
-                        });
-                }
-                catch (Exception ex)
-                {
-                    return InternalServerError(ex);
-                }
-            }
-
-            // ========================================
-            // Obtener solo pagos completados
-            // ========================================
-            [HttpGet]
-            [Route("api/Onvo/clientes/{customerId}/pagos/completados")]
-            public IHttpActionResult ObtenerPagosCompletados(string customerId)
-            {
-                try
-                {
-                    string token = Request.Headers.Authorization?.Parameter;
-                    if (string.IsNullOrEmpty(token))
-                        return Unauthorized();
-
-                    var resultado = _logOnvo.ObtenerPagosCompletadosAsync(customerId, token);
-
-                    if (resultado.resultado)
-                        return Ok(new { success = true, data = resultado.pagos });
-                    else
-                        return Content(System.Net.HttpStatusCode.NotFound, new
-                        {
-                            success = false,
-                            errores = resultado.error.Select(e => e.Message)
-                        });
-                }
-                catch (Exception ex)
-                {
-                    return InternalServerError(ex);
-                }
-            }
-
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
+        // Obtener resumen estadístico de pagos
+        // ========================================
         [HttpGet]
-        [Route("api/Onvo/GetPayment/{paymentId}")]
-        public async Task<ResOnvoPayment> GetPayment(string paymentId)
+        [Route("api/Onvo/clientes/{customerId}/resumen-pagos")]
+        public IHttpActionResult ObtenerResumenPagos(string customerId)
         {
+            log.Info("=== INICIO ObtenerResumenPagos ===");
             try
             {
-                if (string.IsNullOrEmpty(paymentId))
-                {
-                    return new ResOnvoPayment
-                    {
-                        resultado = false,
-                        error = new List<Error>
-                        {
-                            new Error
-                            {
-                                codigo = "INVALID_REQUEST",
-                                mensaje = "Payment ID is required"
-                            }
-                        }
-                    };
-                }
+                log.Info($"PASO 1: CustomerId: {customerId}");
 
-                var token = Request.Headers.Authorization?.Parameter;
+                string token = Request.Headers.Authorization?.Parameter;
+                log.Info($"PASO 2: Token presente: {!string.IsNullOrEmpty(token)}");
 
                 if (string.IsNullOrEmpty(token))
                 {
-                    return new ResOnvoPayment
-                    {
-                        resultado = false,
-                        error = new List<Error>
-                        {
-                            new Error
-                            {
-                                codigo = "UNAUTHORIZED",
-                                mensaje = "Authorization token is required"
-                            }
-                        }
-                    };
+                    log.Warn("PASO 3: Token faltante");
+                    return Unauthorized();
                 }
 
-                // Si LogOnvoPayment tiene un método para obtener pagos, úsalo
-                // Si no, puedes usar el servicio directamente si está disponible
-                if (_onvoPaymentService != null)
+                if (string.IsNullOrEmpty(customerId))
                 {
-                    var result = await _onvoPaymentService.GetPaymentAsync(paymentId);
+                    log.Warn("PASO 3: CustomerId vacío");
+                    return BadRequest("El parámetro customerId es requerido");
+                }
 
-                    // Convertir el resultado al formato de tu respuesta
-                    return new ResOnvoPayment
+                log.Info("PASO 4: Llamando a ObtenerResumenPagosClienteAsync");
+                var resultado = _logOnvo.ObtenerResumenPagosClienteAsync(customerId, token);
+                log.Info($"PASO 5: Resultado obtenido: {resultado?.resultado}");
+
+                if (resultado.resultado)
+                {
+                    log.Info($"PASO 6: Resumen obtenido. Total pagos: {resultado.totalPagos}");
+                    log.Info("=== FIN ObtenerResumenPagos (exitoso) ===");
+                    return Ok(new
                     {
-                        resultado = true,
-                        PaymentUrl = result.PaymentUrl, // Asumiendo que ResOnvo tiene PaymentUrl
-                        error = null
-                    };
+                        success = true,
+                        data = new
+                        {
+                            totalPagos = resultado.totalPagos,
+                            completados = resultado.pagosCompletados,
+                            pendientes = resultado.pagosPendientes,
+                            cancelados = resultado.pagosCancelados,
+                            expirados = resultado.pagosExpirados,
+                            montos = new
+                            {
+                                totalPagado = resultado.totalPagado,
+                                totalPendiente = resultado.totalPendiente,
+                                currency = resultado.currency
+                            }
+                        }
+                    });
                 }
                 else
                 {
-                    // Fallback: usar LogOnvoPayment si tiene un método para obtener pagos
-                    // Asumiendo que tienes este método, si no lo tienes, elimina esta parte
-                    return _logOnvo.ObtenerPagoAsync(paymentId, token);
+                    log.Warn("PASO 6: No se encontró resumen");
+                    log.Info("=== FIN ObtenerResumenPagos (NotFound) ===");
+                    return Content(System.Net.HttpStatusCode.NotFound, new
+                    {
+                        success = false,
+                        errores = resultado.error.Select(e => e.Message)
+                    });
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error in GetPayment: {ex.Message}");
-
-                return new ResOnvoPayment
-                {
-                    resultado = false,
-                    error = new List<Error>
-                    {
-                        new Error
-                        {
-                            codigo = "INTERNAL_ERROR",
-                            mensaje = "An error occurred while retrieving the payment"
-                        }
-                    }
-                };
+                log.Error($"ERROR en ObtenerResumenPagos: {ex.Message}", ex);
+                log.Error($"Stack trace: {ex.StackTrace}");
+                System.Diagnostics.Debug.WriteLine($"Error in ObtenerResumenPagos: {ex.Message}");
+                log.Info("=== FIN ObtenerResumenPagos (con error) ===");
+                return InternalServerError(ex);
             }
         }
 
-        [HttpPost]
-        [Route("api/Onvo/Webhook")]
-        [AllowAnonymous]
-        public async Task<IHttpActionResult> ProcessWebhook()
+        // ========================================
+        // Obtener solo pagos pendientes
+        // ========================================
+        [HttpGet]
+        [Route("api/Onvo/clientes/{customerId}/pagos/pendientes")]
+        public IHttpActionResult ObtenerPagosPendientes(string customerId)
         {
+            log.Info("=== INICIO ObtenerPagosPendientes ===");
             try
             {
-                var payload = await Request.Content.ReadAsStringAsync();
+                log.Info($"PASO 1: CustomerId: {customerId}");
 
-                if (string.IsNullOrEmpty(payload))
-                {
-                    return BadRequest("Empty payload");
-                }
-
-                // Verificar la firma del webhook si tienes el servicio disponible
-                if (_onvoPaymentService != null)
-                {
-                    var signatureHeader = Request.Headers.GetValues("X-Onvo-Signature")?.FirstOrDefault();
-
-                    if (!string.IsNullOrEmpty(signatureHeader))
-                    {
-                        var isValid = await _onvoPaymentService.VerifyWebhookSignatureAsync(payload, signatureHeader);
-                        if (!isValid)
-                        {
-                            return Unauthorized();
-                        }
-                    }
-
-                    var webhookEvent = _onvoPaymentService.ParseWebhookEvent(payload);
-
-                    // Procesar el evento según tu lógica de negocio
-                    // Ejemplo: actualizar estado del pago en la base de datos
-                }
-                else
-                {
-                    // Usar LogOnvoPayment para procesar el webhook si tiene ese método
-                    _logOnvo.ProcesarWebhook(payload);
-                }
-
-                return Ok(new
-                {
-                    received = true,
-                    timestamp = DateTime.UtcNow,
-                    resultado = true
-                });
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Webhook error: {ex.Message}");
-                return InternalServerError(new Exception("Error processing webhook"));
-            }
-        }
-
-        [HttpPost]
-        [Route("api/Onvo/VerifyPayment")]
-        public ResOnvoPayment VerifyPayment([FromBody] ReqVerifyPayment req)
-        {
-            try
-            {
-                if (req == null || string.IsNullOrEmpty(req.PaymentId))
-                {
-                    return new ResOnvoPayment
-                    {
-                        resultado = false,
-                        error = new List<Error>
-                        {
-                            new Error
-                            {
-                                ErrorCode = "INVALID_REQUEST",
-                                Message = "Payment ID is required for verification"
-                            }
-                        }
-                    };
-                }
-
-                var token = Request.Headers.Authorization?.Parameter;
+                string token = Request.Headers.Authorization?.Parameter;
+                log.Info($"PASO 2: Token presente: {!string.IsNullOrEmpty(token)}");
 
                 if (string.IsNullOrEmpty(token))
                 {
-                    return new ResOnvoPayment
-                    {
-                        resultado = false,
-                        error = new List<Error>
-                        {
-                            new Error
-                            {
-                                ErrorCode= 401,
-                                Message = "Authorization token is required"
-                            }
-                        }
-                    };
+                    log.Warn("PASO 3: Token faltante");
+                    return Unauthorized();
                 }
 
-                // Usar LogOnvoPayment para verificar el pago
-                // Asumiendo que tienes este método, si no lo tienes, puedes implementarlo
-                return _logOnvo.VerificarPagoAsync(req, token);
+                log.Info("PASO 4: Llamando a ObtenerPagosPendientesAsync");
+                var resultado = _logOnvo.ObtenerPagosPendientesAsync(customerId, token);
+                log.Info($"PASO 5: Resultado obtenido: {resultado?.resultado}");
+
+                if (resultado.resultado)
+                {
+                    log.Info($"PASO 6: Pagos pendientes obtenidos: {resultado.pagos?.Count ?? 0}");
+                    log.Info("=== FIN ObtenerPagosPendientes (exitoso) ===");
+                    return Ok(new { success = true, data = resultado.pagos });
+                }
+                else
+                {
+                    log.Warn("PASO 6: No se encontraron pagos pendientes");
+                    log.Info("=== FIN ObtenerPagosPendientes (NotFound) ===");
+                    return Content(System.Net.HttpStatusCode.NotFound, new
+                    {
+                        success = false,
+                        errores = resultado.error.Select(e => e.Message)
+                    });
+                }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error in VerifyPayment: {ex.Message}");
-
-                return new ResOnvoPayment
-                {
-                    resultado = false,
-                    error = new List<Error>
-                    {
-                        new Error
-                        {
-                            codigo = "INTERNAL_ERROR",
-                            mensaje = "An error occurred while verifying the payment"
-                        }
-                    }
-                };
+                log.Error($"ERROR en ObtenerPagosPendientes: {ex.Message}", ex);
+                log.Error($"Stack trace: {ex.StackTrace}");
+                log.Info("=== FIN ObtenerPagosPendientes (con error) ===");
+                return InternalServerError(ex);
             }
         }
 
+        // ========================================
+        // Obtener solo pagos completados
+        // ========================================
         [HttpGet]
-        [Route("api/Onvo/Health")]
-        [AllowAnonymous]
-        public IHttpActionResult HealthCheck()
+        [Route("api/Onvo/clientes/{customerId}/pagos/completados")]
+        public IHttpActionResult ObtenerPagosCompletados(string customerId)
         {
-            return Ok(new
+            log.Info("=== INICIO ObtenerPagosCompletados ===");
+            try
             {
-                status = "healthy",
-                timestamp = DateTime.UtcNow,
-                service = "Onvo Payment API"
-            });
-        }
+                log.Info($"PASO 1: CustomerId: {customerId}");
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                
-                (_onvoPaymentService as IDisposable)?.Dispose();
+                string token = Request.Headers.Authorization?.Parameter;
+                log.Info($"PASO 2: Token presente: {!string.IsNullOrEmpty(token)}");
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    log.Warn("PASO 3: Token faltante");
+                    return Unauthorized();
+                }
+
+                log.Info("PASO 4: Llamando a ObtenerPagosCompletadosAsync");
+                var resultado = _logOnvo.ObtenerPagosCompletadosAsync(customerId, token);
+                log.Info($"PASO 5: Resultado obtenido: {resultado?.resultado}");
+
+                if (resultado.resultado)
+                {
+                    log.Info($"PASO 6: Pagos completados obtenidos: {resultado.pagos?.Count ?? 0}");
+                    log.Info("=== FIN ObtenerPagosCompletados (exitoso) ===");
+                    return Ok(new { success = true, data = resultado.pagos });
+                }
+                else
+                {
+                    log.Warn("PASO 6: No se encontraron pagos completados");
+                    log.Info("=== FIN ObtenerPagosCompletados (NotFound) ===");
+                    return Content(System.Net.HttpStatusCode.NotFound, new
+                    {
+                        success = false,
+                        errores = resultado.error.Select(e => e.Message)
+                    });
+                }
             }
-            base.Dispose(disposing);
+            catch (Exception ex)
+            {
+                log.Error($"ERROR en ObtenerPagosCompletados: {ex.Message}", ex);
+                log.Error($"Stack trace: {ex.StackTrace}");
+                log.Info("=== FIN ObtenerPagosCompletados (con error) ===");
+                return InternalServerError(ex);
+            }
         }
     }
-
-    // Clase auxiliar para la verificación de pagos
-    public class ReqVerifyPayment
-    {
-        public string PaymentId { get; set; }
-        public string ReferenceId { get; set; }
-    }
-    */
+}
