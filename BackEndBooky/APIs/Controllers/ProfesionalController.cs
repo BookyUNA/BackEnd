@@ -31,5 +31,23 @@ namespace APIs.Controllers
             var token = Request.Headers.Authorization.Parameter;
             return new LogPerfilProfesional().CalificarProfesional(req, token);
         }
+
+        [Authorize(Roles = "Profesional")]
+        [HttpPost]
+        [Route("api/EventosProfesional")]
+        public ResObtenerEventosProfesional ObtenerEventosProfesional([FromBody] ReqObtenerEventosProfesional req)
+        {
+            var token = Request.Headers.Authorization.Parameter;
+            return new LogPerfilProfesional().ObtenerEventosProfesional(req, token);
+        }
+
+        [Authorize(Roles = "Profesional")]
+        [HttpPost]
+        [Route("api/HorariosProfesional")]
+        public ResObtenerHorariosProfesional ObtenerHorariosProfesional([FromBody] ReqObtenerHorariosProfesional req)
+        {
+            var token = Request.Headers.Authorization.Parameter;
+            return new LogPerfilProfesional().ObtenerHorariosProfesional(req, token);
+        }
     }
 }

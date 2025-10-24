@@ -427,6 +427,24 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(3)));
 			return ((ISingleResult<SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult>)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_HORARIOS_PROFESIONAL")]
+		public ISingleResult<SP_OBTENER_HORARIOS_PROFESIONALResult> SP_OBTENER_HORARIOS_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(1)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
+			return ((ISingleResult<SP_OBTENER_HORARIOS_PROFESIONALResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_EVENTOS_PROFESIONAL")]
+		public ISingleResult<SP_OBTENER_EVENTOS_PROFESIONALResult> SP_OBTENER_EVENTOS_PROFESIONAL([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, sUCCESS, eRRORID);
+			sUCCESS = ((System.Nullable<bool>)(result.GetParameterValue(1)));
+			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
+			return ((ISingleResult<SP_OBTENER_EVENTOS_PROFESIONALResult>)(result.ReturnValue));
+		}
 	}
 	
 	public partial class SP_LISTAR_SERVICIOS_DISPONIBLESResult
@@ -4152,6 +4170,238 @@ namespace DAL
 				if ((this._CalificacionPromedio != value))
 				{
 					this._CalificacionPromedio = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_HORARIOS_PROFESIONALResult
+	{
+		
+		private int _IdHorario;
+		
+		private System.DateTime _FechaDiaSemana;
+		
+		private System.TimeSpan _HoraInicio;
+		
+		private System.TimeSpan _HoraFin;
+		
+		private string _Estado;
+		
+		public SP_OBTENER_HORARIOS_PROFESIONALResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdHorario", DbType="Int NOT NULL")]
+		public int IdHorario
+		{
+			get
+			{
+				return this._IdHorario;
+			}
+			set
+			{
+				if ((this._IdHorario != value))
+				{
+					this._IdHorario = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaDiaSemana", DbType="Date NOT NULL")]
+		public System.DateTime FechaDiaSemana
+		{
+			get
+			{
+				return this._FechaDiaSemana;
+			}
+			set
+			{
+				if ((this._FechaDiaSemana != value))
+				{
+					this._FechaDiaSemana = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HoraInicio", DbType="Time NOT NULL")]
+		public System.TimeSpan HoraInicio
+		{
+			get
+			{
+				return this._HoraInicio;
+			}
+			set
+			{
+				if ((this._HoraInicio != value))
+				{
+					this._HoraInicio = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HoraFin", DbType="Time NOT NULL")]
+		public System.TimeSpan HoraFin
+		{
+			get
+			{
+				return this._HoraFin;
+			}
+			set
+			{
+				if ((this._HoraFin != value))
+				{
+					this._HoraFin = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Estado", DbType="VarChar(20)")]
+		public string Estado
+		{
+			get
+			{
+				return this._Estado;
+			}
+			set
+			{
+				if ((this._Estado != value))
+				{
+					this._Estado = value;
+				}
+			}
+		}
+	}
+	
+	public partial class SP_OBTENER_EVENTOS_PROFESIONALResult
+	{
+		
+		private int _IdEvento;
+		
+		private string _NombreEvento;
+		
+		private string _Descripcion;
+		
+		private System.DateTime _FechaHoraInicio;
+		
+		private System.DateTime _FechaHoraFin;
+		
+		private string _Estado;
+		
+		private System.Nullable<System.DateTime> _FechaCreacion;
+		
+		public SP_OBTENER_EVENTOS_PROFESIONALResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdEvento", DbType="Int NOT NULL")]
+		public int IdEvento
+		{
+			get
+			{
+				return this._IdEvento;
+			}
+			set
+			{
+				if ((this._IdEvento != value))
+				{
+					this._IdEvento = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NombreEvento", DbType="VarChar(200) NOT NULL", CanBeNull=false)]
+		public string NombreEvento
+		{
+			get
+			{
+				return this._NombreEvento;
+			}
+			set
+			{
+				if ((this._NombreEvento != value))
+				{
+					this._NombreEvento = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Descripcion", DbType="VarChar(500)")]
+		public string Descripcion
+		{
+			get
+			{
+				return this._Descripcion;
+			}
+			set
+			{
+				if ((this._Descripcion != value))
+				{
+					this._Descripcion = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaHoraInicio", DbType="DateTime NOT NULL")]
+		public System.DateTime FechaHoraInicio
+		{
+			get
+			{
+				return this._FechaHoraInicio;
+			}
+			set
+			{
+				if ((this._FechaHoraInicio != value))
+				{
+					this._FechaHoraInicio = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaHoraFin", DbType="DateTime NOT NULL")]
+		public System.DateTime FechaHoraFin
+		{
+			get
+			{
+				return this._FechaHoraFin;
+			}
+			set
+			{
+				if ((this._FechaHoraFin != value))
+				{
+					this._FechaHoraFin = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Estado", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
+		public string Estado
+		{
+			get
+			{
+				return this._Estado;
+			}
+			set
+			{
+				if ((this._Estado != value))
+				{
+					this._Estado = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCreacion", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaCreacion
+		{
+			get
+			{
+				return this._FechaCreacion;
+			}
+			set
+			{
+				if ((this._FechaCreacion != value))
+				{
+					this._FechaCreacion = value;
 				}
 			}
 		}
