@@ -45,6 +45,8 @@
     <Compile Include="Entity\CitaCliente.cs" />
     <Compile Include="Entity\CitaProfesional.cs" />
     <Compile Include="Entity\Error.cs" />
+    <Compile Include="Entity\Evento.cs" />
+    <Compile Include="Entity\Horario.cs" />
     <Compile Include="Entity\HorarioProfesional.cs" />
     <Compile Include="Entity\OnvoApiException.cs" />
     <Compile Include="Entity\OnvoConfiguration.cs" />
@@ -78,6 +80,8 @@
     <Compile Include="Request\ReqListarServicio.cs" />
     <Compile Include="Request\ReqListarServiciosParaClientes.cs" />
     <Compile Include="Request\ReqMostrarInformacionMiPerfil.cs" />
+    <Compile Include="Request\ReqObtenerEventosProfesional.cs" />
+    <Compile Include="Request\ReqObtenerHorariosProfesional.cs" />
     <Compile Include="Request\ReqOnvo.cs" />
     <Compile Include="Request\ReqOnvoCustomer.cs" />
     <Compile Include="Request\ReqOnvoCustomerPayment.cs" />
@@ -117,7 +121,8 @@
     <Compile Include="Response\ResListarServiciosParaClientes.cs" />
     <Compile Include="Response\ResMetricasCancelacion.cs" />
     <Compile Include="Response\ResMostrarInformacionMiPerfil.cs" />
-    <Compile Include="Response\ResObtenerPlanes.cs" />
+    <Compile Include="Response\ResObtenerEventosProfesional.cs" />
+    <Compile Include="Response\ResObtenerHorariosProfesional.cs" />
     <Compile Include="Response\ResOnvo.cs" />
     <Compile Include="Response\ResOnvoCustomer.cs" />
     <Compile Include="Response\ResOnvoFlowCompleto.cs" />
