@@ -1,13 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Booky" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Function Name="dbo.SP_LOGIN_USUARIO" Method="SP_LOGIN_USUARIO">
-    <Parameter Name="Email" Parameter="email" Type="System.String" DbType="VarChar(150)" />
-    <Parameter Name="PasswordHash" Parameter="passwordHash" Type="System.String" DbType="VarChar(255)" />
-    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <Parameter Name="RolNombre" Parameter="rolNombre" Type="System.String" DbType="VarChar(50)" Direction="InOut" />
-    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
-    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <Return Type="System.Int32" />
-  </Function>
+  <Connection Mode="AppSettings" ConnectionString="Data Source=ASUSMEY;Initial Catalog=Booky;Integrated Security=True;Encrypt=True;Trust Server Certificate=True" SettingsObjectName="DAL.Properties.Settings" SettingsPropertyName="BookyConnectionString3" Provider="System.Data.SqlClient" />
   <Function Name="dbo.SP_GENERAR_CODIGO_RECUPERACION" Method="SP_GENERAR_CODIGO_RECUPERACION">
     <Parameter Name="CorreoElectronico" Parameter="correoElectronico" Type="System.String" DbType="NVarChar(255)" />
     <Parameter Name="CodigoRecuperacion" Parameter="codigoRecuperacion" Type="System.String" DbType="VarChar(10)" Direction="InOut" />
@@ -138,16 +130,6 @@
       <Column Name="CalificacionPromedio" Type="System.Decimal" DbType="Decimal(3,2)" CanBeNull="true" />
       <Column Name="TotalCalificaciones" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
-  </Function>
-  <Function Name="dbo.SP_REGISTRAR_PAGO_ONVO" Method="SP_REGISTRAR_PAGO_ONVO">
-    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
-    <Parameter Name="ReferenceId" Parameter="referenceId" Type="System.String" DbType="NVarChar(100)" />
-    <Parameter Name="Amount" Parameter="amount" Type="System.Decimal" DbType="Decimal(18,2)" />
-    <Parameter Name="Currency" Parameter="currency" Type="System.String" DbType="NVarChar(10)" />
-    <Parameter Name="Description" Parameter="description" Type="System.String" DbType="NVarChar(255)" />
-    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
-    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <Return Type="System.Int32" />
   </Function>
   <Function Name="dbo.SP_OBTENER_USUARIO_POR_ID" Method="SP_OBTENER_USUARIO_POR_ID">
     <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
@@ -522,22 +504,6 @@
       <Column Name="Direccion" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.SP_CalcularPorcentajeCancelacion" Method="SP_CalcularPorcentajeCancelacion1">
-    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
-    <Parameter Name="PorcentajeCancelacion" Parameter="porcentajeCancelacion" Type="System.Decimal" DbType="Decimal(5,2)" Direction="InOut" />
-    <Parameter Name="CategoriaRiesgo" Parameter="categoriaRiesgo" Type="System.String" DbType="VarChar(20)" Direction="InOut" />
-    <Parameter Name="TotalCitas" Parameter="totalCitas" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <Parameter Name="CitasCanceladas" Parameter="citasCanceladas" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <ElementType Name="SP_CalcularPorcentajeCancelacionResult1">
-      <Column Name="IdUsuario" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="TotalCitas" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CitasCanceladas" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CitasCompletadas" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CitasRechazadas" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="PorcentajeCancelacion" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
-      <Column Name="CategoriaRiesgo" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL" Method="SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONAL">
     <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
     <Parameter Name="IdProfesional" Parameter="idProfesional" Type="System.Int32" DbType="Int" />
@@ -546,5 +512,80 @@
     <ElementType Name="SP_OBTENER_CALIFICACION_PROMEDIO_PROFESIONALResult">
       <Column Name="CalificacionPromedio" Type="System.Decimal" DbType="Decimal(3,2)" CanBeNull="true" />
     </ElementType>
+  </Function>
+  <Function Name="dbo.SP_ListarPlanes" Method="SP_ListarPlanes">
+    <Parameter Name="Resultado" Parameter="resultado" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ErrorID" Parameter="errorID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="SP_ListarPlanesResult">
+      <Column Name="IdPlan" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="PrecioMensual" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PrecioAnual" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="MaxServicios" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MaxClientes" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MaxListaEspera" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MaxPoliticaCancelacion" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IncluyeEstadisticas" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IncluyeAnuncios" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Estado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_ObtenerPlanUsuario" Method="SP_ObtenerPlanUsuario">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Resultado" Parameter="resultado" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ErrorID" Parameter="errorID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="SP_ObtenerPlanUsuarioResult">
+      <Column Name="IdPerfilProfesional" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IdPlan" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombrePlan" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="PrecioMensual" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PrecioAnual" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="MaxServicios" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MaxClientes" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MaxListaEspera" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MaxPoliticaCancelacion" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IncluyeEstadisticas" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IncluyeAnuncios" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Estado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_AsignarPlanUsuario" Method="SP_AsignarPlanUsuario">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdPlan" Parameter="idPlan" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Resultado" Parameter="resultado" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ErrorID" Parameter="errorID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_LOGIN_USUARIO" Method="SP_LOGIN_USUARIO">
+    <Parameter Name="Email" Parameter="email" Type="System.String" DbType="VarChar(150)" />
+    <Parameter Name="PasswordHash" Parameter="passwordHash" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="IPAddress" Parameter="iPAddress" Type="System.String" DbType="VarChar(45)" />
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="RolNombre" Parameter="rolNombre" Type="System.String" DbType="VarChar(50)" Direction="InOut" />
+    <Parameter Name="IdPlan" Parameter="idPlan" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_REGISTRAR_PAGO_ONVO" Method="SP_REGISTRAR_PAGO_ONVO">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Amount" Parameter="amount" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Parameter Name="Currency" Parameter="currency" Type="System.String" DbType="VarChar(10)" />
+    <Parameter Name="Description" Parameter="description" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="Estado" Parameter="estado" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="IdPagoOnvo" Parameter="idPagoOnvo" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="Resultado" Parameter="resultado" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ErrorID" Parameter="errorID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_ASIGNAR_PLAN_USUARIO" Method="SP_ASIGNAR_PLAN_USUARIO">
+    <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NumeroPlan" Parameter="numeroPlan" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IdPagoOnvo" Parameter="idPagoOnvo" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Resultado" Parameter="resultado" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ErrorID" Parameter="errorID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
   </Function>
 </Database>

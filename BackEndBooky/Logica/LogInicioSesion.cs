@@ -3,6 +3,7 @@ using Entities.Entity;
 using Entities.Request;
 using Entities.Response;
 using Logic;
+using Microsoft.IdentityModel.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -21,6 +22,7 @@ namespace Logica
             int? errorID = 0;
             int? idUsuario = null;
             string rol = null;
+            int? planId = null;
 
             try
             {
@@ -42,8 +44,10 @@ namespace Logica
                     linq.SP_LOGIN_USUARIO(
                         req.email,
                         req.password, 
+                        "",
                         ref idUsuario,
                         ref rol,
+                        ref planId,
                         ref resultadoBd,
                         ref errorID
                     );
@@ -53,8 +57,16 @@ namespace Logica
                 if (resultadoBd.HasValue && resultadoBd.Value)
                 {
                     res.resultado = true;
-
-                    res.token = JwtService.GenerateToken(idUsuario.Value, rol);
+                    // Verificar que LogOnvoPayment tiene el servicio inyectado
+                    System.Diagnostics.Debug.WriteLine(planId);
+                    if (rol != null && rol.Equals("Profesional"))
+                    {
+                        res.token = JwtService.GenerateToken(idUsuario.Value, rol, planId);
+                    }
+                    else
+                    {
+                        res.token = JwtService.GenerateToken(idUsuario.Value, rol);
+                    }
 
 
 

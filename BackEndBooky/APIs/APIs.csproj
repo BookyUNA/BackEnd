@@ -347,6 +347,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\PlanesController.cs" />
     <Compile Include="Controllers\ProfesionalController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CitasController.cs" />
@@ -435,6 +436,7 @@
     <Folder Include="Models\" />
     <Folder Include="Views\Auth\" />
     <Folder Include="Views\Onvo\" />
+    <Folder Include="Views\Planes\" />
     <Folder Include="Views\Servicios\" />
   </ItemGroup>
   <ItemGroup>

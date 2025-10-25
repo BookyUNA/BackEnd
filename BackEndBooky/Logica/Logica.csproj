@@ -184,6 +184,7 @@
     <Compile Include="LogOnvoPayment.cs" />
     <Compile Include="LogPerfilProfesional.cs" />
     <Compile Include="LogMetricasCancelacion.cs" />
+    <Compile Include="LogPlanes.cs" />
     <Compile Include="LogReprogramarCita.cs" />
     <Compile Include="LogServicio.cs" />
     <Compile Include="LogSolicitarCita.cs" />

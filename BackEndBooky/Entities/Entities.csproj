@@ -50,6 +50,7 @@
     <Compile Include="Entity\OnvoConfiguration.cs" />
     <Compile Include="Entity\OnvoPaymentLinkDetalle.cs" />
     <Compile Include="Entity\OnvoWebhookEvent.cs" />
+    <Compile Include="Entity\Plan.cs" />
     <Compile Include="Entity\Servicio.cs" />
     <Compile Include="Entity\ServicioParaClientes.cs" />
     <Compile Include="Entity\Usuario.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Request\ReqActualizarPerfilProfesional.cs" />
     <Compile Include="Request\ReqActualizarServicio.cs" />
     <Compile Include="Request\ReqAgregarHorarioProfesional.cs" />
+    <Compile Include="Request\ReqAsignarPlan.cs" />
     <Compile Include="Request\ReqCalificarProfesional.cs" />
     <Compile Include="Request\ReqCalificacionPromedio.cs" />
     <Compile Include="Request\ReqCambioDeContrasena.cs" />
@@ -82,9 +84,12 @@
     <Compile Include="Request\ReqOnvoPayment.cs" />
     <Compile Include="Request\ReqOnvoPaymentLink.cs" />
     <Compile Include="Request\ReqOnvoPaymentMethod.cs" />
+    <Compile Include="Request\ReqRegistrarPagoOnvo.cs" />
+    <Compile Include="Request\ReqRegistrarPagosOnvo.cs" />
     <Compile Include="Request\ReqReprogramarCita.cs" />
     <Compile Include="Request\ReqSolicitarCita.cs" />
     <Compile Include="Request\ReqVerificarEmail.cs" />
+    <Compile Include="Request\ReqVerificarLimite.cs" />
     <Compile Include="Request\ReqVerifyPayment.cs" />
     <Compile Include="Request\ReqOnvoHistorialPagos.cs" />
     <Compile Include="Response\ResActualizarEstadoCita.cs" />
@@ -92,6 +97,7 @@
     <Compile Include="Response\ResActualizarServicio.cs" />
     <Compile Include="Response\ResAgregarHorarioProfesional.cs" />
     <Compile Include="Response\ResAgregarUsuario.cs" />
+    <Compile Include="Response\ResAsignarPlan.cs" />
     <Compile Include="Response\ResBase.cs" />
     <Compile Include="Response\ResActivarDesactivarServicio.cs" />
     <Compile Include="Response\ResCalificacionPromedio.cs" />
@@ -106,10 +112,12 @@
     <Compile Include="Response\ResInicioSesion.cs" />
     <Compile Include="Response\ResListarCitasCliente.cs" />
     <Compile Include="Response\ResListarCitasProfesional.cs" />
+    <Compile Include="Response\ResListarPlanes.cs" />
     <Compile Include="Response\ResListarServicio.cs" />
     <Compile Include="Response\ResListarServiciosParaClientes.cs" />
     <Compile Include="Response\ResMetricasCancelacion.cs" />
     <Compile Include="Response\ResMostrarInformacionMiPerfil.cs" />
+    <Compile Include="Response\ResObtenerPlanes.cs" />
     <Compile Include="Response\ResOnvo.cs" />
     <Compile Include="Response\ResOnvoCustomer.cs" />
     <Compile Include="Response\ResOnvoFlowCompleto.cs" />
@@ -122,9 +130,11 @@
     <Compile Include="Response\ResOnvoPaymentMethodResponse.cs" />
     <Compile Include="Response\ResOnvoPaymentResponse.cs" />
     <Compile Include="Response\ResOnvoResumenPagos.cs" />
+    <Compile Include="Response\ResRegistrarPagoOnvo.cs" />
     <Compile Include="Response\ResReprogramarCita.cs" />
     <Compile Include="Response\ResSolicitarCita.cs" />
     <Compile Include="Response\ResVerificarEmail.cs" />
+    <Compile Include="Response\ResVerificarLimite.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">

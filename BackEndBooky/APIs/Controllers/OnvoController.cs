@@ -8,6 +8,8 @@ using Entities.Response;
 using Entities.Entity;
 using Logica;
 using Logica.Service;
+using Entities.Request;
+using Entities.Response;
 
 namespace APIs.Controllers
 {
@@ -33,101 +35,15 @@ namespace APIs.Controllers
         }
 
         [HttpPost]
-        [Route("api/Onvo/CreatePayment")]
-        public ResOnvoPayment CreatePayment([FromBody] ReqOnvoPayment req)
+        [Route("api/Onvo/pagoSimulado")]
+        [Authorize(Roles = "Profesional")]
+       
+        public  ResRegistrarPagoOnvo registrarPago([FromBody] ReqRegistrarPagoOnvo request)
         {
-            log.Info("=== INICIO CreatePayment ===");
-            try
-            {
-                log.Info($"Request recibido: {Newtonsoft.Json.JsonConvert.SerializeObject(req)}");
-
-                // Validar que _logOnvo no sea null
-                if (_logOnvo == null)
-                {
-                    log.Error("ERROR CRÍTICO: _logOnvo is null in CreatePayment");
-                    System.Diagnostics.Debug.WriteLine("ERROR: _logOnvo is null in CreatePayment");
-                    return new ResOnvoPayment
-                    {
-                        resultado = false,
-                        error = new List<Error>
-                        {
-                            new Error
-                            {
-                                ErrorCode = 500,
-                                Message = "Servicio de pago no inicializado"
-                            }
-                        }
-                    };
-                }
-
-                // Validar el request
-                if (req == null)
-                {
-                    log.Warn("Request es null");
-                    return new ResOnvoPayment
-                    {
-                        resultado = false,
-                        error = new List<Error>
-                        {
-                            new Error
-                            {
-                                ErrorCode = 400,
-                                Message = "Request no puede ser nulo"
-                            }
-                        }
-                    };
-                }
-
-                var token = Request.Headers.Authorization?.Parameter;
-                log.Info($"Token presente: {!string.IsNullOrEmpty(token)}");
-
-                // Validar token
-                if (string.IsNullOrEmpty(token))
-                {
-                    log.Warn("Token de autorización faltante");
-                    return new ResOnvoPayment
-                    {
-                        resultado = false,
-                        error = new List<Error>
-                        {
-                            new Error
-                            {
-                                ErrorCode = 401,
-                                Message = "Token de autorización requerido"
-                            }
-                        }
-                    };
-                }
-
-                log.Info($"Processing payment for amount: {req.Amount}");
-                var resultado = _logOnvo.CrearPagoAsync(req, token);
-                log.Info($"Resultado obtenido: {resultado?.resultado}");
-                log.Info("=== FIN CreatePayment (exitoso) ===");
-
-                return resultado;
-            }
-            catch (Exception ex)
-            {
-                log.Error($"ERROR en CreatePayment: {ex.Message}", ex);
-                log.Error($"Stack trace: {ex.StackTrace}");
-                log.Error($"Inner exception: {ex.InnerException?.Message}");
-                System.Diagnostics.Debug.WriteLine($"Error in CreatePayment: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
-
-                return new ResOnvoPayment
-                {
-                    resultado = false,
-                    error = new List<Error>
-                    {
-                        new Error
-                        {
-                            ErrorCode = 500,
-                            Message = ex.Message.ToString()
-                        }
-                    }
-                };
-            }
+            var token = Request.Headers.Authorization?.Parameter;
+            return new LogPlanes().RegistrarPagoOnvo(request,token);
         }
+
 
         [HttpPost]
         [Route("api/Onvo/clientes")]
@@ -274,68 +190,6 @@ namespace APIs.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("api/Onvo/payment-links")]
-        public IHttpActionResult GenerarUrlPago([FromBody] ReqOnvoPaymentLink request)
-        {
-            log.Info("=== INICIO GenerarUrlPago ===");
-            try
-            {
-                log.Info($"PASO 1: Request recibido: {request != null}");
-
-                string token = Request.Headers.Authorization?.Parameter;
-                log.Info($"PASO 2: Token presente: {!string.IsNullOrEmpty(token)}");
-
-                if (string.IsNullOrEmpty(token))
-                {
-                    log.Warn("PASO 3: Token faltante en GenerarUrlPago");
-                    return Unauthorized();
-                }
-
-                if (_logOnvo == null)
-                {
-                    log.Error("PASO 4 ERROR: _logOnvo es null en GenerarUrlPago");
-                    return InternalServerError(new Exception("Servicio no inicializado"));
-                }
-
-                log.Info("PASO 5: Llamando a GenerarUrlPagoAsync");
-                var resultado = _logOnvo.GenerarUrlPagoAsync(request, token);
-                log.Info($"PASO 6: Resultado: {resultado?.resultado}");
-
-                if (resultado.resultado)
-                {
-                    log.Info("PASO 7: Generando respuesta exitosa");
-                    var response = Ok(new
-                    {
-                        success = true,
-                        data = new
-                        {
-                            paymentLinkId = resultado.paymentLinkId,
-                            paymentUrl = resultado.paymentUrl,
-                            amount = resultado.amount,
-                            currency = resultado.currency,
-                            expiresAt = resultado.expiresAt
-                        }
-                    });
-                    log.Info("PASO 8: Respuesta creada exitosamente");
-                    log.Info("=== FIN GenerarUrlPago (exitoso) ===");
-                    return response;
-                }
-                else
-                {
-                    log.Warn($"PASO 7: GenerarUrlPago falló: {resultado.mensaje}");
-                    log.Info("=== FIN GenerarUrlPago (BadRequest) ===");
-                    return BadRequest(resultado.mensaje);
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error($"ERROR en GenerarUrlPago: {ex.Message}", ex);
-                log.Error($"Stack trace: {ex.StackTrace}");
-                log.Info("=== FIN GenerarUrlPago (con error) ===");
-                return InternalServerError(ex);
-            }
-        }
 
         // ========================================
         // NUEVO: Obtener pagos por cliente
