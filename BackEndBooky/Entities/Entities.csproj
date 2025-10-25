@@ -123,6 +123,7 @@
     <Compile Include="Response\ResMostrarInformacionMiPerfil.cs" />
     <Compile Include="Response\ResObtenerEventosProfesional.cs" />
     <Compile Include="Response\ResObtenerHorariosProfesional.cs" />
+    <Compile Include="Response\ResObtenerPlan.cs" />
     <Compile Include="Response\ResOnvo.cs" />
     <Compile Include="Response\ResOnvoCustomer.cs" />
     <Compile Include="Response\ResOnvoFlowCompleto.cs" />
