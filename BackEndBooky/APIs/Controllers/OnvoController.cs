@@ -16,6 +16,25 @@ namespace APIs.Controllers
     [Authorize]
     public class OnvoController : ApiController
     {
+        [Authorize(Roles = "Profesional")]
+        [HttpPost]
+        [Route("api/OnvoCompleto")]
+        public ResOnvoFlowCompleto ObtenerHorariosProfesional([FromBody] ReqOnvoFlowCompleto req)
+        {
+            var token = Request.Headers.Authorization.Parameter;
+            return new LogSimulatedPayment().ProcesarPagoCompletoSimulado(req, token);
+        }
+
+
+
+
+
+
+
+
+
+
+        /*
         private readonly LogOnvoPayment _logOnvo;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -194,66 +213,7 @@ namespace APIs.Controllers
         // ========================================
         // NUEVO: Obtener pagos por cliente
         // ========================================
-        [HttpGet]
-        [Route("api/Onvo/GetPaymentsByCustomer/{customerId}")]
-        public IHttpActionResult GetPaymentsByCustomer(string customerId)
-        {
-            log.Info("=== INICIO GetPaymentsByCustomer ===");
-            try
-            {
-                log.Info($"PASO 1: CustomerId recibido: {customerId}");
-
-                string token = Request.Headers.Authorization?.Parameter;
-                log.Info($"PASO 2: Token presente: {!string.IsNullOrEmpty(token)}");
-
-                if (string.IsNullOrEmpty(token))
-                {
-                    log.Warn("PASO 3: Token faltante");
-                    return Unauthorized();
-                }
-
-                if (string.IsNullOrEmpty(customerId))
-                {
-                    log.Warn("PASO 3: CustomerId vacío");
-                    return BadRequest("El parámetro customerId es requerido");
-                }
-
-                log.Info("PASO 4: Llamando a ObtenerPagosPorClienteAsync");
-                var resultado = _logOnvo.ObtenerPagosPorClienteAsync(customerId, token);
-                log.Info($"PASO 5: Resultado obtenido: {resultado?.resultado}");
-
-                if (resultado.resultado)
-                {
-                    log.Info($"PASO 6: Pagos obtenidos exitosamente. Count: {resultado.pagos.Count}");
-                    log.Info("=== FIN GetPaymentsByCustomer (exitoso) ===");
-                    return Ok(new
-                    {
-                        success = true,
-                        count = resultado.pagos.Count,
-                        pagos = resultado.pagos
-                    });
-                }
-                else
-                {
-                    log.Warn($"PASO 6: No se encontraron pagos");
-                    log.Info("=== FIN GetPaymentsByCustomer (NotFound) ===");
-                    return Content(System.Net.HttpStatusCode.NotFound, new
-                    {
-                        success = false,
-                        errores = resultado.error.Select(e => e.Message)
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error($"ERROR en GetPaymentsByCustomer: {ex.Message}", ex);
-                log.Error($"Stack trace: {ex.StackTrace}");
-                System.Diagnostics.Debug.WriteLine($"Error in GetPaymentsByCustomer: {ex.Message}");
-                log.Info("=== FIN GetPaymentsByCustomer (con error) ===");
-                return InternalServerError(ex);
-            }
-        }
-
+       
         // ========================================
         // Obtener historial de pagos por cliente con filtro opcional
         // ========================================
@@ -493,5 +453,7 @@ namespace APIs.Controllers
                 return InternalServerError(ex);
             }
         }
+    }
+        */
     }
 }
