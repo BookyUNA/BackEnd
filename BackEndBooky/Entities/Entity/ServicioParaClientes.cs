@@ -8,7 +8,7 @@ namespace Entities.Entity
 {
     public class ServicioParaClientes
     {
-       public int idServicio { get; set; } 
+        public int idServicio { get; set; } 
         public string nombreServicio { get; set; }
         public string descripcion { get; set; }
         public int duracionMinutos { get; set; }
@@ -16,8 +16,11 @@ namespace Entities.Entity
         public bool permiteDescuento { get; set; }
         public double porcentajeDescuento { get; set; }
         public DateTime fechaCreacion { get; set; }
+        public int idPerfilProfesional { get; set; }
         public string nombreProfesional { get; set; }
         public string profesion { get; set; }
-       
+        public int idUsuarioProfesional { get; set; }
+        public double calificacionPromedio { get; set; }
+
     }
 }
