@@ -278,6 +278,7 @@ namespace Logica
             return res;
         }
 
+
         public ResListarServiciosParaClientes ListarServiciosParaClientes(ReqListarServiciosParaClientes req, string token)
         {
             ResListarServiciosParaClientes res = new ResListarServiciosParaClientes();
@@ -326,12 +327,9 @@ namespace Logica
                             permiteDescuento = s.PermiteDescuento,
                             porcentajeDescuento =(double) s.PorcentajeDescuento,
                             fechaCreacion = s.FechaCreacion,
-                            
-                            idPerfilProfesional = s.IdPerfil,
+                           
                             nombreProfesional = s.NombreProfesional,
-                            profesion = s.Profesion,
-                            idUsuarioProfesional = s.IdUsuario,
-                            calificacionPromedio = (double)(s.CalificacionPromedio ?? 0)
+                            profesion = s.Profesion
                         }).ToList();
                     }
                     else
@@ -370,5 +368,11 @@ namespace Logica
 
             return res;
         }
+
+
+
+
+
+
     }
 }
