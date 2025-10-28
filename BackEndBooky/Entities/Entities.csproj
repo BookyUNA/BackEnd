@@ -84,7 +84,7 @@
     <Compile Include="Request\ReqObtenerHorariosProfesional.cs" />
     <Compile Include="Request\ReqOnvo.cs" />
     <Compile Include="Request\ReqOnvoCustomer.cs" />
-    <Compile Include="Request\ReqOnvoFlowCompleto.cs" />
+    <Compile Include="Request\ReqOnvoCustomerPayment.cs" />
     <Compile Include="Request\ReqOnvoPayment.cs" />
     <Compile Include="Request\ReqOnvoPaymentLink.cs" />
     <Compile Include="Request\ReqOnvoPaymentMethod.cs" />

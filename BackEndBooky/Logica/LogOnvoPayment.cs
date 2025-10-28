@@ -414,9 +414,8 @@ public class LogOnvoPayment
 
     #endregion
 
-
     #region FLUJO COMPLETO: Cliente + Tarjeta + URL
-    /*
+
     /// <summary>
     /// Flujo completo: Crea cliente, guarda tarjeta y genera URL de pago
     /// </summary>
@@ -566,7 +565,6 @@ public class LogOnvoPayment
     }
 
     #endregion
-    */
 
     public ResOnvoPayment ObtenerPagoAsync(string paymentId, string token)
     {

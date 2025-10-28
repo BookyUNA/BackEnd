@@ -187,7 +187,6 @@
     <Compile Include="LogPlanes.cs" />
     <Compile Include="LogReprogramarCita.cs" />
     <Compile Include="LogServicio.cs" />
-    <Compile Include="LogSimulatedPayment.cs" />
     <Compile Include="LogSolicitarCita.cs" />
     <Compile Include="LogUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
