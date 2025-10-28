@@ -13,7 +13,6 @@ using Unity;
 using Unity.Lifetime;
 using Unity.WebApi;
 using Unity.Injection;
-using Entities.Entity;
 using Logica;
 using Logica.Service;
 
@@ -121,46 +120,10 @@ namespace APIs
 
                 var container = new UnityContainer();
 
-                // Registrar la configuración de Onvo
-                var onvoConfig = new OnvoConfiguration
-                {
-                    BaseUrl = ConfigurationManager.AppSettings["OnvoBaseUrl"] ?? "https://api.onvopay.com/v1",
-                    SecretKey = ConfigurationManager.AppSettings["OnvoSecretKey"] ?? "onvo_test_secret_key_2d6dYlKDwPn_sjIuu3ucgZ1o6ncCBm2kicZD-B03k9bwY3IySLRI3iMcLIqKFVXACBSyJzvA9uXcUTQ6XUpIyg",
-                    TimeoutSeconds = int.Parse(ConfigurationManager.AppSettings["OnvoTimeoutSeconds"] ?? "30")
-                };
-
-                // Registrar como instancia singleton
-                container.RegisterInstance<OnvoConfiguration>(onvoConfig);
-
-                // Registrar servicios con lifetime manager adecuado
-                // CAMBIO: Usar el servicio sincrónico seguro
-                container.RegisterType<IOnvoPaymentService, OnvoPaymentService>(new ContainerControlledLifetimeManager());
-
-                // Registrar LogOnvoPayment especificando el constructor con parámetros
-                container.RegisterType<LogOnvoPayment>(
-                    new ContainerControlledLifetimeManager(),
-                    new InjectionConstructor(typeof(IOnvoPaymentService))
-                );
-
-                // Registrar el controlador explícitamente
-                container.RegisterType<APIs.Controllers.OnvoController>(
-                    new HierarchicalLifetimeManager(),
-                    new InjectionConstructor(typeof(LogOnvoPayment))
-                );
-
-                // Configurar el resolver de dependencias EN LA CONFIGURACIÓN CORRECTA
+                // Configurar el resolver de dependencias
                 config.DependencyResolver = new UnityDependencyResolver(container);
 
                 System.Diagnostics.Debug.WriteLine("Unity configured successfully in Startup2");
-
-                // Verificar que las dependencias se pueden resolver correctamente
-                var testService = container.Resolve<IOnvoPaymentService>();
-                var testLog = container.Resolve<LogOnvoPayment>();
-
-                System.Diagnostics.Debug.WriteLine($"Services resolved successfully: Service={testService != null}, Log={testLog != null}");
-
-                // Verificar que LogOnvoPayment tiene el servicio inyectado
-                System.Diagnostics.Debug.WriteLine($"LogOnvoPayment has service: {testLog?.HasService() == true}");
             }
             catch (Exception ex)
             {
