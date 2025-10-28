@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Booky" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=ASUSMEY;Initial Catalog=Booky;Integrated Security=True;Encrypt=True;Trust Server Certificate=True" SettingsObjectName="DAL.Properties.Settings" SettingsPropertyName="BookyConnectionString3" Provider="System.Data.SqlClient" />
   <Function Name="dbo.SP_GENERAR_CODIGO_RECUPERACION" Method="SP_GENERAR_CODIGO_RECUPERACION">
     <Parameter Name="CorreoElectronico" Parameter="correoElectronico" Type="System.String" DbType="NVarChar(255)" />
     <Parameter Name="CodigoRecuperacion" Parameter="codigoRecuperacion" Type="System.String" DbType="VarChar(10)" Direction="InOut" />
@@ -93,27 +92,6 @@
     <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
     <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
     <Return Type="System.Int32" />
-  </Function>
-  <Function Name="dbo.SP_LISTAR_SERVICIOS_DISPONIBLES" Method="SP_LISTAR_SERVICIOS_DISPONIBLES">
-    <Parameter Name="NombreServicio" Parameter="nombreServicio" Type="System.String" DbType="NVarChar(100)" />
-    <Parameter Name="NombreProfesional" Parameter="nombreProfesional" Type="System.String" DbType="NVarChar(100)" />
-    <Parameter Name="Profesion" Parameter="profesion" Type="System.String" DbType="NVarChar(100)" />
-    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
-    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
-    <ElementType Name="SP_LISTAR_SERVICIOS_DISPONIBLESResult">
-      <Column Name="IdServicio" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="NombreServicio" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="Descripcion" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DuracionMinutos" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Precio" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
-      <Column Name="PermiteDescuento" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="PorcentajeDescuento" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
-      <Column Name="FechaCreacion" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="Estado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="IdPerfil" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="NombreProfesional" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="Profesion" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-    </ElementType>
   </Function>
   <Function Name="dbo.SP_OBTENER_INFORMACION_MI_PERFIL" Method="SP_OBTENER_INFORMACION_MI_PERFIL">
     <Parameter Name="IdUsuario" Parameter="idUsuario" Type="System.Int32" DbType="Int" />
@@ -605,6 +583,29 @@
       <Column Name="IncluyeEstadisticas" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="IncluyeAnuncios" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Estado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_LISTAR_SERVICIOS_DISPONIBLES" Method="SP_LISTAR_SERVICIOS_DISPONIBLES">
+    <Parameter Name="NombreServicio" Parameter="nombreServicio" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="NombreProfesional" Parameter="nombreProfesional" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="Profesion" Parameter="profesion" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="SUCCESS" Parameter="sUCCESS" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Parameter Name="ERRORID" Parameter="eRRORID" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="SP_LISTAR_SERVICIOS_DISPONIBLESResult">
+      <Column Name="IdServicio" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreServicio" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DuracionMinutos" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Precio" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PermiteDescuento" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="PorcentajeDescuento" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+      <Column Name="FechaCreacion" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Estado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IdPerfil" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreProfesional" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Profesion" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="IdUsuario" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CalificacionPromedio" Type="System.Decimal" DbType="Decimal(3,2)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
