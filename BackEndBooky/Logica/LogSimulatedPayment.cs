@@ -113,18 +113,13 @@ namespace Logica
                     return res;
                 }
 
-                System.Diagnostics.Debug.WriteLine($"[INICIO] Procesando pago completo para: {req.Email}");
-                System.Diagnostics.Debug.WriteLine($"[INICIO] Monto: {req.Amount} {req.Currency ?? "CRC"}");
-
                 // =====================================================
                 // PASO 1: CREAR CLIENTE (95% éxito)
                 // =====================================================
-                System.Diagnostics.Debug.WriteLine("[PASO 1/3] Creando cliente...");
                 SimulateDelay();
 
                 if (!SimulateSuccess(0.95))
                 {
-                    System.Diagnostics.Debug.WriteLine("❌ [PASO 1/3] Error al crear cliente");
                     res.resultado = false;
                     res.error.Add(new Error { ErrorCode = 50001, Message = "Error al crear cliente en el sistema de pagos" });
                     return res;
@@ -134,40 +129,65 @@ namespace Logica
                 bool? resultadoBdCliente = false;
                 int? errorIdCliente = 0;
 
-                using (var linq = new DataClasses1DataContext())
+                try
                 {
-                    linq.SP_REGISTRAR_CLIENTE_ONVO(
-                        idUsuarioToken,
-                        customerId,
-                        req.Email,
-                        req.Name,
-                        req.Phone,
-                        ref resultadoBdCliente,
-                        ref errorIdCliente
-                    );
-
-                    if (!resultadoBdCliente.HasValue || !resultadoBdCliente.Value)
+                    using (var linq = new DataClasses1DataContext())
                     {
-                        System.Diagnostics.Debug.WriteLine("❌ [PASO 1/3] Error al guardar cliente en BD");
-                        res.resultado = false;
-                        res.error.Add(new Error { ErrorCode = errorIdCliente ?? 50002, Message = "Error al guardar cliente en BD local" });
-                        return res;
+                        linq.SP_REGISTRAR_CLIENTE_ONVO(
+                            idUsuarioToken,
+                            customerId,
+                            req.Email,
+                            req.Name,
+                            req.Phone,
+                            ref resultadoBdCliente,
+                            ref errorIdCliente
+                        );
+
+                        if (!resultadoBdCliente.HasValue || !resultadoBdCliente.Value)
+                        {
+                            string mensajeErrorCliente = TraducirErrorBD(errorIdCliente, "cliente");
+                            res.resultado = false;
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = errorIdCliente ?? 50002,
+                                Message = mensajeErrorCliente
+                            });
+                            return res;
+                        }
                     }
+                }
+                catch (System.Data.SqlClient.SqlException sqlEx)
+                {
+                    string mensajeErrorSql = TraducirErrorSql(sqlEx);
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = sqlEx.Number,
+                        Message = mensajeErrorSql
+                    });
+                    return res;
+                }
+                catch (Exception ex)
+                {
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = 50099,
+                        Message = $"Error al registrar cliente: {ex.Message}"
+                    });
+                    return res;
                 }
 
                 res.customerId = customerId;
-                System.Diagnostics.Debug.WriteLine($"✅ [PASO 1/3] Cliente creado: {customerId}");
 
                 // =====================================================
                 // PASO 2: VALIDAR Y GUARDAR TARJETA (70% éxito)
                 // =====================================================
-                System.Diagnostics.Debug.WriteLine("[PASO 2/3] Validando tarjeta...");
                 SimulateDelay();
 
                 // Validar número de tarjeta
                 if (string.IsNullOrWhiteSpace(req.CardNumber?.ToString()))
                 {
-                    System.Diagnostics.Debug.WriteLine("❌ [PASO 2/3] Número de tarjeta inválido");
                     res.resultado = false;
                     res.error.Add(new Error { ErrorCode = 40001, Message = "Número de tarjeta requerido" });
                     return res;
@@ -178,10 +198,6 @@ namespace Logica
                 {
                     var errorCode = GetRandomErrorCode();
                     var errorMessage = GetErrorMessage(errorCode);
-
-                    System.Diagnostics.Debug.WriteLine($"❌ [PASO 2/3] Tarjeta rechazada: {errorCode}");
-                    System.Diagnostics.Debug.WriteLine($"❌ Razón: {errorMessage}");
-
                     res.resultado = false;
                     res.error.Add(new Error { ErrorCode = 40002, Message = errorMessage });
                     return res;
@@ -195,41 +211,66 @@ namespace Logica
                 bool? resultadoBdTarjeta = false;
                 int? errorIdTarjeta = 0;
 
-                using (var linq = new DataClasses1DataContext())
+                try
                 {
-                    linq.SP_REGISTRAR_METODO_PAGO_ONVO(
-                        idUsuarioToken,
-                        customerId,
-                        paymentMethodId,
-                        last4,
-                        brand,
-                        req.ExpMonth.ToString(),
-                        req.ExpYear.ToString(),
-                        ref resultadoBdTarjeta,
-                        ref errorIdTarjeta
-                    );
-
-                    if (!resultadoBdTarjeta.HasValue || !resultadoBdTarjeta.Value)
+                    using (var linq = new DataClasses1DataContext())
                     {
-                        System.Diagnostics.Debug.WriteLine("❌ [PASO 2/3] Error al guardar tarjeta en BD");
-                        res.resultado = false;
-                        res.error.Add(new Error { ErrorCode = errorIdTarjeta ?? 50003, Message = "Error al guardar tarjeta en BD local" });
-                        return res;
+                        linq.SP_REGISTRAR_METODO_PAGO_ONVO(
+                            idUsuarioToken,
+                            customerId,
+                            paymentMethodId,
+                            last4,
+                            brand,
+                            req.ExpMonth.ToString(),
+                            req.ExpYear.ToString(),
+                            ref resultadoBdTarjeta,
+                            ref errorIdTarjeta
+                        );
+
+                        if (!resultadoBdTarjeta.HasValue || !resultadoBdTarjeta.Value)
+                        {
+                            string mensajeErrorTarjeta = TraducirErrorBD(errorIdTarjeta, "tarjeta");
+                            res.resultado = false;
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = errorIdTarjeta ?? 50003,
+                                Message = mensajeErrorTarjeta
+                            });
+                            return res;
+                        }
                     }
+                }
+                catch (System.Data.SqlClient.SqlException sqlEx)
+                {
+                    string mensajeErrorSql = TraducirErrorSql(sqlEx);
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = sqlEx.Number,
+                        Message = mensajeErrorSql
+                    });
+                    return res;
+                }
+                catch (Exception ex)
+                {
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = 50098,
+                        Message = $"Error al registrar método de pago: {ex.Message}"
+                    });
+                    return res;
                 }
 
                 res.paymentMethodId = paymentMethodId;
                 res.last4 = last4;
                 res.brand = brand;
-                System.Diagnostics.Debug.WriteLine($"✅ [PASO 2/3] Tarjeta guardada: {brand} **** {last4}");
 
                 // =====================================================
                 // PASO 3: REGISTRAR PAGO (con estados aleatorios)
                 // =====================================================
-                System.Diagnostics.Debug.WriteLine("[PASO 3/3] Procesando pago...");
                 SimulateDelay();
 
-                // Generar resultado aleatorio del pago (igual que LogPlanes)
                 var resultadoSimulado = GenerarResultadoPagoSimulado();
                 string estadoPago = resultadoSimulado.Item1;
                 string mensajeEstado = resultadoSimulado.Item2;
@@ -238,38 +279,54 @@ namespace Logica
                 int? errorIdPago = 0;
                 int? idPagoOnvo = 0;
 
-                using (var linq = new DataClasses1DataContext())
+                try
                 {
-                    linq.SP_REGISTRAR_PAGO_ONVO(
-                        idUsuarioToken,
-                        req.Amount,
-                        req.Currency ?? "CRC",
-                        req.Description,
-                        estadoPago,
-                        ref idPagoOnvo,
-                        ref resultadoBdPago,
-                        ref errorIdPago
-                    );
-
-                    if (!resultadoBdPago.HasValue || !resultadoBdPago.Value)
+                    using (var linq = new DataClasses1DataContext())
                     {
-                        System.Diagnostics.Debug.WriteLine("❌ [PASO 3/3] Error al registrar pago en BD");
+                        linq.SP_REGISTRAR_PAGO_ONVO(
+                            idUsuarioToken,
+                            req.Amount,
+                            req.Currency ?? "CRC",
+                            req.Description,
+                            estadoPago,
+                            ref idPagoOnvo,
+                            ref resultadoBdPago,
+                            ref errorIdPago
+                        );
 
-                        string mensajeError = "Error al registrar pago en BD local";
-                        switch (errorIdPago)
+                        if (!resultadoBdPago.HasValue || !resultadoBdPago.Value)
                         {
-                            case 40007:
-                                mensajeError = "No tiene métodos de pago activos";
-                                break;
-                            case 40002:
-                                mensajeError = "Monto inválido";
-                                break;
+                            string mensajeErrorPago = TraducirErrorBD(errorIdPago, "pago");
+                            res.resultado = false;
+                            res.error.Add(new Error
+                            {
+                                ErrorCode = errorIdPago ?? 50004,
+                                Message = mensajeErrorPago
+                            });
+                            return res;
                         }
-
-                        res.resultado = false;
-                        res.error.Add(new Error { ErrorCode = errorIdPago ?? 50004, Message = mensajeError });
-                        return res;
                     }
+                }
+                catch (System.Data.SqlClient.SqlException sqlEx)
+                {
+                    string mensajeErrorSql = TraducirErrorSql(sqlEx);
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = sqlEx.Number,
+                        Message = mensajeErrorSql
+                    });
+                    return res;
+                }
+                catch (Exception ex)
+                {
+                    res.resultado = false;
+                    res.error.Add(new Error
+                    {
+                        ErrorCode = 50097,
+                        Message = $"Error al registrar pago: {ex.Message}"
+                    });
+                    return res;
                 }
 
                 // =====================================================
@@ -282,43 +339,124 @@ namespace Logica
                 res.currency = req.Currency ?? "CRC";
                 res.fechaCreacion = DateTime.Now;
 
-                // Si el pago fue exitoso
                 if (estadoPago == "Completado")
                 {
                     res.resultado = true;
                     res.mensaje = "¡Pago procesado exitosamente!";
-
-                    System.Diagnostics.Debug.WriteLine("╔════════════════════════════════════════════════╗");
-                    System.Diagnostics.Debug.WriteLine("║   ✅ PAGO COMPLETADO EXITOSAMENTE             ║");
-                    System.Diagnostics.Debug.WriteLine("╚════════════════════════════════════════════════╝");
                 }
                 else
                 {
                     res.resultado = false;
                     res.mensaje = $"Pago registrado con estado: {estadoPago}";
-
-                    System.Diagnostics.Debug.WriteLine("╔════════════════════════════════════════════════╗");
-                    System.Diagnostics.Debug.WriteLine($"║   ⚠️  PAGO {estadoPago.ToUpper()}                    ║");
-                    System.Diagnostics.Debug.WriteLine("╚════════════════════════════════════════════════╝");
                 }
-
-                System.Diagnostics.Debug.WriteLine($"ID Pago: {idPagoOnvo}");
-                System.Diagnostics.Debug.WriteLine($"Cliente ID: {customerId}");
-                System.Diagnostics.Debug.WriteLine($"Tarjeta: {brand} **** {last4}");
-                System.Diagnostics.Debug.WriteLine($"Monto: {req.Amount} {req.Currency ?? "CRC"}");
-                System.Diagnostics.Debug.WriteLine($"Estado: {estadoPago}");
-                System.Diagnostics.Debug.WriteLine($"Mensaje: {mensajeEstado}");
-                System.Diagnostics.Debug.WriteLine("═══════════════════════════════════════════════════");
-
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"💥 EXCEPCIÓN: {ex.Message}");
                 res.resultado = false;
-                res.error.Add(new Error { ErrorCode = 50000, Message = $"Error inesperado: {ex.Message}" });
+                res.error.Add(new Error
+                {
+                    ErrorCode = 50000,
+                    Message = $"Error inesperado en el proceso de pago: {ex.Message}"
+                });
             }
 
             return res;
+        }
+
+        // =====================================================
+        // MÉTODOS AUXILIARES PARA TRADUCIR ERRORES
+        // =====================================================
+
+        private string TraducirErrorBD(int? errorId, string contexto)
+        {
+            if (!errorId.HasValue)
+                return $"Error desconocido al procesar {contexto}";
+
+            switch (errorId.Value)
+            {
+                // Errores de validación (40xxx)
+                case 40001:
+                    return contexto == "pago" ? "El ID de usuario es inválido" : "Parámetro inválido";
+
+                case 40002:
+                    return "El monto debe ser mayor o igual a cero";
+
+                case 40004:
+                    return "El estado del pago es inválido. Estados permitidos: Pendiente, Completado, Fallido, Cancelado";
+
+                case 40005:
+                    return "El usuario no existe o está inactivo en el sistema";
+
+                case 40007:
+                    return "No tiene métodos de pago activos. Por favor registre una tarjeta válida";
+
+                // Errores de duplicados (50015-50017)
+                case 50015:
+                    return "Este cliente ya está registrado en el sistema";
+
+                case 50016:
+                    return "No se encontró el cliente. Por favor registre el cliente primero";
+
+                case 50017:
+                    return "Este método de pago ya está registrado";
+
+                // Errores de base de datos (50xxx)
+                case 50001:
+                    return "Error al crear el cliente en el sistema de pagos";
+
+                case 50002:
+                    return "Error al guardar la información del cliente en la base de datos";
+
+                case 50003:
+                    return "Error al guardar el método de pago en la base de datos";
+
+                case 50004:
+                    return "Error al registrar el pago en la base de datos";
+
+                // Error genérico
+                default:
+                    return $"Error al procesar {contexto} (Código: {errorId})";
+            }
+        }
+
+        private string TraducirErrorSql(System.Data.SqlClient.SqlException sqlEx)
+        {
+            switch (sqlEx.Number)
+            {
+                // Errores comunes de SQL Server
+                case -1:
+                case -2:
+                    return "No se pudo conectar con la base de datos. Por favor intente más tarde";
+
+                case 2:
+                case 53:
+                    return "Error de conexión con el servidor de base de datos";
+
+                case 208:
+                    return "No se encontró la tabla en la base de datos. Contacte al administrador";
+
+                case 229:
+                    return "No tiene permisos suficientes para realizar esta operación";
+
+                case 515:
+                    return "Falta un dato requerido en el registro";
+
+                case 547:
+                    return "No se puede completar la operación. Hay información relacionada que depende de este registro";
+
+                case 2627:
+                case 2601:
+                    return "Ya existe un registro con estos datos. No se permiten duplicados";
+
+                case 8152:
+                    return "El texto ingresado es demasiado largo para el campo";
+
+                case 18456:
+                    return "Error de autenticación con la base de datos";
+
+                default:
+                    return $"Error de base de datos: {sqlEx.Message}";
+            }
         }
     }
 }
