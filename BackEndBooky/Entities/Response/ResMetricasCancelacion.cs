@@ -16,8 +16,7 @@ namespace Entities.Response
 
         public int TotalCitas { get; set; }
         public int CitasCanceladas { get; set; }
-        public int CitasCompletadas { get; set; }
-        public int CitasRechazadas { get; set; }
+     
         public decimal PorcentajeCancelacion { get; set; }
         public string CategoriaRiesgo { get; set; }
         public DateTime FechaCalculo { get; set; }

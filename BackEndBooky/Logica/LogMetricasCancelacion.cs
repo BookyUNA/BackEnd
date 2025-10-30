@@ -107,8 +107,7 @@ namespace Logica
                             res.resultado = true;
                             res.TotalCitas = 0;
                             res.CitasCanceladas = 0;
-                            res.CitasCompletadas = 0;
-                            res.CitasRechazadas = 0;
+                         
                             res.PorcentajeCancelacion = 0.00m;
                             res.CategoriaRiesgo = "MUY BAJA";
                             res.FechaCalculo = DateTime.Now;
@@ -124,8 +123,7 @@ namespace Logica
                             res.resultado = true;
                             res.TotalCitas = totalCitas.Value;
                             res.CitasCanceladas = 0;
-                            res.CitasCompletadas = 0; // Se puede obtener del SP si se agrega
-                            res.CitasRechazadas = 0;  // Se puede obtener del SP si se agrega
+                      
                             res.PorcentajeCancelacion = 0.00m;
                             res.CategoriaRiesgo = "MUY BAJA";
                             res.FechaCalculo = DateTime.Now;
@@ -139,8 +137,7 @@ namespace Logica
                         res.resultado = true;
                         res.TotalCitas = totalCitas.Value;
                         res.CitasCanceladas = citasCanceladas.Value;
-                        res.CitasCompletadas = 0; // Agregar al SP si es necesario
-                        res.CitasRechazadas = 0;  // Agregar al SP si es necesario
+                    
                         res.PorcentajeCancelacion = porcentajeCancelacion ?? 0.00m;
                         res.CategoriaRiesgo = categoriaRiesgo ?? "NO DEFINIDA";
                         res.FechaCalculo = DateTime.Now;
