@@ -33,7 +33,7 @@ namespace DAL
     #endregion
 		
 		public DataClasses1DataContext() : 
-				base(global::DAL.Properties.Settings.Default.ConnectionStringCloud, mappingSource)
+				base(global::DAL.Properties.Settings.Default.BookyConnectionString3, mappingSource)
 		{
 			OnCreated();
 		}
@@ -368,17 +368,6 @@ namespace DAL
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idCita);
 			return ((ISingleResult<SP_OBTENER_DATOS_CITA_CORREOResult>)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_CalcularPorcentajeCancelacion")]
-		public ISingleResult<SP_CalcularPorcentajeCancelacionResult> SP_CalcularPorcentajeCancelacion([global::System.Data.Linq.Mapping.ParameterAttribute(Name="IdUsuario", DbType="Int")] System.Nullable<int> idUsuario, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PorcentajeCancelacion", DbType="Decimal(5,2)")] ref System.Nullable<decimal> porcentajeCancelacion, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CategoriaRiesgo", DbType="VarChar(20)")] ref string categoriaRiesgo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="TotalCitas", DbType="Int")] ref System.Nullable<int> totalCitas, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CitasCanceladas", DbType="Int")] ref System.Nullable<int> citasCanceladas)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuario, porcentajeCancelacion, categoriaRiesgo, totalCitas, citasCanceladas);
-			porcentajeCancelacion = ((System.Nullable<decimal>)(result.GetParameterValue(1)));
-			categoriaRiesgo = ((string)(result.GetParameterValue(2)));
-			totalCitas = ((System.Nullable<int>)(result.GetParameterValue(3)));
-			citasCanceladas = ((System.Nullable<int>)(result.GetParameterValue(4)));
-			return ((ISingleResult<SP_CalcularPorcentajeCancelacionResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_OBTENER_DATOS_CITA_CORREO")]
@@ -3526,140 +3515,6 @@ namespace DAL
 				if ((this._Direccion != value))
 				{
 					this._Direccion = value;
-				}
-			}
-		}
-	}
-	
-	public partial class SP_CalcularPorcentajeCancelacionResult
-	{
-		
-		private System.Nullable<int> _IdUsuario;
-		
-		private System.Nullable<int> _TotalCitas;
-		
-		private System.Nullable<int> _CitasCanceladas;
-		
-		private System.Nullable<int> _CitasCompletadas;
-		
-		private System.Nullable<int> _CitasRechazadas;
-		
-		private System.Nullable<decimal> _PorcentajeCancelacion;
-		
-		private string _CategoriaRiesgo;
-		
-		public SP_CalcularPorcentajeCancelacionResult()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdUsuario", DbType="Int")]
-		public System.Nullable<int> IdUsuario
-		{
-			get
-			{
-				return this._IdUsuario;
-			}
-			set
-			{
-				if ((this._IdUsuario != value))
-				{
-					this._IdUsuario = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TotalCitas", DbType="Int")]
-		public System.Nullable<int> TotalCitas
-		{
-			get
-			{
-				return this._TotalCitas;
-			}
-			set
-			{
-				if ((this._TotalCitas != value))
-				{
-					this._TotalCitas = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CitasCanceladas", DbType="Int")]
-		public System.Nullable<int> CitasCanceladas
-		{
-			get
-			{
-				return this._CitasCanceladas;
-			}
-			set
-			{
-				if ((this._CitasCanceladas != value))
-				{
-					this._CitasCanceladas = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CitasCompletadas", DbType="Int")]
-		public System.Nullable<int> CitasCompletadas
-		{
-			get
-			{
-				return this._CitasCompletadas;
-			}
-			set
-			{
-				if ((this._CitasCompletadas != value))
-				{
-					this._CitasCompletadas = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CitasRechazadas", DbType="Int")]
-		public System.Nullable<int> CitasRechazadas
-		{
-			get
-			{
-				return this._CitasRechazadas;
-			}
-			set
-			{
-				if ((this._CitasRechazadas != value))
-				{
-					this._CitasRechazadas = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PorcentajeCancelacion", DbType="Decimal(5,2)")]
-		public System.Nullable<decimal> PorcentajeCancelacion
-		{
-			get
-			{
-				return this._PorcentajeCancelacion;
-			}
-			set
-			{
-				if ((this._PorcentajeCancelacion != value))
-				{
-					this._PorcentajeCancelacion = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CategoriaRiesgo", DbType="VarChar(20)")]
-		public string CategoriaRiesgo
-		{
-			get
-			{
-				return this._CategoriaRiesgo;
-			}
-			set
-			{
-				if ((this._CategoriaRiesgo != value))
-				{
-					this._CategoriaRiesgo = value;
 				}
 			}
 		}

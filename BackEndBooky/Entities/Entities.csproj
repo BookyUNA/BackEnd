@@ -79,6 +79,7 @@
     <Compile Include="Request\ReqListarCitasProfesional.cs" />
     <Compile Include="Request\ReqListarServicio.cs" />
     <Compile Include="Request\ReqListarServiciosParaClientes.cs" />
+    <Compile Include="Request\ReqMetricasCancelacion.cs" />
     <Compile Include="Request\ReqMostrarInformacionMiPerfil.cs" />
     <Compile Include="Request\ReqObtenerEventosProfesional.cs" />
     <Compile Include="Request\ReqObtenerHorariosProfesional.cs" />

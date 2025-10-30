@@ -11,7 +11,9 @@ namespace Entities.Response
     {
         public bool resultado { get; set; }
         public List<Error> error { get; set; }
-  
+
+        public string Mensaje { get; set; }
+
         public int TotalCitas { get; set; }
         public int CitasCanceladas { get; set; }
         public int CitasCompletadas { get; set; }
