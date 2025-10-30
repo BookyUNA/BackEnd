@@ -118,13 +118,7 @@ namespace Logica
                 // =====================================================
                 SimulateDelay();
 
-                if (!SimulateSuccess(0.95))
-                {
-                    res.resultado = false;
-                    res.error.Add(new Error { ErrorCode = 50001, Message = "Error al crear cliente en el sistema de pagos" });
-                    return res;
-                }
-
+              
                 string customerId = GenerateId("cust");
                 bool? resultadoBdCliente = false;
                 int? errorIdCliente = 0;
