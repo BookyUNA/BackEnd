@@ -118,12 +118,12 @@ namespace APIs.Controllers
         [Authorize]
         [HttpPost]
         [Route("api/obtenerPorcentajeCancelacion")]
-        public ResMetricasCancelacion porcentajeCancelacion()
+        public ResMetricasCancelacion porcentajeCancelacion(ReqMetricasCancelacion metricasCancelacion)
         {
 
             var token = Request.Headers.Authorization?.Parameter;
 
-            return new LogMetricasCancelacion().ObtenerMetricasCancelacion(token);
+            return new LogMetricasCancelacion().ObtenerMetricasCancelacion(metricasCancelacion,token);
         }
     }
 }

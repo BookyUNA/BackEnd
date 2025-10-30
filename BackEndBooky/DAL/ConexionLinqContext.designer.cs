@@ -80,8 +80,29 @@ namespace DAL
 			eRRORID = ((System.Nullable<int>)(result.GetParameterValue(2)));
 			return ((int)(result.ReturnValue));
 		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_GENERAR_CODIGO_VERIFICACION")]
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_CALCULAR_PORCENTAJE_CANCELACION")]
+			public int SP_CALCULAR_PORCENTAJE_CANCELACION(
+		[global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdUsuarioProfesional", DbType = "Int")] System.Nullable<int> idUsuarioProfesional,
+		[global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IdCita", DbType = "Int")] System.Nullable<int> idCita,
+		[global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PorcentajeCancelacion", DbType = "Decimal(5,2)")] ref System.Nullable<decimal> porcentajeCancelacion,
+		[global::System.Data.Linq.Mapping.ParameterAttribute(Name = "CategoriaRiesgo", DbType = "VarChar(20)")] ref string categoriaRiesgo,
+		[global::System.Data.Linq.Mapping.ParameterAttribute(Name = "TotalCitas", DbType = "Int")] ref System.Nullable<int> totalCitas,
+		[global::System.Data.Linq.Mapping.ParameterAttribute(Name = "CitasCanceladas", DbType = "Int")] ref System.Nullable<int> citasCanceladas,
+		[global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Resultado", DbType = "Bit")] ref System.Nullable<bool> resultado,
+		[global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ErrorID", DbType = "Int")] ref System.Nullable<int> errorID)
+			{
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), idUsuarioProfesional, idCita, porcentajeCancelacion, categoriaRiesgo, totalCitas, citasCanceladas, resultado, errorID);
+            porcentajeCancelacion = ((System.Nullable<decimal>)(result.GetParameterValue(2)));
+            categoriaRiesgo = ((string)(result.GetParameterValue(3)));
+            totalCitas = ((System.Nullable<int>)(result.GetParameterValue(4)));
+            citasCanceladas = ((System.Nullable<int>)(result.GetParameterValue(5)));
+            resultado = ((System.Nullable<bool>)(result.GetParameterValue(6)));
+            errorID = ((System.Nullable<int>)(result.GetParameterValue(7)));
+            return ((int)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.SP_GENERAR_CODIGO_VERIFICACION")]
 		public int SP_GENERAR_CODIGO_VERIFICACION([global::System.Data.Linq.Mapping.ParameterAttribute(Name="Email", DbType="VarChar(150)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Codigo", DbType="VarChar(10)")] ref string codigo, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SUCCESS", DbType="Bit")] ref System.Nullable<bool> sUCCESS, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ERRORID", DbType="Int")] ref System.Nullable<int> eRRORID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), email, codigo, sUCCESS, eRRORID);
@@ -4610,6 +4631,140 @@ namespace DAL
 				}
 			}
 		}
-	}
+
+        public partial class SP_CALCULAR_PORCENTAJE_CANCELACIONResult
+        {
+            private System.Nullable<int> _IdUsuario;
+            private System.Nullable<int> _TotalCitas;
+            private System.Nullable<int> _CitasCanceladas;
+            private System.Nullable<int> _CitasCompletadas;
+            private System.Nullable<int> _CitasRechazadas;
+            private System.Nullable<decimal> _PorcentajeCancelacion;
+            private string _CategoriaRiesgo;
+            private System.Nullable<bool> _Resultado;
+            private System.Nullable<int> _ErrorID;
+
+            public SP_CALCULAR_PORCENTAJE_CANCELACIONResult()
+            {
+            }
+
+            [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IdUsuario", DbType = "Int")]
+            public System.Nullable<int> IdUsuario
+            {
+                get { return this._IdUsuario; }
+                set
+                {
+                    if ((this._IdUsuario != value))
+                    {
+                        this._IdUsuario = value;
+                    }
+                }
+            }
+
+            [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCitas", DbType = "Int")]
+            public System.Nullable<int> TotalCitas
+            {
+                get { return this._TotalCitas; }
+                set
+                {
+                    if ((this._TotalCitas != value))
+                    {
+                        this._TotalCitas = value;
+                    }
+                }
+            }
+
+            [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CitasCanceladas", DbType = "Int")]
+            public System.Nullable<int> CitasCanceladas
+            {
+                get { return this._CitasCanceladas; }
+                set
+                {
+                    if ((this._CitasCanceladas != value))
+                    {
+                        this._CitasCanceladas = value;
+                    }
+                }
+            }
+
+            [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CitasCompletadas", DbType = "Int")]
+            public System.Nullable<int> CitasCompletadas
+            {
+                get { return this._CitasCompletadas; }
+                set
+                {
+                    if ((this._CitasCompletadas != value))
+                    {
+                        this._CitasCompletadas = value;
+                    }
+                }
+            }
+
+            [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CitasRechazadas", DbType = "Int")]
+            public System.Nullable<int> CitasRechazadas
+            {
+                get { return this._CitasRechazadas; }
+                set
+                {
+                    if ((this._CitasRechazadas != value))
+                    {
+                        this._CitasRechazadas = value;
+                    }
+                }
+            }
+
+            [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PorcentajeCancelacion", DbType = "Decimal(5,2)")]
+            public System.Nullable<decimal> PorcentajeCancelacion
+            {
+                get { return this._PorcentajeCancelacion; }
+                set
+                {
+                    if ((this._PorcentajeCancelacion != value))
+                    {
+                        this._PorcentajeCancelacion = value;
+                    }
+                }
+            }
+
+            [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CategoriaRiesgo", DbType = "VarChar(20)")]
+            public string CategoriaRiesgo
+            {
+                get { return this._CategoriaRiesgo; }
+                set
+                {
+                    if ((this._CategoriaRiesgo != value))
+                    {
+                        this._CategoriaRiesgo = value;
+                    }
+                }
+            }
+
+            [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Resultado", DbType = "Bit")]
+            public System.Nullable<bool> Resultado
+            {
+                get { return this._Resultado; }
+                set
+                {
+                    if ((this._Resultado != value))
+                    {
+                        this._Resultado = value;
+                    }
+                }
+            }
+
+            [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ErrorID", DbType = "Int")]
+            public System.Nullable<int> ErrorID
+            {
+                get { return this._ErrorID; }
+                set
+                {
+                    if ((this._ErrorID != value))
+                    {
+                        this._ErrorID = value;
+                    }
+                }
+            }
+        }
+    }
 }
 #pragma warning restore 1591
